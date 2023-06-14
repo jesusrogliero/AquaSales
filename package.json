@@ -1,0 +1,46 @@
+{
+  "name": "aqua_sales",
+  "version": "1.1.0",
+  "description": "AquaSales",
+  "main": "app.js",
+  "repository": {
+    "type": "git",
+    "url": "https://gitlab.com/jesmirou/sbms.git"
+  },
+  "scripts": {
+    "start": "electron .",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder"
+  },
+  "author": "Jesus Rogliero",
+  "license": "ISC",
+  "build": {
+    "appId": "AquaSales",
+    "productName": "AquaSales",
+    "asar": true,
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "ia32",
+            "x64"
+          ]
+        }
+      ]
+    }
+  },
+  "devDependencies": {
+    "electron": "^13.4.0",
+    "electron-builder": "^22.13.1",
+    "eslint": "^7.32.0",
+    "eslint-plugin-react": "^7.26.0"
+  },
+  "dependencies": {
+    "appdata-path": "^1.0.0",
+    "bcv-divisas": "^1.2.6",
+    "electron-log": "^4.4.1",
+    "sequelize": "^6.6.5",
+    "sqlite3": "^5.0.2"
+  }
+}
