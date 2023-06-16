@@ -9,25 +9,9 @@ let home = Vue.component('home', {
 		}
 	},
 
-	created: async function() {
-
-	},
-
-	computed: {
-	
-	},
-
-	watch: {
-	
-	},
-
-	methods: {
-	},
-
-
 	template: `
 		<v-container>
-		hola
+		<h1>hola</h1>
 		</v-container>
 		`
 });
