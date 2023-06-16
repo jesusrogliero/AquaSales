@@ -1,7 +1,7 @@
 'use strict';
 
 let routes = [
-    {path: "/", component: () => import("./components/home.js") },
+    {path: "/", component: () => import("./components/Home.js") },
 
 ];
 
