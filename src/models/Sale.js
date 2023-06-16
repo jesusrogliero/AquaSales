@@ -9,7 +9,13 @@ const Sale = sequelize.define("sales", {
         primaryKey: true,
     },
 
-    total: {
+    total_dolar: {
+        type: DataTypes.DECIMAL,
+        allowNull: false,
+        defaultValue: 0,
+    },
+
+    total_bs: {
         type: DataTypes.DECIMAL,
         allowNull: false,
         defaultValue: 0,
@@ -44,7 +50,5 @@ const Sale = sequelize.define("sales", {
     }
 
 });
-
-Invoice.belongsTo(Client, { foreignKey: 'client_id' });
 
 module.exports = Sale;

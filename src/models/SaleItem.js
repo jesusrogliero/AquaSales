@@ -45,6 +45,33 @@ const SaleItem = sequelize.define("sales_items", {
         }
     },
 
+    quantity: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        validate: {
+            notEmpty: {
+                msg: "Ingrese la cantidad de este producto"
+            },
+            isNumeric: {
+                msg: "Cantidad no valida"
+            }
+        }
+    },
+
+    
+    liters: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        validate: {
+            notEmpty: {
+                msg: "Ingrese la cantidad de litros este producto"
+            },
+            isNumeric: {
+                msg: "Cantidad no valida"
+            }
+        }
+    },
+
     cap: {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
@@ -72,4 +99,4 @@ const SaleItem = sequelize.define("sales_items", {
 SaleItem.belongsTo(Sale, { foreignKey: 'sale_id' });
 SaleItem.belongsTo(Product, { foreignKey: 'product_id' });
 
-module.exports = Sale;
+module.exports = SaleItem;
