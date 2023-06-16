@@ -2,7 +2,6 @@
 
 import routes from './routes.js'; 
 import Snapback from "./utils/SnackbarApp.js";
-import navigation from './components/navigation.js';
 const router = new VueRouter({ routes: routes });
 
 let vue = new Vue({
