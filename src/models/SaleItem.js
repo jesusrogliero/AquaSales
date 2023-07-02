@@ -58,31 +58,33 @@ const SaleItem = sequelize.define("sales_items", {
         }
     },
 
-    
+    caps: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    },
+
     liters: {
         type: DataTypes.INTEGER,
         allowNull: false,
-        validate: {
-            notEmpty: {
-                msg: "Ingrese la cantidad de litros este producto"
-            },
-            isNumeric: {
-                msg: "Cantidad no valida"
-            }
-        }
     },
 
-    cap: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: false,
-        allowNull: false
+    units: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
     },
 
-    total: {
+    total_bs: {
         type: DataTypes.DECIMAL,
         allowNull: false,
         defaultValue: 0,
     },
+
+    total_dolar: {
+        type: DataTypes.DECIMAL,
+        allowNull: false,
+        defaultValue: 0,
+    },
+
 
     createdAt: {
         type: DataTypes.DATEONLY,
