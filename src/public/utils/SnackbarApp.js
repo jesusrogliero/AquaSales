@@ -29,7 +29,7 @@ export default Vue.component('snackbar-app',{
                     mdi-{{ icon }}
                 </v-icon>
                 <span class="text-h6"  style = "margin-left: 5px;">
-                    {{ text.message }}
+                    {{ text }}
                 </span>
             </div>
         </v-snackbar>
