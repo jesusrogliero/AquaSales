@@ -59,5 +59,5 @@ const Payment = sequelize.define('Payment', {
 	}
 });
 
-SaleItem.belongsTo(Sale, { foreignKey: 'sale_id' });
+Payment.belongsTo(Sale, { foreignKey: 'sale_id' });
 module.exports = Payment;

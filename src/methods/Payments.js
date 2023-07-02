@@ -1,9 +1,10 @@
 'use strict'
 
 const Payment = require('../models/Payment.js');
+const Sale = require('../models/Sale.js');
 const empty = require('../helpers/empty.js');
 const log = require('electron-log');
-const BCV = require('bcv-divisas');
+const sequelize = require('sequelize');
 
 const Payments = {
 
@@ -14,7 +15,21 @@ const Payments = {
      */
     'index-payments': async function () {
         try {
-            return await Payment.findAll({ raw: true });
+            return await Payment.findAll({
+                attributes: { 
+					include:[
+						[sequelize.col('sales.createdAt'), 'sale_created_at']
+					]
+				},
+				include: [
+					{
+						model: Sale,
+						required: true,
+						attributes: []
+					}
+				],
+                raw: true
+            });
         } catch (error) {
             log.error(error.message);
             return { message: error.message, code: 0 };
@@ -74,7 +89,7 @@ const Payments = {
         }
     },
 
-    
+
     /**
      * funcion que muestra la tasa del BCV
      * 
@@ -100,9 +115,9 @@ const Payments = {
     'update-payment': async function (params) {
 
         try {
-            if ( params.mobile_payment < 0 ) throw new Error("El monto no puede ser negativo");
-            if ( params.cash_dollar < 0 ) throw new Error("El monto no puede ser negativo");
-            if ( params.cash_bolivares < 0 ) throw new Error("El monto no puede ser negativo");
+            if (params.mobile_payment < 0) throw new Error("El monto no puede ser negativo");
+            if (params.cash_dollar < 0) throw new Error("El monto no puede ser negativo");
+            if (params.cash_bolivares < 0) throw new Error("El monto no puede ser negativo");
 
             let payment = await Payment.findByPk(params.id);
 
