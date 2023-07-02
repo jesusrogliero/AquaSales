@@ -42,6 +42,26 @@ const Product = sequelize.define("products", {
         }
     },
 
+
+    quantity: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        validate: {
+            isNumeric: {
+                args: true,
+                msg: "Los cantidad ingresada incorrecta"
+            },
+            notEmpty: {
+                args: true,
+                msg: "La cantidad es obligatoria"
+            },
+            notNull: {
+                args: true,
+                msg: "La cantidad es obligatoria"
+            }
+        }
+    },
+
     price_bs: {
         type: DataTypes.DECIMAL,
         allowNull: false,
@@ -58,6 +78,18 @@ const Product = sequelize.define("products", {
                 args: true,
                 msg: "El precio en Bs es obligatorio"
             }
+        }
+    },
+
+    cap: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 0,
+        validate: {
+            isNumeric: {
+                args: true,
+                msg: "Cantidad de Tapas incorrecta"
+            },
         }
     },
 
