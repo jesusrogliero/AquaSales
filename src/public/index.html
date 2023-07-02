@@ -10,6 +10,7 @@
 	<link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
 	<link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet">
 	<link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
+	<link rel="stylesheet" href="./resources/styles/card.css">
 
 	<title>Sistema Administrativo</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
@@ -19,14 +20,16 @@
 	<div id="app">
 		<v-app>
 
-			<!-- Alerta de la app -->
-			<snackbar-app :color="colorAlert" :text="textAlert" :icon="iconAlert"></snackbar-app>
+			<navigation></navigation>
 
 			<v-main>
 				<v-container fluid>
 					<router-view />
 				</v-container>
 			</v-main>
+
+			<!-- Alerta de la app -->
+			<snackbar-app :color="colorAlert" :text="textAlert" :icon="iconAlert"></snackbar-app>
 
 		</v-app>
 	</div>
