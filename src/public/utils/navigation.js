@@ -48,12 +48,12 @@ export default Vue.component('navigation', {
         </v-btn>
         
         <v-btn color="blue lighten-3" class="mr-n3" elevation="0" @click="toSales">
-            <v-icon>mdi-clipboard-check-outline</v-icon>
+            <v-icon>mdi-clipboard-clock-outline</v-icon>
             <span>Ventas</span>  
         </v-btn>
 
         <v-btn color="blue lighten-3" class="mr-n3" elevation="0" @click="toDispatchedSales">
-            <v-icon>mdi-clock-time-three-outline</v-icon>
+            <v-icon>mdi-clipboard-check</v-icon>
             <span>Despachadas</span>  
         </v-btn>
 
