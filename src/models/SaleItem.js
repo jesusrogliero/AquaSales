@@ -63,6 +63,17 @@ const SaleItem = sequelize.define("sales_items", {
         allowNull: false,
     },
 
+    pending_dispatch: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    },
+
+    dispatched: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 0
+    },
+    
     liters: {
         type: DataTypes.INTEGER,
         allowNull: false,
@@ -74,13 +85,13 @@ const SaleItem = sequelize.define("sales_items", {
     },
 
     total_bs: {
-        type: DataTypes.DECIMAL,
+        type: DataTypes.DECIMAL(10, 2),
         allowNull: false,
         defaultValue: 0,
     },
 
     total_dolar: {
-        type: DataTypes.DECIMAL,
+        type: DataTypes.DECIMAL(10, 2),
         allowNull: false,
         defaultValue: 0,
     },
