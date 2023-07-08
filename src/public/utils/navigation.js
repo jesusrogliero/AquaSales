@@ -14,6 +14,7 @@ export default Vue.component('navigation', {
         toSales() { this.$router.push('/sales'); },
         toPayments() { this.$router.push('/payments'); },
         toNewSale() { this.$router.push('/new_sale'); },
+        toDispatchedSales() { this.$router.push('/dispatched_sales')}
     },
 
     template: `
@@ -49,6 +50,11 @@ export default Vue.component('navigation', {
         <v-btn color="blue lighten-3" class="mr-n3" elevation="0" @click="toSales">
             <v-icon>mdi-clipboard-check-outline</v-icon>
             <span>Ventas</span>  
+        </v-btn>
+
+        <v-btn color="blue lighten-3" class="mr-n3" elevation="0" @click="toDispatchedSales">
+            <v-icon>mdi-clock-time-three-outline</v-icon>
+            <span>Despachadas</span>  
         </v-btn>
 
         <v-btn color="blue lighten-3" elevation="0" @click="toPayments">
