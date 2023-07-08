@@ -2,6 +2,7 @@
 
 const Payment = require('../models/Payment.js');
 const Sale = require('../models/Sale.js');
+const BCV = require('bcv-divisas');
 const empty = require('../helpers/empty.js');
 const log = require('electron-log');
 const sequelize = require('sequelize');
@@ -16,18 +17,20 @@ const Payments = {
     'index-payments': async function () {
         try {
             return await Payment.findAll({
-                attributes: { 
-					include:[
-						[sequelize.col('sales.createdAt'), 'sale_created_at']
-					]
-				},
-				include: [
-					{
-						model: Sale,
-						required: true,
-						attributes: []
-					}
-				],
+                attributes: [
+                    'id', 'createdAt', 'reference',
+                    [sequelize.literal("mobile_payment || ' BsS'"), 'mobile_payment'],
+                    [sequelize.literal("cash_dollar || ' $'"), 'cash_dollar'],
+                    [sequelize.literal("cash_bolivares || ' BsS'"), 'cash_bolivares'],
+                    [sequelize.col('sale.client'), 'client']
+                ],
+                include: [
+                    {
+                        model: Sale,
+                        required: true,
+                        attributes: []
+                    }
+                ],
                 raw: true
             });
         } catch (error) {
@@ -48,6 +51,7 @@ const Payments = {
 
             const new_payment = await Payment.create({
                 mobile_payment: params.mobile_payment,
+                reference: params.reference,
                 cash_dollar: params.cash_dollar,
                 cash_bolivares: params.cash_bolivares,
                 sale_id: params.sale_id
@@ -61,7 +65,7 @@ const Payments = {
                 return { message: error.errors[0].message, code: 0 };
             }
             else {
-                log.error(error.errors[0].message);
+                log.error(error.error.message);
                 return { message: error.message, code: 0 };
             }
 
@@ -96,9 +100,10 @@ const Payments = {
      * @param {int} id 
      * @returns {json} pago
      */
-    'show-bcv': async function (id) {
+    'show-bcv': async function () {
         try {
-            return await BCV.bcvDolar();
+            let bcv = await BCV.bcvDolar()
+            return parseFloat(bcv._dolar);
         } catch (error) {
             log.error(error.message);
             return { message: error.message, code: 0 };
@@ -126,6 +131,7 @@ const Payments = {
             payment.mobile_payment = params.mobile_payment;
             payment.cash_bolivares = params.cash_bolivares;
             payment.cash_dollar = params.cash_dollar;
+            payment.reference = params.reference;
 
             await payment.save();
 
