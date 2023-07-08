@@ -11,8 +11,9 @@ export default Vue.component('products', {
             name: null,
             quantity: null,
             liters: null,
-            price_bs: null,
+            price: null,
             cap: null,
+            is_dolar: false,
 
             requiredRule: [v => !!v || 'Este campo es requerido!!'],
 			numberRule: [
@@ -52,8 +53,13 @@ export default Vue.component('products', {
 					this.name = response.name;
 					this.liters = response.liters;
 					this.quantity = response.quantity;
-					this.price_bs = response.price_bs;
                     this.cap = response.cap;
+                    this.is_dolar = response.is_dolar;
+
+                    this.price = response.price_bs;
+                    if(response.is_dolar) {
+                        this.price = response.price_dolar;
+                    }
 				}
 				this.dialog = dialog;
 			} catch (error) {
@@ -72,9 +78,10 @@ export default Vue.component('products', {
 			this.name = null;
 			this.liters = null;
 			this.quantity = null;
-            this.price_bs = null;
+            this.price = null;
 			this.dialog = null;
             this.cap = null;
+            this.is_dolar = null;
 		},
 
         validate() {
@@ -92,8 +99,9 @@ export default Vue.component('products', {
                     name: this.name,
                     liters: this.liters,
                     quantity: this.quantity,
-                    price_bs: this.price_bs,
-                    cap: this.cap
+                    price: this.price,
+                    cap: this.cap,
+                    is_dolar: this.is_dolar
                 });
 
 				if (response.code == 0)
@@ -118,7 +126,7 @@ export default Vue.component('products', {
                     name: this.name,
                     liters: this.liters,
                     quantity: this.quantity,
-                    price_bs: this.price_bs,
+                    price: this.price,
                     cap: this.cap
                 });
 
@@ -201,8 +209,17 @@ export default Vue.component('products', {
                         </v-col>
 
                         <v-col cols="12" lg="6" md="6" sm="6"  class="mt-2">
-                            <v-text-field v-model="price_bs" suffix="BsS" :rules="numberRule" label="Precio en Bs" required
-                                placeholder="Ingresa el precio en Bolivares"></v-text-field>
+            
+                            <v-text-field 
+                                v-model="price" 
+                                :suffix="is_dolar ? '$' : 'BsS'"
+                                :rules="numberRule"
+                                label="Precio"
+                                required
+                                placeholder="Ingresa el precio"
+                                @click:append="is_dolar = !is_dolar"
+                                append-icon="mdi-repeat"
+                            ></v-text-field>
                         </v-col>
 
                         <v-col cols="12" lg="6" md="6" sm="6"  class="mt-2">
