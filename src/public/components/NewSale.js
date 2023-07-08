@@ -16,9 +16,30 @@ export default Vue.component('new-sale', {
             total_caps: 0,
             total_liters: 0,
             total_units: 0,
+            pending_dispatch: 0,
+            total_dispatched: 0,
+            sate_id: null,
 
+            item_id: null,
+            dispatch: null,
+            item_pending_dispatch: null,
             product_id: null,
             quantity: null,
+
+            mobile_payment: null,
+            reference: null,
+            cash_dollar: null,
+            cash_bolivares: null,
+
+            falta_dolar: 0,
+            falta_bs: 0,
+            vuelto_dolar: 0,
+            vuelto_bs: 0,
+
+            numberRule: [
+                v => !!v || 'Este campo es requerido!!',
+                v => /[+-]?(?=\.\d|\d)(?:\d+)?(?:\.?\d*)(?:[eE][+-]?\d+)?/gm.test(v) || 'Verifique antes de continuar'
+            ],
 
             headers: [
                 { text: 'Producto', value: 'product_name' },
@@ -27,14 +48,61 @@ export default Vue.component('new-sale', {
                 { text: 'Tapa', value: 'caps' },
                 { text: 'Total en BsS', value: 'total_bs' },
                 { text: 'Total en $', value: 'total_dolar' },
+                { text: 'Pendiente por Despachar', value: 'pending_dispatch' },
+                { text: 'Despachado', value: 'dispatched' },
                 { text: 'Acción', value: 'actions' },
             ],
 
             title: 'Lista de Productos',
             url: 'index-items',
             dialog: null,
-            valid: true
+            valid: true,
+            bcv: 0
         };
+    },
+
+    async mounted() {
+        try {
+            let response = await execute('pending-sale', null);
+            this.bcv = await execute('show-bcv', null);
+
+            if (response != null) {
+
+                if (response.code == 0)
+                    throw new Error(response.message);
+
+                this.sale_id = response.id;
+                this.client = response.client;
+                this.state_id = response.state_id;
+                this.total_dolar = response.total_dolar;
+                this.total_bs = response.total_bs;
+                this.total_caps = response.total_caps;
+                this.total_liters = response.total_liters;
+                this.total_units = response.total_units;
+                this.pending_dispatch = response.pending_dispatch;
+                this.total_dispatched = response.total_dispatched;
+            }
+
+            
+
+        } catch (error) {
+            alertApp({ color: "error", icon: "alert", text: error.message });
+        }
+    },
+
+    watch: {
+        total_bs() {
+            this.checkoutSale();
+        },
+        cash_bolivares() {
+            this.checkoutSale();
+        },
+        cash_dollar() {
+            this.checkoutSale();
+        },
+        mobile_payment() {
+            this.checkoutSale();
+        }
     },
 
     methods: {
@@ -47,12 +115,8 @@ export default Vue.component('new-sale', {
 
                     let response = await execute('show-item', id);
 
-                    this.id = response.id;
-                    this.name = response.name;
-                    this.liters = response.liters;
-                    this.quantity = response.quantity;
-                    this.price_bs = response.price_bs;
-                    this.price_dolar = response.price_dolar
+                    this.item_id = response.id;
+                    this.item_pending_dispatch = response.pending_dispatch;
                 }
                 this.dialog = dialog;
             } catch (error) {
@@ -62,26 +126,27 @@ export default Vue.component('new-sale', {
         },
 
         closeDialog() {
-            this.$refs.form.reset();
+            //this.$refs.form.reset();
             this.dialog = null;
-        },
-
-        cleanForm() {
-            this.product_id = null;
-            this.quantity = null;
-            this.dialog = null; 
         },
 
         cleanSale() {
             this.sale_id = null;
-            this.name = null;
-            this.liters = null;
-            this.quantity = null;
-            this.price_bs = null;
-            this.price_dolar = null;
-            this.dialog = null; 
+            this.client = null;
+            this.state_id = null;
+            this.total_dolar = null;
+            this.total_bs = null;
+            this.total_caps = null;
+            this.total_liters = null;
+            this.total_units = null;
+            this.pending_dispatch = null;
+            this.total_dispatched = null;
         },
 
+        validate() {
+            if (this.$refs.form.validate() && this.dialog == 'edit')
+                this.updateItem();
+        },
 
         async getSale() {
             try {
@@ -90,12 +155,15 @@ export default Vue.component('new-sale', {
                 if (response.code == 0)
                     throw new Error(response.message);
 
-                    this.client = response.client;
-                    this.total_dolar = response.total_dolar;
-                    this.total_bs = response.total_bs;
-                    this.total_caps = response.total_caps;
-                    this.total_liters = response.total_liters;
-                    this.total_units = response.total_units;
+                this.client = response.client;
+                this.total_dolar = response.total_dolar;
+                this.total_bs = response.total_bs;
+                this.total_caps = response.total_caps;
+                this.total_liters = response.total_liters;
+                this.total_units = response.total_units;
+                this.pending_dispatch = response.pending_dispatch;
+                this.total_dispatched = response.total_dispatched;
+                this.state_id = response.state_id;
 
             } catch (error) {
                 alertApp({ color: "error", icon: "alert", text: response.message });
@@ -137,9 +205,47 @@ export default Vue.component('new-sale', {
             } catch (error) {
                 alertApp({ color: "error", icon: "alert", text: error.message });
             } finally {
-                this.cleanForm();
                 this.cleanSale();
                 this.dialog = null;
+            }
+        },
+
+        async updateClientSale() {
+            try {
+                let response = await execute('update-client-sale', {
+                    sale_id: this.sale_id,
+                    client: this.client
+                });
+
+                if (response.code == 0)
+                    throw new Error(response.message);
+
+                alertApp({ color: "success", icon: "check", text: response.message });
+
+            } catch (error) {
+                alertApp({ color: "error", icon: "alert", text: error.message });
+            }
+        },
+
+
+        async finalizeSale() {
+            try {
+                let response = await execute('finalize-sale', {
+                    sale_id: this.sale_id,
+                    mobile_payment: this.mobile_payment,
+                    reference: this.reference,
+                    cash_dollar: this.cash_dollar,
+                    cash_bolivares: this.cash_bolivares,
+                });
+
+                if (response.code == 0)
+                    throw new Error(response.message);
+
+                alertApp({ color: "success", icon: "check", text: response.message });
+                this.cleanSale();
+
+            } catch (error) {
+                alertApp({ color: "error", icon: "alert", text: error.message });
             }
         },
 
@@ -147,6 +253,48 @@ export default Vue.component('new-sale', {
             this.product_id = product_id;
         },
 
+        async checkoutSale() {
+
+            let cantidadDolaresEnBolivares = 0;
+
+            if (this.cash_dollar != null || this.cash_dollar == undefined) {
+                cantidadDolaresEnBolivares = parseFloat(this.cash_dollar * this.bcv);
+            }
+
+            let totalPagadoBolivares = 0;
+            const regex = /^[+]?\d*\.?\d+$/;
+
+            if(regex.test(this.mobile_payment)) {
+                totalPagadoBolivares += parseFloat(this.mobile_payment);
+            }
+
+            if( regex.test(this.cash_bolivares)) {
+                totalPagadoBolivares += parseFloat(this.cash_bolivares);
+            }
+
+            if(regex.test(cantidadDolaresEnBolivares)) {
+                totalPagadoBolivares += parseFloat(cantidadDolaresEnBolivares);
+            }
+
+            // Calcula el vuelto y el faltante
+            let vuelto = totalPagadoBolivares - this.total_bs;
+            let faltante = 0;
+            
+            this.vuelto_bs = 0;
+            this.vuelto_dolar = 0;
+            this.falta_bs = 0;
+            this.falta_dolar = 0;
+
+            // Verifica si hay vuelto o faltante
+            if (vuelto >= 0) {
+                this.vuelto_bs = parseFloat(vuelto.toFixed(2));
+                this.vuelto_dolar =  parseFloat(vuelto / this.bcv).toFixed(2);
+            } else {
+                faltante = vuelto * -1;
+                this.falta_bs = faltante.toFixed(2);
+                this.falta_dolar =  parseFloat(faltante / this.bcv).toFixed(2);
+            }
+        },
 
         async createItem() {
             try {
@@ -166,24 +314,47 @@ export default Vue.component('new-sale', {
             } catch (error) {
                 alertApp({ color: "error", icon: "alert", text: error.message });
             } finally {
+                this.quantity = null;
                 this.dialog = null;
             }
         },
 
-        async destroyItem() {
+        async updateItem() {
             try {
-                let response = await execute('destroy-item', this.id);
+                let response = await execute('dispatch-item', {
+                    id: this.item_id,
+                    dispatch: this.dispatch,
+                });
 
                 if (response.code == 0)
                     throw new Error(response.message);
 
                 alertApp({ color: "success", icon: "check", text: response.message });
                 await this.$refs.dataTable.getData();
+                this.getSale();
 
             } catch (error) {
                 alertApp({ color: "error", icon: "alert", text: error.message });
             } finally {
-                this.cleanForm();
+                this.dispatch = null;
+                this.dialog = null;
+            }
+        },
+
+        async destroyItem() {
+            try {
+                let response = await execute('destroy-item', this.item_id);
+
+                if (response.code == 0)
+                    throw new Error(response.message);
+
+                alertApp({ color: "success", icon: "check", text: response.message });
+                await this.$refs.dataTable.getData();
+                await this.getSale();
+
+            } catch (error) {
+                alertApp({ color: "error", icon: "alert", text: error.message });
+            } finally {
                 this.dialog = null;
             }
         }
@@ -194,7 +365,7 @@ export default Vue.component('new-sale', {
     <div>
     
     <div class="mb-4">
-        <v-btn color="green" dark class="mr-3" @click="createSale">
+        <v-btn color="green" dark class="mr-3" v-if="sale_id == null" @click="createSale">
             <span>Crear Venta</span>
             <v-icon>mdi-file-plus</v-icon>
         </v-btn>
@@ -204,7 +375,7 @@ export default Vue.component('new-sale', {
             <v-icon>mdi-trash-can-outline</v-icon>
         </v-btn>
 
-        <v-btn color="purple" dark v-if="sale_id != null">
+        <v-btn color="purple" dark v-if="sale_id != null" @click="finalizeSale">
                 <span>Finalizar Venta</span>
         <v-icon>mdi-check</v-icon>
     </v-btn>
@@ -220,8 +391,16 @@ export default Vue.component('new-sale', {
                         <h3>Detalles de la Venta</h3>
                     </v-col>
                     <v-col cols="12">
-                        <b>Cliente: </b>
-                        <span class="float-right">{{client}}</span>
+                        <v-text-field 
+                            v-model="client" 
+                            class="mb-n6" 
+                            dense 
+                            label="Nombre del Cliente" 
+                            placeholder="Ingresa el nombre del cliente"
+                            append-icon="mdi-content-save-edit"
+                            @click:append="updateClientSale"
+                            filled
+                        ></v-text-field>
                     </v-col>
                     <v-col cols="12">
                         <b>Unidades Totales: </b>
@@ -247,7 +426,7 @@ export default Vue.component('new-sale', {
 
                     <v-col cols="12">
                         <b>Estado: </b>
-                        <span class="float-right"> Pendiente</span>
+                        <span class="float-right"> {{sate_id == 1 ? 'Pendiente' : ''}}</span>
                     </v-col>
 
                     <v-col cols="12">
@@ -259,6 +438,19 @@ export default Vue.component('new-sale', {
                         <b>Total en Dolares: </b>
                         <span class="float-right">{{total_dolar}} $</span>
                     </v-col>
+
+                    <v-col cols="12">
+                        <b>Pendientes por Despachar: </b>
+                        <span class="float-right red--text">{{pending_dispatch}} UNID</span>
+                    </v-col>
+
+                    
+                    <v-col cols="12">
+                        <b>Total Despachado: </b>
+                        <span class="float-right green--text">{{total_dispatched}} UNID</span>
+                    </v-col>
+                    
+
                 </v-row>
             </v-col>
 
@@ -270,25 +462,39 @@ export default Vue.component('new-sale', {
                     </v-col>
 
                     <v-col cols="6">
-                        <v-text-field class="mb-n6" dense label="Pago Movil" suffix="BsS" filled></v-text-field>
+                        <v-text-field v-model="mobile_payment" class="mb-n6" dense label="Pago Movil" suffix="BsS" filled></v-text-field>
                     </v-col>
 
                     <v-col cols="6">
-                        <v-text-field dense class="mb-n6" label="Efectivo" suffix="$"  filled></v-text-field>
+                        <v-text-field v-model="reference" dense class="mb-n6" suffix="Nro" label="Referencia" filled></v-text-field>
                     </v-col>
 
-                    <v-col cols="12">
-                        <v-text-field dense class="mb-n6" label="Efectivo BsS" suffix="BsS"  filled></v-text-field>
+                    <v-col cols="6">
+                        <v-text-field v-model="cash_dollar" dense class="mb-n6" label="Efectivo" suffix="$"  filled></v-text-field>
+                    </v-col>
+
+                    <v-col cols="6">
+                        <v-text-field v-model="cash_bolivares" dense class="mb-n6" label="Efectivo BsS" suffix="BsS"  filled></v-text-field>
                     </v-col>
 
                     <v-col cols="6">
                         <b>Vuelto $: </b>
-                        <span class="float-right"> 150 $</span>
+                        <span class="float-right"> {{vuelto_dolar}} $</span>
+                    </v-col>
+
+                    <v-col cols="6">
+                        <b>Falta en $: </b>
+                        <span class="float-right"> {{falta_dolar}} $</span>
                     </v-col>
 
                     <v-col cols="6">
                         <b>Vuelto BsS: </b>
-                        <span class="float-right"> 150 BsS</span>
+                        <span class="float-right"> {{vuelto_bs}} BsS</span>
+                    </v-col>
+
+                    <v-col cols="6">
+                        <b>Falta en BsS: </b>
+                        <span class="float-right"> {{falta_bs}} BsS</span>
                     </v-col>
                   
 
@@ -299,7 +505,7 @@ export default Vue.component('new-sale', {
 
     
         <!-- Dialogo de confirmacion antes de eliminar -->
-        <dialog-confirm v-if="sale_id != null" :active="dialog == 'delete'" :confirm="destroyItem" :cancel="cleanForm">
+        <dialog-confirm v-if="sale_id != null" :active="dialog == 'delete'" :confirm="destroyItem" :cancel="closeDialog">
             
             <template v-slot:dialog-title>
             <span class="title">Eliminar Producto?</span>
@@ -313,39 +519,23 @@ export default Vue.component('new-sale', {
         </dialog-confirm>
 
         <!-- Dialogo para crear o actualizar recursos -->
-        <dialog-base v-if="sale_id != null" :active="dialog == 'new' || dialog == 'edit'">
+        <dialog-base v-if="sale_id != null" :active="dialog == 'edit'">
             <template v-slot:dialog-title>
-                <span class="title">{{ dialog == 'edit' ? 'Editar Producto' : 'Nuevo Producto'}}</span>
+                <span class="title">Editar Despacho</span>
             </template>
 
             <template v-slot:dialog-content>
 
                 <v-form ref="form" v-model="valid" lazy-validation>
                     <v-row>
-
                         <v-col cols="12" lg="6" md="6" sm="6"  class="mt-2">
-                            <v-text-field v-model="name" :rules="requiredRule" label="Nombre" required
-                                placeholder="Ingresa el nombre del Producto"></v-text-field>
+                            <v-text-field v-model="item_pending_dispatch" suffix="UNID" readonly label="Pendiente Por Despachar"
+                                placeholder="Cuanto desea despachar"></v-text-field>
                         </v-col>
 
                         <v-col cols="12" lg="6" md="6" sm="6"  class="mt-2">
-                            <v-text-field v-model="liters" :rules="numberRule" label="Litros" required
-                                placeholder="Ingresa el volumen de la botella" suffix="Lt"></v-text-field>
-                        </v-col>
-
-                        <v-col cols="12" lg="6" md="6" sm="6"  class="mt-2">
-                            <v-text-field v-model="quantity" suffix="UNID" :rules="numberRule" label="Cantidad" required
-                                placeholder="Ingresa la cantidad del producto"></v-text-field>
-                        </v-col>
-
-                        <v-col cols="12" lg="6" md="6" sm="6"  class="mt-2">
-                            <v-text-field v-model="price_bs" suffix="BsS" :rules="numberRule" label="Precio en Bs" required
-                                placeholder="Ingresa el precio en Bolivares"></v-text-field>
-                        </v-col>
-
-                        <v-col cols="12" lg="6" md="6" sm="6"  class="mt-2">
-                            <v-text-field v-model="price_dolar" suffix="$" :rules="numberRule" label="Precio en Dolares" required
-                                placeholder="Ingresa el precio en Dolares"></v-text-field>
+                            <v-text-field v-model="dispatch" suffix="UNID" :rules="numberRule" label="Cantidad a Despachar" required
+                                placeholder="Cuanto desea despachar"></v-text-field>
                         </v-col>
                     </v-row>
                 </v-form>
@@ -372,6 +562,7 @@ export default Vue.component('new-sale', {
             :url="url" 
             :headers="headers" 
             :title="title"
+            :update="openDialog"
             :destroy="openDialog"
             :sale_id="sale_id"
         >
