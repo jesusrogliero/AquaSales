@@ -13,16 +13,25 @@ const Payment = sequelize.define('Payment', {
 
 	mobile_payment: {
 		type: DataTypes.DECIMAL,
+		allowNull: true,
 		defaultValue: 0
+	},
+
+	reference: {
+		type: DataTypes.TEXT,
+		allowNull: true,
+		defaultValue: 'NO'
 	},
 
 	cash_dollar: {
 		type: DataTypes.DECIMAL,
+		allowNull: true,
 		defaultValue: 0
 	},
 
 	cash_bolivares: {
 		type: DataTypes.DECIMAL,
+		allowNull: true,
 		defaultValue: 0
 	},
 
