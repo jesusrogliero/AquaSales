@@ -17,14 +17,15 @@ const Products = {
         try {
             return await Product.findAll({
                 attributes: [
-					'id', 'name', 'createdAt', 'updatedAt',
-					[sequelize.literal("liters || ' Lt'"), 'liters'],
-					[sequelize.literal("quantity || ' UNID'"), 'quantity'],
+                    'id', 'name', 'createdAt', 'updatedAt',
+                    [sequelize.literal("liters || ' Lt'"), 'liters'],
+                    [sequelize.literal("quantity || ' UNID'"), 'quantity'],
                     [sequelize.literal("cap || ' UNID'"), 'cap'],
-					[sequelize.literal("price_bs || ' BsS'"), 'price_bs'],
-					[sequelize.literal("price_dolar || ' $'"), 'price_dolar'],
-				],
-                raw: true });
+                    [sequelize.literal("price_bs || ' BsS'"), 'price_bs'],
+                    [sequelize.literal("price_dolar || ' $'"), 'price_dolar'],
+                ],
+                raw: true
+            });
         } catch (error) {
             log.error(error.message);
             return { message: error.message, code: 0 };
@@ -48,16 +49,16 @@ const Products = {
             let price_bs = 0
             let price_dolar = 0;
 
-            if(params.is_dolar) {
+            if (params.is_dolar) {
                 price_dolar = params.price;
                 price_bs = params.price * exchange_rate._dolar;
-            }else {
+            } else {
                 price_dolar = parseFloat(params.price / exchange_rate._dolar);
                 price_dolar = parseFloat(price_dolar.toFixed(3));
 
                 price_bs = params.price;
             }
-           
+
             await Product.create({
                 name: params.name,
                 quantity: params.quantity,
@@ -105,13 +106,13 @@ const Products = {
 
             products.forEach(async product => {
 
-                if(product.is_dolar) {
+                if (product.is_dolar) {
                     price_bs = product.price_dolar * exchange_rate._dolar;
-                }else {
+                } else {
                     price_dolar = parseFloat(product.price_bs / exchange_rate._dolar);
                     price_dolar = price_dolar.toFixed(3);
                 }
-               
+
                 await product.save();
             });
 
@@ -170,19 +171,31 @@ const Products = {
 
             if (params.quantity < 0) throw new Error('La cantidad del producto no es correcta');
             if (params.liters < 0) throw new Error('La cantidad de litros no es correcta');
-            if (params.price_bs < 0) throw new Error('El precio en bolivares no es correcto');
-            if (params.price_dolar < 0) throw new Error('El precio es dolares no es correcto');
             if (params.cap < 0) throw new Error('La cantidad de tapas es incorrecta');
 
             let product = await Product.findByPk(params.id);
 
             if (product === null) throw new Error("El producto no existe");
 
+            let exchange_rate = await bcv.bcvDolar();
+            let price_bs = 0
+            let price_dolar = 0;
+
+            if (params.is_dolar) {
+                price_dolar = params.price;
+                price_bs = params.price * exchange_rate._dolar;
+            } else {
+                price_dolar = parseFloat(params.price / exchange_rate._dolar);
+                price_dolar = parseFloat(price_dolar.toFixed(3));
+
+                price_bs = params.price;
+            }
+
             product.name = params.name;
             product.quantity =
-                product.liters = params.liters;
-            product.price_bs = params.price_bs;
-            product.price_dolar = params.price_dolar;
+            product.liters = params.liters;
+            product.price_bs = price_bs;
+            product.price_dolar = price_dolar;
             product.cap = params.cap;
 
             await product.save();
