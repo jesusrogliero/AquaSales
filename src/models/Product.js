@@ -93,6 +93,11 @@ const Product = sequelize.define("products", {
         }
     },
 
+    is_dolar: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: 0
+    },
 
     price_dolar: {
         type: DataTypes.DECIMAL,
