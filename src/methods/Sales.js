@@ -128,7 +128,7 @@ const Sales = {
             sale.client = params.client;
             await sale.save();
 
-            return { message: "Actualizado Correctamente", code: 1 };
+            return { message: "Registrado con exito", code: 1 };
         } catch (error) {
             log.error(error.message);
             return { message: error.message, code: 0 };
