@@ -1,7 +1,7 @@
 'use strict'
 
 // componente home
-let home = Vue.component('home', {
+let Home = Vue.component('Home', {
 
 	data: function () {
 		return {
@@ -49,6 +49,14 @@ let home = Vue.component('home', {
 			}
 		},
 
+
+		empty(num) {
+			if (num == NaN || num == undefined || num == null) {
+				return 0;
+			}
+			return num;
+		},
+
 		async getBcv() {
 			try {
 				let response = await execute('show-bcv');
@@ -68,8 +76,6 @@ let home = Vue.component('home', {
 			try {
 				let response = await execute('pending-dispatch');
 
-				console.log(response)
-
 				if (response.code === 0) {
 					throw new Error(response.message)
 				}
@@ -83,14 +89,13 @@ let home = Vue.component('home', {
 		async getMetricsToday() {
 			try {
 				let response = await execute('metrics-sales-today');
-				console.log(response);
 
 				if (response.code === 0) {
 					throw new Error(response.message)
 				}
 
-				this.today_sales_bs = parseFloat(response.today_sales_bs).toFixed(2);
-				this.today_sales_dolar = parseFloat(response.today_sales_dolar).toFixed(2);
+				this.today_sales_bs = parseFloat(this.empty(response.today_sales_bs)).toFixed(2);
+				this.today_sales_dolar = parseFloat(this.empty(response.today_sales_dolar)).toFixed(2);
 				this.today_sales_units = response.today_sales_units;
 				this.pending_dispatch = response.pending_dispatch;
 
@@ -108,8 +113,8 @@ let home = Vue.component('home', {
 					throw new Error(response.message)
 				}
 
-				this.lastweek_sales_bs = parseFloat(response.lastweek_sales_bs).toFixed(2);
-				this.lastweek_sales_dolar = parseFloat(response.lastweek_sales_dolar).toFixed(2);
+				this.lastweek_sales_bs = parseFloat(this.empty(response.lastweek_sales_bs)).toFixed(2);
+				this.lastweek_sales_dolar = parseFloat( this.empty(response.lastweek_sales_dolar)).toFixed(2);
 				this.lastweek_sales_units = response.lastweek_sales_units;
 
 			} catch (error) {
@@ -125,9 +130,9 @@ let home = Vue.component('home', {
 					throw new Error(response.message)
 				}
 
-				this.lastmonth_sales_bs = parseFloat(response.lastmonth_sales_bs).toFixed(2);
-				this.lastmonth_sales_dolar = parseFloat(response.lastmonth_sales_dolar).toFixed(2);
-				this.lastmonth_sales_units = parseFloat(response.lastmonth_sales_units).toFixed(2);
+				this.lastmonth_sales_bs = parseFloat(this.empty(response.lastmonth_sales_bs)).toFixed(2);
+				this.lastmonth_sales_dolar = parseFloat(this.empty(response.lastmonth_sales_dolar)).toFixed(2);
+				this.lastmonth_sales_units = response.lastmonth_sales_units;
 
 			} catch (error) {
 				alertApp('error', 'alert', error.message);
@@ -160,10 +165,10 @@ let home = Vue.component('home', {
 							<v-row>
 
 								<v-col cols="12">
-									<h1 class="ml-2">{{today_sales_bs == null ? 0 : today_sales_bs }} BsS </h1>
+									<h1 class="ml-2">{{today_sales_bs}} BsS </h1>
 								</v-col>
 								<v-col>
-									<h1 class="ml-2">{{today_sales_dolar == null ? 0 : today_sales_dolar }} $ </h1>
+									<h1 class="ml-2">{{today_sales_dolar}} $ </h1>
 								</v-col>
 								
 								<v-spacer></v-spacer>
@@ -180,10 +185,10 @@ let home = Vue.component('home', {
 							<v-card-text>
 								<v-row>
 									<v-col cols="12">
-										<h1 class="ml-2">{{lastweek_sales_bs == null ? 0 : lastweek_sales_bs }} BsS</h1>
+										<h1 class="ml-2">{{lastweek_sales_bs}} BsS</h1>
 									</v-col>
 									<v-col>
-										<h1 class="ml-2">{{lastweek_sales_dolar == null ? 0 : lastweek_sales_dolar }} $</h1>
+										<h1 class="ml-2">{{lastweek_sales_dolar}} $</h1>
 									</v-col>
 
 									<v-spacer></v-spacer>
@@ -201,10 +206,10 @@ let home = Vue.component('home', {
 						<v-card-text>
 							<v-row>
 								<v-col cols="12">
-									<h1 class="ml-2">{{lastmonth_sales_bs == null ? 0 : lastmonth_sales_bs }} BsS</h1>
+									<h1 class="ml-2">{{lastmonth_sales_bs}} BsS</h1>
 								</v-col>
 								<v-col>
-									<h1 class="ml-2">{{lastmonth_sales_dolar == null ? 0 : lastmonth_sales_dolar }} $</h1>
+									<h1 class="ml-2">{{lastmonth_sales_dolar}} $</h1>
 								</v-col>
 
 								<v-spacer></v-spacer>
@@ -275,4 +280,4 @@ let home = Vue.component('home', {
 		`
 });
 
-export default home;
+export default Home;
