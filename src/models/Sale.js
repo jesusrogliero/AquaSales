@@ -13,7 +13,7 @@ const Sale = sequelize.define("sales", {
     client: {
         type: DataTypes.TEXT,
         allowNull: false,
-        defaultValue: 'Cliente'
+        defaultValue: 'Generico'
     },
 
     state_id: {
@@ -24,6 +24,18 @@ const Sale = sequelize.define("sales", {
             model: "sales_states",
             key: "id"
         },
+    },
+
+    pending_dispatch: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 0,
+    },
+
+    total_dispatched: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 0
     },
 
     total_dolar: {
