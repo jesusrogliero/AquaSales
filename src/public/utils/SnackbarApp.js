@@ -19,8 +19,8 @@ export default Vue.component('snackbar-app',{
         <v-snackbar 
             v-model = "snackbar"  
             :color="color"
-            timeout = "4000"
-            :top = "true"
+            timeout = "2500"
+            :top = "false"
             :vertical="'vertical'"
         >
             
