@@ -8,7 +8,6 @@ const moment = require('moment');
 
 const Metrics = {
 
-
     /**
      * Metricas de Ventas
      * 
@@ -42,6 +41,7 @@ const Metrics = {
                     [sequelize.literal("sum(total_bs)"), 'today_sales_bs'],
                     [sequelize.literal("sum(total_dolar)"), 'today_sales_dolar'],
                     [sequelize.literal("sum(total_units)"), 'today_sales_units'],
+                    [sequelize.literal("sum(total_liters)"), 'today_liters_consumption'],
                 ],
                 where: {
                     createdAt: moment().format("YYYY-MM-DD")
@@ -72,6 +72,7 @@ const Metrics = {
                     [sequelize.literal("sum(total_bs)"), 'lastweek_sales_bs'],
                     [sequelize.literal("sum(total_dolar)"), 'lastweek_sales_dolar'],
                     [sequelize.literal("sum(total_units)"), 'lastweek_sales_units'],
+                    [sequelize.literal("sum(total_liters)"), 'lastweek_liters_consumption'],
                 ],
                 where: {
                     createdAt: {
@@ -106,6 +107,7 @@ const Metrics = {
                     [sequelize.literal("sum(total_bs)"), 'lastmonth_sales_bs'],
                     [sequelize.literal("sum(total_dolar)"), 'lastmonth_sales_dolar'],
                     [sequelize.literal("sum(total_units)"), 'lastmonth_sales_units'],
+                    [sequelize.literal("sum(total_liters)"), 'lastmonth_liters_consumption'],
                 ],
                 where: {
                     createdAt: {
