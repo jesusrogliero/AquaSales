@@ -20,6 +20,10 @@ let Home = Vue.component('Home', {
 			lastmonth_sales_dolar: null,
 			lastmonth_sales_units: null,
 
+			today_liters_consumption: null,
+			lastweek_liters_consumption: null,
+			lastmonth_liters_consumption: null,
+
 			bcv: 0,
 			mensaje: ''
 		};
@@ -35,7 +39,7 @@ let Home = Vue.component('Home', {
 		await this.getBcv();
 		this.loading = false;
 	},
-
+ 
 	methods: {
 
 		saludar() {
@@ -97,8 +101,8 @@ let Home = Vue.component('Home', {
 				this.today_sales_bs = parseFloat(this.empty(response.today_sales_bs)).toFixed(2);
 				this.today_sales_dolar = parseFloat(this.empty(response.today_sales_dolar)).toFixed(2);
 				this.today_sales_units = response.today_sales_units;
-				this.pending_dispatch = response.pending_dispatch;
-
+				this.today_liters_consumption = response.today_liters_consumption;
+	
 			} catch (error) {
 				alertApp('error', 'alert', error.message);
 			}
@@ -116,6 +120,7 @@ let Home = Vue.component('Home', {
 				this.lastweek_sales_bs = parseFloat(this.empty(response.lastweek_sales_bs)).toFixed(2);
 				this.lastweek_sales_dolar = parseFloat( this.empty(response.lastweek_sales_dolar)).toFixed(2);
 				this.lastweek_sales_units = response.lastweek_sales_units;
+				this.lastweek_liters_consumption = response.lastweek_liters_consumption;
 
 			} catch (error) {
 				alertApp('error', 'alert', error.message);
@@ -133,6 +138,7 @@ let Home = Vue.component('Home', {
 				this.lastmonth_sales_bs = parseFloat(this.empty(response.lastmonth_sales_bs)).toFixed(2);
 				this.lastmonth_sales_dolar = parseFloat(this.empty(response.lastmonth_sales_dolar)).toFixed(2);
 				this.lastmonth_sales_units = response.lastmonth_sales_units;
+				this.lastmonth_liters_consumption = response.lastmonth_liters_consumption;
 
 			} catch (error) {
 				alertApp('error', 'alert', error.message);
@@ -157,20 +163,74 @@ let Home = Vue.component('Home', {
 			</v-container>
 		
 			<div class="mx-2 mt-10">
-			<v-row>
-				<v-col cols="12" sm="6" md="4" lg="4">
+				<v-row>
+					<v-col cols="12" sm="6" md="4" lg="4">
+						<v-card color="#ECEFF1">
+							<v-card-title>INGRESOS HOY</v-card-title>
+							<v-card-text>
+								<v-row>
+
+									<v-col cols="12">
+										<h1 class="ml-2">{{today_sales_bs}} BsS </h1>
+									</v-col>
+									<v-col>
+										<h1 class="ml-2">{{today_sales_dolar}} $ </h1>
+									</v-col>
+									
+									<v-spacer></v-spacer>
+									<v-icon size="80" class="mr-2 mt-n9" color="green ">mdi-trending-up</v-icon>
+								</v-row>
+							</v-card-text>
+						</v-card>
+					</v-col>
+
+					<v-col cols="12" sm="6" md="4" lg="4">
+						<div>
+							<v-card :loading="loading" color="#ECEFF1">
+								<v-card-title>INGRESOS ESTA SEMANA</v-card-title>
+								<v-card-text>
+									<v-row>
+										<v-col cols="12">
+											<h1 class="ml-2">{{lastweek_sales_bs}} BsS</h1>
+										</v-col>
+										<v-col>
+											<h1 class="ml-2">{{lastweek_sales_dolar}} $</h1>
+										</v-col>
+
+										<v-spacer></v-spacer>
+										<v-icon size="80" class="mr-2 mt-n9" color="green">mdi-trending-up</v-icon>
+									</v-row>
+								</v-card-text>
+							</v-card>
+						</div>
+
+					</v-col>
+
+					<v-col cols="12" sm="6" md="4" lg="4">
+						<v-card :loading="loading" color="#ECEFF1">
+							<v-card-title>INGRESOS DE ESTE MES</v-card-title>
+							<v-card-text>
+								<v-row>
+									<v-col cols="12">
+										<h1 class="ml-2">{{lastmonth_sales_bs}} BsS</h1>
+									</v-col>
+									<v-col>
+										<h1 class="ml-2">{{lastmonth_sales_dolar}} $</h1>
+									</v-col>
+
+									<v-spacer></v-spacer>
+									<v-icon size="80" class="mt-n9" color="primary">mdi-trending-up</v-icon>
+								</v-row>
+							</v-card-text>
+						</v-card>
+					</v-col>
+
+					<v-col cols="12" sm="6" md="4" lg="4">
 					<v-card :loading="loading" color="#ECEFF1">
-						<v-card-title>INGRESOS HOY</v-card-title>
+						<v-card-title>Volumen Despachado Hoy</v-card-title>
 						<v-card-text>
 							<v-row>
-
-								<v-col cols="12">
-									<h1 class="ml-2">{{today_sales_bs}} BsS </h1>
-								</v-col>
-								<v-col>
-									<h1 class="ml-2">{{today_sales_dolar}} $ </h1>
-								</v-col>
-								
+								<h1 class="ml-2">{{today_liters_consumption == null ? 0 : today_liters_consumption }} LT</h1>
 								<v-spacer></v-spacer>
 								<v-icon size="80" class="mr-2 mt-n9" color="green ">mdi-trending-up</v-icon>
 							</v-row>
@@ -179,105 +239,90 @@ let Home = Vue.component('Home', {
 				</v-col>
 
 				<v-col cols="12" sm="6" md="4" lg="4">
-					<div>
+					<v-card :loading="loading" color="#ECEFF1">
+						<v-card-title>Volumen Despachado esta Semana</v-card-title>
+						<v-card-text>
+							<v-row>
+								<h1 class="ml-2">{{lastweek_liters_consumption == null ? 0 : lastweek_liters_consumption }} LT</h1>
+								<v-spacer></v-spacer>
+								<v-icon size="80" class="mr-2 mt-n9" color="green ">mdi-trending-up</v-icon>
+							</v-row>
+						</v-card-text>
+					</v-card>
+				</v-col>
+
+				<v-col cols="12" sm="6" md="4" lg="4">
+					<v-card :loading="loading" color="#ECEFF1">
+						<v-card-title>Volumen Despachado Este mes</v-card-title>
+						<v-card-text>
+							<v-row>
+								<h1 class="ml-2">{{lastmonth_liters_consumption == null ? 0 : lastmonth_liters_consumption }} LT</h1>
+								<v-spacer></v-spacer>
+								<v-icon size="80" class="mr-2 mt-n9" color="green ">mdi-trending-up</v-icon>
+							</v-row>
+						</v-card-text>
+					</v-card>
+				</v-col>
+
+					<v-col cols="12" sm="6" md="4" lg="4">
 						<v-card :loading="loading" color="#ECEFF1">
-							<v-card-title>INGRESOS ESTA SEMANA</v-card-title>
+							<v-card-title>Vendidos Hoy</v-card-title>
 							<v-card-text>
 								<v-row>
-									<v-col cols="12">
-										<h1 class="ml-2">{{lastweek_sales_bs}} BsS</h1>
-									</v-col>
-									<v-col>
-										<h1 class="ml-2">{{lastweek_sales_dolar}} $</h1>
-									</v-col>
-
+									<h1 class="ml-2">{{today_sales_units == null ? 0 : today_sales_units }} UNID</h1>
 									<v-spacer></v-spacer>
-									<v-icon size="80" class="mr-2 mt-n9" color="green">mdi-trending-up</v-icon>
+									<v-img
+									class="mt-n10"
+									height="80"
+									max-width="80"
+									src="../public/resources/images/botella.png"
+								></v-img>
 								</v-row>
 							</v-card-text>
 						</v-card>
-					</div>
+					</v-col>
 
-				</v-col>
+					<v-col cols="12" sm="6" md="4" lg="4">
+						<v-card :loading="loading" color="#ECEFF1">
+							<v-card-title>Vendidos Esta Semana</v-card-title>
+							<v-card-text>
+								<v-row>
+									<h1 class="ml-2">{{lastweek_sales_units == null ? 0 : lastweek_sales_units }} UNID</h1>
+									<v-spacer></v-spacer>
+									<v-img
+									class="mt-n10"
+									height="80"
+									max-width="80"
+									src="../public/resources/images/botella-de-agua.png"
+								></v-img>
+								</v-row>
+							</v-card-text>
+						</v-card>
+					</v-col>
 
-				<v-col cols="12" sm="6" md="4" lg="4">
-					<v-card :loading="loading" color="#ECEFF1">
-						<v-card-title>INGRESOS DE ESTE MES</v-card-title>
-						<v-card-text>
-							<v-row>
-								<v-col cols="12">
-									<h1 class="ml-2">{{lastmonth_sales_bs}} BsS</h1>
-								</v-col>
-								<v-col>
-									<h1 class="ml-2">{{lastmonth_sales_dolar}} $</h1>
-								</v-col>
-
-								<v-spacer></v-spacer>
-								<v-icon size="80" class="mt-n9" color="primary">mdi-trending-up</v-icon>
-							</v-row>
-						</v-card-text>
-					</v-card>
-				</v-col>
-
-				<v-col cols="12" sm="6" md="4" lg="4">
-					<v-card :loading="loading" color="#ECEFF1">
-						<v-card-title>Vendidos Hoy</v-card-title>
-						<v-card-text>
-							<v-row>
-								<h1 class="ml-2">{{today_sales_units == null ? 0 : today_sales_units }} UNID</h1>
-								<v-spacer></v-spacer>
-								<v-img
-								class="mt-n10"
-								height="80"
-								max-width="80"
-								src="../public/resources/images/botella.png"
-							></v-img>
-							</v-row>
-						</v-card-text>
-					</v-card>
-				</v-col>
-
-				<v-col cols="12" sm="6" md="4" lg="4">
-				<v-card :loading="loading" color="#ECEFF1">
-					<v-card-title>Vendidos Esta Semana</v-card-title>
-					<v-card-text>
-						<v-row>
-							<h1 class="ml-2">{{lastweek_sales_units == null ? 0 : lastweek_sales_units }} UNID</h1>
-							<v-spacer></v-spacer>
-							<v-img
-							class="mt-n10"
-							height="80"
-							max-width="80"
-							src="../public/resources/images/botella-de-agua.png"
-						></v-img>
-						</v-row>
-					</v-card-text>
-				</v-card>
-			</v-col>
-
-			<v-col cols="12" sm="6" md="4" lg="4">
-			<v-card :loading="loading" color="#ECEFF1">
-				<v-card-title>Pendientes Despacho</v-card-title>
-				<v-card-text>
-					<v-row>
-						<h1 class="ml-2">{{pending_dispatch == null ? 0 : pending_dispatch }} UNID</h1>
-						<v-spacer></v-spacer>
-						
-						<v-img
-						class="mt-n10"
-						height="80"
-						max-width="80"
-						src="../public/resources/images/despacho.png"
-					></v-img>
-					</v-row>
-				</v-card-text>
-			</v-card>
-		</v-col>
-		</v-row>
-		</div>
+					<v-col cols="12" sm="6" md="4" lg="4">
+						<v-card :loading="loading" color="#ECEFF1">
+							<v-card-title>Pendientes Despacho</v-card-title>
+							<v-card-text>
+								<v-row>
+									<h1 class="ml-2">{{pending_dispatch == null ? 0 : pending_dispatch }} UNID</h1>
+									<v-spacer></v-spacer>
+									
+									<v-img
+									class="mt-n10"
+									height="80"
+									max-width="80"
+									src="../public/resources/images/despacho.png"
+								></v-img>
+								</v-row>
+							</v-card-text>
+						</v-card>
+					</v-col>
+				</v-row>
+			</div>
 		
 		</div>
-		`
+`
 });
 
 export default Home;
