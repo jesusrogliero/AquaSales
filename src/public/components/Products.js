@@ -127,7 +127,8 @@ export default Vue.component('products', {
                     liters: this.liters,
                     quantity: this.quantity,
                     price: this.price,
-                    cap: this.cap
+                    cap: this.cap,
+                    is_dolar: this.is_dolar
                 });
 
 				if (response.code == 0)
