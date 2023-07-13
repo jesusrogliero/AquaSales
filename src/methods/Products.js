@@ -166,8 +166,6 @@ const Products = {
         try {
             if (empty(params.name)) throw new Error("El nombre del producto es obligatorio");
             if (empty(params.liters)) throw new Error("Los litros del producto es obligatorio");
-            if (empty(params.price_dolar)) throw new Error("El precio en Dolares es obligatorio");
-            if (empty(params.price_bs)) throw new Error("El precio en Bs es obligatorio");
 
             if (params.quantity < 0) throw new Error('La cantidad del producto no es correcta');
             if (params.liters < 0) throw new Error('La cantidad de litros no es correcta');
@@ -192,7 +190,7 @@ const Products = {
             }
 
             product.name = params.name;
-            product.quantity =
+            product.quantity = params.quantity;
             product.liters = params.liters;
             product.price_bs = price_bs;
             product.price_dolar = price_dolar;
