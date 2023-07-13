@@ -57,7 +57,8 @@ export default Vue.component('new-sale', {
             url: 'index-items',
             dialog: null,
             valid: true,
-            bcv: 0
+            bcv: 0,
+            overlay: true
         };
     },
 
@@ -141,6 +142,16 @@ export default Vue.component('new-sale', {
             this.total_units = null;
             this.pending_dispatch = null;
             this.total_dispatched = null;
+      
+            this.mobile_payment = null,
+            this.reference = null,
+            this.cash_dollar = null,
+            this.cash_bolivares = null;
+
+            this.falta_dolar = 0;
+            this.falta_bs = 0;
+            this.vuelto_bs = null;
+            this.vuelto_dolar = null;
         },
 
         validate() {
@@ -363,6 +374,8 @@ export default Vue.component('new-sale', {
 
     template: `
     <div>
+
+   
     
     <div class="mb-4">
         <v-btn color="green" dark class="mr-3" v-if="sale_id == null" @click="createSale">
