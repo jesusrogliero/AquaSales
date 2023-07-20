@@ -81,7 +81,7 @@ export default Vue.component('products', {
             this.price = null;
 			this.dialog = null;
             this.cap = null;
-            this.is_dolar = null;
+            this.is_dolar = false;
 		},
 
         validate() {
