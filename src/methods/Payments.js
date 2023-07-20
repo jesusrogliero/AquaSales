@@ -2,10 +2,13 @@
 
 const Payment = require('../models/Payment.js');
 const Sale = require('../models/Sale.js');
-const BCV = require('bcv-divisas');
 const empty = require('../helpers/empty.js');
 const log = require('electron-log');
 const sequelize = require('sequelize');
+
+const BCV = require('bcv-divisas');
+const Exchange = require('../models/Exchange.js');
+const moment = require('moment');
 
 const Payments = {
 
@@ -102,8 +105,21 @@ const Payments = {
      */
     'show-bcv': async function () {
         try {
-            let bcv = await BCV.bcvDolar()
-            return parseFloat(bcv._dolar);
+
+            let today = moment().format("YYYY-MM-DD");
+
+            let exchange = await Exchange.findByPk(1);
+
+            if(exchange.updatedAt != today) {
+                let bcv = await BCV.bcvDolar();
+                bcv =  parseFloat(bcv._dolar);
+
+                exchange.bcv = bcv;
+                await exchange.save();
+            }
+
+            return exchange.bcv;
+          
         } catch (error) {
             log.error(error.message);
             return { message: error.message, code: 0 };
