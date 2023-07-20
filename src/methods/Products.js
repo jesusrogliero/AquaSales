@@ -4,7 +4,7 @@ const sequelize = require('sequelize');
 const Product = require('../models/Product.js');
 const empty = require('../helpers/empty.js');
 const log = require('electron-log');
-const bcv = require('bcv-divisas');
+const Exchange = require('../models/Exchange.js');
 
 const Products = {
 
@@ -45,15 +45,15 @@ const Products = {
 
             if (params.cap > params.quantity) throw new Error('No puedes ingresar mas tapas que porductos');
 
-            let exchange_rate = await bcv.bcvDolar();
+            let exchange = await Exchange.findByPk(1);
             let price_bs = 0
             let price_dolar = 0;
 
             if (params.is_dolar) {
                 price_dolar = params.price;
-                price_bs = params.price * exchange_rate._dolar;
+                price_bs = params.price * exchange.bcv;
             } else {
-                price_dolar = parseFloat(params.price / exchange_rate._dolar);
+                price_dolar = parseFloat(params.price / exchange.bcv);
                 price_dolar = parseFloat(price_dolar.toFixed(3));
 
                 price_bs = params.price;
@@ -94,24 +94,27 @@ const Products = {
     'ajust-products': async function () {
         try {
 
-            let products = await Product.findAll({ raw: true });
+            let products = await Product.findAll({raw: true});
 
             if (products.length == 0) {
                 throw new Error('No hay productos registrados');
             }
 
-            let exchange_rate = await bcv.bcvDolar();
-            let price_bs = 0;
+            let exchange = await Exchange.findByPk(1);
+            let price_bs = params.price;
             let price_dolar = 0;
 
             products.forEach(async product => {
 
                 if (product.is_dolar) {
-                    price_bs = product.price_dolar * exchange_rate._dolar;
+                    price_bs = product.price_dolar * exchange.bcv;
                 } else {
-                    price_dolar = parseFloat(product.price_bs / exchange_rate._dolar);
+                    price_dolar = parseFloat(product.price_bs / exchange.bcv);
                     price_dolar = price_dolar.toFixed(3);
+
                 }
+                product.price_bs = price_bs;
+                product.price_dolar = price_dolar;
 
                 await product.save();
             });
@@ -124,7 +127,7 @@ const Products = {
                 return { message: error.errors[0].message, code: 0 };
             }
             else {
-                log.error(error.errors[0].message);
+                log.error(error.message);
                 return { message: error.message, code: 0 };
             }
 
@@ -175,15 +178,15 @@ const Products = {
 
             if (product === null) throw new Error("El producto no existe");
 
-            let exchange_rate = await bcv.bcvDolar();
+            let exchange = await Exchange.findByPk(1);
             let price_bs = 0
             let price_dolar = 0;
 
             if (params.is_dolar) {
                 price_dolar = params.price;
-                price_bs = params.price * exchange_rate._dolar;
+                price_bs = params.price * exchange.bcv;
             } else {
-                price_dolar = parseFloat(params.price / exchange_rate._dolar);
+                price_dolar = parseFloat(params.price / exchange.bcv);
                 price_dolar = parseFloat(price_dolar.toFixed(3));
 
                 price_bs = params.price;
