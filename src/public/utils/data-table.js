@@ -93,6 +93,7 @@ export default Vue.component('data-table', {
             :headers="headers"
             :items="data"
             :search="search"
+            itemsPerPage="9"
         >
             <template v-slot:item.actions="{ item }">
 
