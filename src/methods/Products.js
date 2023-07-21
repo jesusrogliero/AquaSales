@@ -94,30 +94,30 @@ const Products = {
     'ajust-products': async function () {
         try {
 
-            let products = await Product.findAll({raw: true});
+            let products = await Product.findAll();
 
             if (products.length == 0) {
                 throw new Error('No hay productos registrados');
             }
 
             let exchange = await Exchange.findByPk(1);
-            let price_bs = params.price;
+            let price_bs = 0;
             let price_dolar = 0;
 
-            products.forEach(async product => {
+            for (let product of products) {
 
                 if (product.is_dolar) {
                     price_bs = product.price_dolar * exchange.bcv;
+                    product.price_bs = price_bs;
+
                 } else {
                     price_dolar = parseFloat(product.price_bs / exchange.bcv);
                     price_dolar = price_dolar.toFixed(3);
+                    product.price_dolar = price_dolar;
 
                 }
-                product.price_bs = price_bs;
-                product.price_dolar = price_dolar;
-
                 await product.save();
-            });
+            };
 
             return { message: "Precios ajustados correctamente", code: 1 };
         } catch (error) {
