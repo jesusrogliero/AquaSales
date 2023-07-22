@@ -90,6 +90,7 @@ const SaleItems = {
 			sale.total_dolar = sale.total_dolar + item.total_dolar;
 			sale.total_dolar = sale.total_dolar.toFixed(2);
 			sale.total_bs = sale.total_bs + item.total_bs;
+			sale.total_bs = sale.total_bs.toFixed(2);
 			sale.total_units = sale.total_units + item.units;
 			sale.total_caps = sale.total_caps + item.caps;
 			sale.total_liters = sale.total_liters + item.liters;
