@@ -4,3 +4,4 @@ data/data.db
 /dist
 /logs
 yarn.lock
+aqua.data
