@@ -1,7 +1,7 @@
 'use strict';
 
 export default Vue.component('snackbar-app',{
-    props: ["text", "icon", "color"],
+    props: ["text", "icon", "color", "code"],
 
     data: function(){
         return {
@@ -10,9 +10,9 @@ export default Vue.component('snackbar-app',{
     },
 
     watch: {
-        text: function(value){
+        code: function(value){
             this.snackbar = true;
-        }
+        },
     },
 
     template: `
