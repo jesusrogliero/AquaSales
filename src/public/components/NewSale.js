@@ -408,10 +408,9 @@ export default Vue.component('new-sale', {
                             v-model="client" 
                             class="mb-n6" 
                             dense 
+                            @blur="updateClientSale"
                             label="Nombre del Cliente" 
                             placeholder="Ingresa el nombre del cliente"
-                            append-icon="mdi-content-save-edit"
-                            @click:append="updateClientSale"
                             filled
                         ></v-text-field>
                     </v-col>
@@ -599,6 +598,7 @@ export default Vue.component('new-sale', {
                             <v-text-field 
                                 class="ml-3"
                                 v-model="quantity" 
+                                type="number"
                                 suffix="UNID" 
                                 label="Cantidad"
                                 size="9"
@@ -606,7 +606,7 @@ export default Vue.component('new-sale', {
                         </col>
 
                         <col cols="4">
-                            <v-btn class="ml-3 mr-3" @click="createItem" color="transparent" text style="color: green !important;">
+                            <v-btn class="ml-3 mr-3" @click="createItem" color="green" text>
                                 <v-icon>mdi-plus</v-icon>
                             </v-btn>
                         </col>
