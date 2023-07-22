@@ -74,7 +74,7 @@ let Home = Vue.component('Home', {
 				}
 				this.bcv = response;
 			} catch (error) {
-				alertApp('error', 'alert', error.message);
+				alertApp({color: "error", icon: "alert", text: error.message});
 			}
 
 		},
@@ -89,7 +89,7 @@ let Home = Vue.component('Home', {
 				}
 				this.pending_dispatch = response.pending_dispatch;
 			} catch (error) {
-				alertApp('error', 'alert', error.message);
+				alertApp({color: "error", icon: "alert", text: error.message});
 			}
 
 		},
@@ -107,7 +107,7 @@ let Home = Vue.component('Home', {
 				this.lastweek_liters_consumption = response.lastweek_liters_consumption;
 				this.lastmonth_liters_consumption = response.lastmonth_liters_consumption;
 			} catch (error) {
-				alertApp('error', 'alert', error.message);
+				alertApp({color: "error", icon: "alert", text: error.message});
 			}
 
 		},
@@ -125,7 +125,7 @@ let Home = Vue.component('Home', {
 				this.today_sales_units = response.today_sales_units;
 	
 			} catch (error) {
-				alertApp('error', 'alert', error.message);
+				alertApp({color: "error", icon: "alert", text: error.message});
 			}
 		},
 
@@ -143,7 +143,7 @@ let Home = Vue.component('Home', {
 				this.lastweek_sales_units = response.lastweek_sales_units;
 
 			} catch (error) {
-				alertApp('error', 'alert', error.message);
+				alertApp({color: "error", icon: "alert", text: error.message});
 			}
 		},
 
@@ -160,7 +160,7 @@ let Home = Vue.component('Home', {
 				this.lastmonth_sales_units = response.lastmonth_sales_units;
 
 			} catch (error) {
-				alertApp('error', 'alert', error.message);
+				alertApp({color: "error", icon: "alert", text: error.message});
 			}
 		}
 	},
@@ -171,14 +171,12 @@ let Home = Vue.component('Home', {
 			<v-container class="fill-height  mb-n2" fluid>
 				<v-row>
 					<v-col cols="12" lg="6" md="6" sm="6">
-						
-						<h3>
 						<admin-autenticate/>
+						<h3>
 							<v-icon size="30" class="mr-2">mdi-briefcase-variant-outline</v-icon>
 							{{mensaje}} | BCV: {{bcv}} BsS
 						</h3>
-					</v-col>
-					
+					</v-col>		
 				</v-row>
 			</v-container>
 		
