@@ -62,6 +62,23 @@ export default Vue.component('dispatched-sales', {
             }
         },
 
+        async destroy() {
+            try {
+                let response = await execute('destroy-sale', this.id);
+
+                if (response.code == 0)
+                    throw new Error(response.message);
+
+                alertApp({ color: "success", icon: "check", text: response.message });
+                await this.$refs.dataTable.getData();
+
+            } catch (error) {
+                alertApp({ color: "error", icon: "alert", text: error.message });
+            } finally {
+                this.dialog = null;
+            }
+        },
+
         closeDialog() {
             this.dialog = null;
         },
@@ -70,6 +87,21 @@ export default Vue.component('dispatched-sales', {
 
     template: `
     <div>
+
+        <!-- Dialogo de confirmacion antes de eliminar -->
+        <dialog-confirm :active="dialog == 'delete'" :confirm="destroy" :cancel="closeDialog">
+            
+            <template v-slot:dialog-title>
+            <span class="title">Eliminar Esta Venta?</span>
+            </template>
+            
+            <template v-slot:dialog-content>
+                <span class="headline">
+                    Esta seguro de que desea eliminar esta Venta?
+                </span>
+            </template>
+        </dialog-confirm>
+
 
         <data-table 
             ref="dataTable"
