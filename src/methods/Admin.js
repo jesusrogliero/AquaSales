@@ -13,7 +13,7 @@ const Admin = {
      */
     'get-admin-name': async function () {
         try {
-            let data = await AdminModel.findByPk(1,{
+            let data = await AdminModel.findByPk(1, {
                 attributes: ['name'],
                 raw: true
             });
@@ -36,7 +36,32 @@ const Admin = {
 
             let isPassowrd = await Hash.checkHash(password, admin.password);
 
+            if(!isPassowrd) {
+                throw new Error('Contraseña incorrecta');
+            }
+            
+            admin.isAutenticate = true;
+            await admin.save();
+
             return isPassowrd;
+        } catch (error) {
+            log.error(error.message);
+            return { message: error.message, code: 0 };
+        }
+    },
+
+    /**
+     * cierre de sesion
+     * 
+     * @returns {string} message
+     */
+    'logout': async function () {
+        try {
+            let admin = await AdminModel.findByPk(1);
+            admin.isAutenticate = false;
+            await admin.save();
+
+            return "Sesión Cerrada";
         } catch (error) {
             log.error(error.message);
             return { message: error.message, code: 0 };
