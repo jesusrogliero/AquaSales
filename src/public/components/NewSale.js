@@ -398,7 +398,7 @@ export default Vue.component('new-sale', {
     
     <v-container v-if="sale_id != null">
         <v-row>
-            <v-col cols="12" md="6" lg="4" class="card-info-invoice">
+            <v-col cols="12" md="6" lg="3" class="card-info-invoice">
                 <v-row>
                     <v-col cols="12" class="text-center">
                         <h3>Detalles de la Venta</h3>
@@ -467,14 +467,14 @@ export default Vue.component('new-sale', {
             </v-col>
 
 
-            <v-col cols="12" md="6" lg="4" class="card-info-invoice">
+            <v-col cols="12" md="6" lg="5" class="card-info-invoice">
                 <v-row>
                     <v-col cols="12" class="text-center">
                         <h3>Detalles del Pago</h3>
                     </v-col>
 
                     <v-col cols="6">
-                        <v-text-field v-model="mobile_payment" class="mb-n6" dense label="Pago Movil" suffix="BsS" filled></v-text-field>
+                        <v-text-field v-model="mobile_payment" class="mb-n6" type="number" dense label="Pago Movil" suffix="BsS" filled></v-text-field>
                     </v-col>
 
                     <v-col cols="6">
@@ -482,11 +482,11 @@ export default Vue.component('new-sale', {
                     </v-col>
 
                     <v-col cols="6">
-                        <v-text-field v-model="cash_dollar" dense class="mb-n6" label="Efectivo" suffix="$"  filled></v-text-field>
+                        <v-text-field v-model="cash_dollar" dense class="mb-n6" type="number" label="Efectivo" suffix="$"  filled></v-text-field>
                     </v-col>
 
                     <v-col cols="6">
-                        <v-text-field v-model="cash_bolivares" dense class="mb-n6" label="Efectivo BsS" suffix="BsS"  filled></v-text-field>
+                        <v-text-field v-model="cash_bolivares" dense class="mb-n6" type="number"type="number" label="Efectivo BsS" suffix="BsS"  filled></v-text-field>
                     </v-col>
 
                     <v-col cols="6">
@@ -546,7 +546,7 @@ export default Vue.component('new-sale', {
                         </v-col>
 
                         <v-col cols="12" lg="6" md="6" sm="6"  class="mt-2">
-                            <v-text-field v-model="dispatch" suffix="UNID" :rules="numberRule" label="Cantidad a Despachar" required
+                            <v-text-field v-model="dispatch" suffix="UNID" :rules="numberRule" type="number" label="Cantidad a Despachar" required
                                 placeholder="Cuanto desea despachar"></v-text-field>
                         </v-col>
                     </v-row>
