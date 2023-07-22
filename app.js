@@ -3,43 +3,12 @@ const { loadMethods } = require('./methods');
 const dirs = require('./dirs');
 const path = require('path');
 const appdata = require('appdata-path');
-const log = require('electron-log').transports.file.resolvePath = () => path.join(appdata('sbms'), 'sbms-log.log');
+const backup = require('./utils/backup.js');
+require('update-electron-app')()
+const log = require('electron-log').transports.file.resolvePath = () => path.join(appdata('AquaSales'), 'AquaSales.log');
 
 // funcion de inicio de la aplicacion
 const main = function () {
-
-	const nodemailer = require("nodemailer");
-
-	let sender = nodemailer.createTransport({
-		service: 'gmail',
-		auth: {
-			user: 'othebestlevel@gmail.com',
-			pass: 'qhqkayvsbxruball'
-		}
-	});
-
-	let mail = {
-		from: "othebestlevel@gmail.com",
-		to: "othebestlevel@gmail.com",
-		subject: "Copia de Seguridad AquaSales",
-		text: "Base de datos del sistema de la embotelladora",
-		attachments: [
-			{
-				filename: 'aqua.data',
-				path: __dirname + '/aqua.data',
-				cid: 'aqua.data'
-			}
-		]
-	};
-
-	sender.sendMail(mail, function (error, info) {
-		if (error) {
-			console.log(error);
-		} else {
-			console.log("Email sent successfully: "
-				+ info.response);
-		}
-	});
 
 	// cargando ventana
 	const win = new BrowserWindow({
@@ -66,8 +35,10 @@ const main = function () {
 
 	win.once('ready-to-show', () => {
 		win.show();
-	});
 
+		// ejecuto el backup del sistema
+		backup();
+	});
 };
 
 app.whenReady().then(() => main());
