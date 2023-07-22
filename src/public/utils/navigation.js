@@ -58,9 +58,9 @@ export default Vue.component('navigation', {
         </v-btn>
 
         <v-btn color="blue lighten-3" elevation="0" @click="toPayments">
-        <v-icon>mdi-currency-usd</v-icon>
-        <span>Pagos</span>  
-    </v-btn>
+            <v-icon>mdi-currency-usd</v-icon>
+            <span>Pagos</span>  
+        </v-btn>
 
     </v-app-bar>
     `
