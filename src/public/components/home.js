@@ -1,6 +1,7 @@
 'use strict'
 
 import '../utils/card-dashboard.js';
+import '../components/AdminAutenticate.js';
 
 // componente home
 let Home = Vue.component('Home', {
@@ -170,12 +171,9 @@ let Home = Vue.component('Home', {
 			<v-container class="fill-height  mb-n2" fluid>
 				<v-row>
 					<v-col cols="12" lg="6" md="6" sm="6">
-
-						<h3>
-						<v-btn icon >
-							<v-icon size="30">mdi-account-lock-open-outline</v-icon>
-						</v-btn>
 						
+						<h3>
+						<admin-autenticate/>
 							<v-icon size="30" class="mr-2">mdi-briefcase-variant-outline</v-icon>
 							{{mensaje}} | BCV: {{bcv}} BsS
 						</h3>
