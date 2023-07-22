@@ -200,12 +200,12 @@ export default Vue.component('products', {
                         </v-col>
 
                         <v-col cols="12" lg="6" md="6" sm="6"  class="mt-2">
-                            <v-text-field v-model="liters" :rules="numberRule" label="Litros" required
+                            <v-text-field v-model="liters" :rules="numberRule" type="number" label="Litros" required
                                 placeholder="Ingresa el volumen de la botella" suffix="Lt"></v-text-field>
                         </v-col>
 
                         <v-col cols="12" lg="6" md="6" sm="6"  class="mt-2">
-                            <v-text-field v-model="quantity" suffix="UNID" :rules="numberRule" label="Cantidad" required
+                            <v-text-field v-model="quantity" suffix="UNID" :rules="numberRule" type="number" label="Cantidad" required
                                 placeholder="Ingresa la cantidad del producto"></v-text-field>
                         </v-col>
 
@@ -215,6 +215,7 @@ export default Vue.component('products', {
                                 v-model="price" 
                                 :suffix="is_dolar ? '$' : 'BsS'"
                                 :rules="numberRule"
+                                type="number"
                                 label="Precio"
                                 required
                                 placeholder="Ingresa el precio"
@@ -224,7 +225,7 @@ export default Vue.component('products', {
                         </v-col>
 
                         <v-col cols="12" lg="6" md="6" sm="6"  class="mt-2">
-                        <v-text-field v-model="cap" suffix="UNID" :rules="numberRule" label="Cantidad de Tapas" required
+                        <v-text-field v-model="cap" suffix="UNID" :rules="numberRule" type="number" label="Cantidad de Tapas" required
                             placeholder="Ingresa la cantidad de tapas"></v-text-field>
                         </v-col>
                     </v-row>
