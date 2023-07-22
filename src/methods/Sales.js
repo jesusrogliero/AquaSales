@@ -125,7 +125,7 @@ const Sales = {
             if (empty(params.client)) throw new Error('Debes definir un cliente');
 
             let sale = await Sale.findByPk(params.sale_id);
-            sale.client = params.client;
+            sale.client = params.client.replace(/\b\w/g, l => l.toUpperCase());
             await sale.save();
 
             return { message: "Registrado con exito", code: 1 };
@@ -170,6 +170,10 @@ const Sales = {
 
             if (sale.state_id == 2) throw new Error('Esta Venta ya fue procesada');
             if (sale.state_id == 3) throw new Error('Esta Venta ya fue Despachada');
+
+            if(sale.total_units === 0) {
+                throw new Error('No has agregado nada a la venta');
+            }
 
             const regex = /^[+]?\d*\.?\d+$/;
 
