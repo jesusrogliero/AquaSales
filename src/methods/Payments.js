@@ -124,63 +124,6 @@ const Payments = {
             log.error(error.message);
             return { message: error.message, code: 0 };
         }
-    },
-
-
-    /**
-     * funcion que actualiza un pago
-     * 
-     * @param {*} params 
-     * @returns message
-     */
-    'update-payment': async function (params) {
-
-        try {
-            if (params.mobile_payment < 0) throw new Error("El monto no puede ser negativo");
-            if (params.cash_dollar < 0) throw new Error("El monto no puede ser negativo");
-            if (params.cash_bolivares < 0) throw new Error("El monto no puede ser negativo");
-
-            let payment = await Payment.findByPk(params.id);
-
-            if (payment === null) throw new Error("El pago no existe");
-
-            payment.mobile_payment = params.mobile_payment;
-            payment.cash_bolivares = params.cash_bolivares;
-            payment.cash_dollar = params.cash_dollar;
-            payment.reference = params.reference;
-
-            await payment.save();
-
-            return { message: "Actualizado Correctamente", code: 1 };
-
-        } catch (error) {
-            log.error(error.message);
-            return { message: error.message, code: 0 };
-        }
-    },
-
-
-
-    /**
-     * funcion que elimina un pago
-     * 
-     * @param {*} params 
-     * @returns message
-     */
-    'destroy-payment': async function (id) {
-        try {
-            let payment = await Payment.findByPk(id);
-
-            if (payment === null) throw new Error("Este pago no existe");
-
-            payment.destroy();
-
-            return { message: "Eliminado Correctamente", code: 1 };
-
-        } catch (error) {
-            log.error(error.message);
-            return { message: error.message, code: 0 };
-        }
     }
 };
 
