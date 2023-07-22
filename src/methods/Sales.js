@@ -7,6 +7,7 @@ const Payment = require('../models/Payment.js');
 const empty = require('../helpers/empty.js');
 const log = require('electron-log');
 const sequelize = require('sequelize');
+const isAuth = require('../helpers/auth.js');
 
 const Sales = {
 
@@ -94,10 +95,9 @@ const Sales = {
      */
     'create-sale': async function (params = {}) {
         try {
-
             let sale = await Sale.create(params);
-
             return { message: "Nueva Venta Creada", code: 1, sale_id: sale.id };
+
         } catch (error) {
 
             if (!empty(error.errors)) {
@@ -246,7 +246,7 @@ const Sales = {
     },
 
     /**
-     * funcion que elimina un producto
+     * funcion que elimina una venta
      * 
      * @param {*} params 
      * @returns message
@@ -258,13 +258,20 @@ const Sales = {
 
             if (empty(sale)) throw new Error("Esta venta no existe");
 
-            if (sale.state_id == 2) throw new Error('Esta Venta ya fue procesada');
-            if (sale.state_id == 3) throw new Error('Esta Venta ya fue Despachada');
+            if(sale.state_id != 1) {
+                if(! await isAuth()) throw new Error('Usted no esta Autorizado para borrar esta venta');
+            }
 
             await SaleItem.destroy({
                 where: {
                     sale_id: sale.id
                 },
+            });
+
+            await Payment.destroy( {
+                where: {
+                    sale_id: sale.id
+                }
             });
 
             await sale.destroy();
