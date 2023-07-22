@@ -29,6 +29,7 @@ let vue = new Vue({
 			alert: false,
 			textAlert: "",
 			colorAlert: "",
+			codeAlert: 0,
 			iconAlert: null,
 			timeAlert: null,
 
@@ -55,6 +56,7 @@ let vue = new Vue({
 			this.colorAlert = params.code == null ? params.color : "info";
 			this.textAlert = params.text != null ? params.text : "";
 			this.iconAlert = params.icon;
+			this.codeAlert++;
 
 		},
 	},
