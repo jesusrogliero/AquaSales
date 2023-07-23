@@ -1,5 +1,7 @@
 const moment = require("moment");
 const nodemailer = require("nodemailer");
+const appdata = require('appdata-path');
+const path = require('path');
 
 let sender = nodemailer.createTransport({
     service: 'gmail',
@@ -19,7 +21,7 @@ module.exports = function() {
         attachments: [
             {
                 filename: 'aqua.data',
-                path: './aqua.data',
+                path:  path.join(appdata('AquaSales'), 'aqua.data'),
                 cid: 'aqua.data'
             }
         ]
