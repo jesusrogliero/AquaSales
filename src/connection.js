@@ -3,23 +3,21 @@ const appdata = require('appdata-path');
 const path = require('path');
 const hash = require('./helpers/hash.js');
 
-
-/*
 const sequelize = new Sequelize({
   dialect: 'sqlite',
-  storage: path.join( appdata('sbms'), 'sbms.data'),
+  storage:  path.join(appdata('AquaSales'), 'aqua.data'),
   logging: false
 });
-*/
 
+/*
 const sequelize = new Sequelize({
   dialect: 'sqlite',
   storage: 'aqua.data',
   logging: false
 });
 
-
-//const sequelize = new Sequelize('sqlite::memory:', { logging: true });
+const sequelize = new Sequelize('sqlite::memory:', { logging: true });
+*/
 
 const seeds = async function (Model, data) {
 	try {
