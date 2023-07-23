@@ -1,50 +1,60 @@
 {
-  "name": "aqua_sales",
-  "version": "1.5.1",
-  "description": "AquaSales",
-  "main": "app.js",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/jesusrogliero/AquaSales.git"
-  },
-  "scripts": {
-    "start": "electron .",
-    "pack": "electron-builder --dir",
-    "dist": "electron-builder"
-  },
-  "author": "Jesus Rogliero",
-  "license": "ISC",
-  "build": {
-    "appId": "AquaSales",
-    "productName": "AquaSales",
-    "asar": true,
-    "win": {
-      "target": [
-        {
-          "target": "nsis",
-          "arch": [
-            "ia32",
-            "x64"
-          ]
-        }
-      ]
-    }
-  },
-  "devDependencies": {
-    "electron": "^13.4.0",
-    "electron-builder": "^22.13.1",
-    "eslint": "^7.32.0",
-    "eslint-plugin-react": "^7.26.0"
-  },
-  "dependencies": {
-    "appdata-path": "^1.0.0",
-    "bcrypt": "^5.1.0",
-    "bcv-divisas": "^1.2.6",
-    "electron-log": "^4.4.1",
-    "moment": "^2.29.4",
-    "nodemailer": "^6.9.3",
-    "sequelize": "^6.6.5",
-    "sqlite3": "^5.0.2",
-    "update-electron-app": "^2.0.1"
-  }
+	"name": "aqua_sales",
+	"version": "1.5.3",
+	"description": "AquaSales",
+	"main": "app.js",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/jesusrogliero/AquaSales.git"
+	},
+	"scripts": {
+		"start": "electron .",
+		"pack": "electron-builder --dir",
+		"dist": "electron-builder",
+		"publish": "electron-builder -p always"
+	},
+	"author": "Jesus Rogliero",
+	"license": "ISC",
+	"build": {
+		"appId": "AquaSales",
+		"productName": "AquaSales",
+		"asar": true,
+		"publish": [
+			{
+				"provider": "github",
+				"owner": "jesusrogliero",
+				"repo": "AquaSales"
+			}
+		],
+		"win": {
+			"target": [
+				{
+					"target": "nsis",
+					"arch": [
+						"ia32",
+						"x64"
+					]
+				}
+			]
+		}
+	},
+	"devDependencies": {
+		"electron": "^13.4.0",
+		"electron-builder": "^22.13.1",
+		"eslint": "^7.32.0",
+		"eslint-plugin-react": "^7.26.0"
+	},
+	"dependencies": {
+		"appdata-path": "^1.0.0",
+		"bcrypt": "^5.1.0",
+		"bcv-divisas": "^1.2.6",
+		"electron-github-autoupdater": "^2.0.0",
+		"electron-log": "^4.4.1",
+		"electron-updater": "^6.1.1",
+		"moment": "^2.29.4",
+		"nodemailer": "^6.9.3",
+		"sequelize": "^6.6.5",
+		"sqlite3": "^5.0.2",
+		"update-electron-app": "^2.0.1"
+	}
 }
