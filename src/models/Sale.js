@@ -1,5 +1,6 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require('../connection.js');
+const SaleState = require('./SaleState.js');
 
 const Sale = sequelize.define("sales", {
 
@@ -9,7 +10,41 @@ const Sale = sequelize.define("sales", {
         primaryKey: true,
     },
 
-    total: {
+    client: {
+        type: DataTypes.TEXT,
+        allowNull: false,
+        defaultValue: 'Generico'
+    },
+
+    state_id: {
+        type: DataTypes.BIGINT,
+        allowNull: false,
+        defaultValue: 1,
+        references: {
+            model: "sales_states",
+            key: "id"
+        },
+    },
+
+    pending_dispatch: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 0,
+    },
+
+    total_dispatched: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 0
+    },
+
+    total_dolar: {
+        type: DataTypes.DECIMAL,
+        allowNull: false,
+        defaultValue: 0,
+    },
+
+    total_bs: {
         type: DataTypes.DECIMAL,
         allowNull: false,
         defaultValue: 0,
@@ -45,6 +80,6 @@ const Sale = sequelize.define("sales", {
 
 });
 
-Invoice.belongsTo(Client, { foreignKey: 'client_id' });
+Sale.belongsTo(SaleState, { foreignKey: 'state_id' });
 
 module.exports = Sale;

@@ -1,7 +1,7 @@
 'use strict';
 
 export default Vue.component('snackbar-app',{
-    props: ["text", "icon", "color"],
+    props: ["text", "icon", "color", "code"],
 
     data: function(){
         return {
@@ -10,17 +10,17 @@ export default Vue.component('snackbar-app',{
     },
 
     watch: {
-        text: function(value){
+        code: function(value){
             this.snackbar = true;
-        }
+        },
     },
 
     template: `
         <v-snackbar 
             v-model = "snackbar"  
             :color="color"
-            timeout = "4000"
-            :top = "true"
+            timeout = "2500"
+            :top = "false"
             :vertical="'vertical'"
         >
             
@@ -29,7 +29,7 @@ export default Vue.component('snackbar-app',{
                     mdi-{{ icon }}
                 </v-icon>
                 <span class="text-h6"  style = "margin-left: 5px;">
-                    {{ text.message }}
+                    {{ text }}
                 </span>
             </div>
         </v-snackbar>

@@ -1,17 +1,12 @@
 'use strict';
 
 let routes = [
-    {path: "/", component: () => import("./components/home.js") },
-    {path: "/taxes", component: () => import("./components/taxes.js") },
-    {path: "/clients", component: () => import("./components/clients.js") },
-    {path: "/currencies", component: () => import("./components/currencies.js") },
-    {path: "/products", component: () => import("./components/products.js") },
-    {path: "/prices", component: () => import("./components/prices.js") },
-    {path: "/purchases_orders", component: () => import("./components/purchasesOrders.js") },
-    {path: "/providers", component: () => import("./components/providers.js") },
-    {path: "/costs", component: () => import("./components/costs.js") },
-    {path: "/invoices", component: () => import("./components/invoices.js") },
-
+    {path: "/", component: () => import("./components/Home.js") },
+    {path: "/products", component: () => import("./components/Products.js") },
+    {path: "/sales", component: () => import("./components/Sales.js") },
+    {path: "/payments", component: () => import("./components/Payments.js") },
+    {path: "/new_sale", component: () => import("./components/NewSale.js") },
+    {path: "/dispatched_sales", component: () => import("./components/DispatchedSales.js") },
 ];
 
 // exportando rutas designadas

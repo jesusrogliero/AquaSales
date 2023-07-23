@@ -1,55 +1,52 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-  <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
-  <script src="./resources/javascript/vue-router.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+	<link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+	<link href="https://cdn.jsdelivr.net/npm/@mdi/font@6.x/css/materialdesignicons.min.css" rel="stylesheet">
+	<link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
+	<link rel="stylesheet" href="./resources/styles/card.css">
 
-
-  <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
-
-  <title>Sistema Administrativo</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+	<title>AquaSales</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
 </head>
+
 <body>
-  <div id="app">
-    <v-app>
+	<div id="app">
+		<v-app>
 
-      <!-- Alerta de la app -->
-      <snackbar-app
-        :color = "colorAlert"
-        :text = "textAlert"
-        :icon = "iconAlert"
-      ></snackbar-app>
-    
-      <navigation></navigation>
+			<navigation></navigation>
 
-      <v-main>
-        <v-container fluid>
-            <keep-alive>
-              <router-view/>
-            </keep-alive>
-        </v-container>
-      </v-main>
+			<v-main>
+				<v-container fluid>
+					<router-view />
+				</v-container>
+			</v-main>
 
-      </v-app>
-  </div>
+			<!-- Alerta de la app -->
+			<snackbar-app :color="colorAlert" :text="textAlert" :icon="iconAlert" :code="codeAlert"></snackbar-app>
 
-  <script type="module">
-    const execute = require('../javascript/execute');
-    window.execute = execute;
-  </script>
-  <script type="module" src="./main.js"></script>
+		</v-app>
+	</div>
 
-  
-  <script>
-    // funcion que activa la alerta
-    function alertApp(params = {}){
-      appInstance.activeAlert(params);
-    }
-  </script>
+	<script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
+	<script src="./resources/javascript/vue-router.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+	
+	<script type="module">
+		const execute = require('../javascript/execute');
+		window.execute = execute;
+	</script>
+	<script type="module" src="./main.js"></script>
+
+
+	<script>
+		// funcion que activa la alerta
+		function alertApp(params = {}) {
+			appInstance.activeAlert(params);
+		}
+	</script>
 
 </body>
+
 </html>
