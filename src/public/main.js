@@ -45,7 +45,7 @@ let vue = new Vue({
 			}
 			
 		} catch (error) {
-			alertApp('error', 'alert', error.message);
+			alertApp({color: "error", icon: "alert", text: error.message});
 		}
 	},
 
