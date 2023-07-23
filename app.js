@@ -1,11 +1,15 @@
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, dialog } = require('electron');
+const {NsisUpdater, autoUpdater }= require('electron-updater');
+
 const { loadMethods } = require('./methods');
 const dirs = require('./dirs');
 const path = require('path');
 const appdata = require('appdata-path');
+
 const backup = require('./utils/backup.js');
-require('update-electron-app')()
 const log = require('electron-log').transports.file.resolvePath = () => path.join(appdata('AquaSales'), 'AquaSales.log');
+
+
 
 // funcion de inicio de la aplicacion
 const main = function () {
@@ -33,11 +37,45 @@ const main = function () {
 		else console.error(error);
 	});
 
-	win.once('ready-to-show', () => {
+	win.once('ready-to-show', async () => {
 		win.show();
+
+		// actualizador
+		await new NsisUpdater().checkForUpdatesAndNotify();
 
 		// ejecuto el backup del sistema
 		backup();
+	});
+
+	autoUpdater.on('checking-for-update', () => {
+		win.webContents.send('message', 'Checking for update...');
+	});
+
+	autoUpdater.on('update-available', (info) => {
+		win.webContents.send('message', 'Update available.');
+	});
+
+	autoUpdater.on('update-not-available', (info) => {
+		win.webContents.send('Update not available.');
+	});
+
+	autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
+		const dialogOpts = {
+			type: 'info',
+			buttons: ['Restart', 'Later'],
+			title: 'Application Update',
+			message: process.platform === 'win32' ? releaseNotes : releaseName,
+			detail:
+				'A new version has been downloaded. Restart the application to apply the updates.'
+		}
+
+		dialog.showMessageBox(dialogOpts).then((returnValue) => {
+			if (returnValue.response === 0) autoUpdater.quitAndInstall()
+		})
+	});
+
+	autoUpdater.on('error', (err) => {
+		win.webContents.send('Error in auto-updater. ' + err);
 	});
 };
 
