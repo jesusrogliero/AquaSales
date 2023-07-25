@@ -16,7 +16,7 @@ const Exchange = sequelize.define('exchange', {
 		defaultValue: 0
 	},
 	
-	updatedAt: {
+	date: {
 		type: DataTypes.DATEONLY,
 		allowNull: false
 	}
