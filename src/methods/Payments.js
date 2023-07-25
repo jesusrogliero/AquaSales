@@ -105,21 +105,20 @@ const Payments = {
      */
     'show-bcv': async function () {
         try {
-
             let today = moment().format("YYYY-MM-DD");
-
             let exchange = await Exchange.findByPk(1);
 
-            if(exchange.updatedAt != today) {
+            if (exchange.date != today) {
                 let bcv = await BCV.bcvDolar();
-                bcv =  parseFloat(bcv._dolar);
+                bcv = parseFloat(bcv._dolar);
 
                 exchange.bcv = bcv;
+                exchange.date = today;
                 await exchange.save();
             }
 
             return exchange.bcv;
-          
+
         } catch (error) {
             log.error(error.message);
             return { message: error.message, code: 0 };
