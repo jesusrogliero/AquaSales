@@ -486,7 +486,7 @@ export default Vue.component('new-sale', {
                     </v-col>
 
                     <v-col cols="6">
-                        <v-text-field v-model="cash_bolivares" dense class="mb-n6" type="number"type="number" label="Efectivo BsS" suffix="BsS"  filled></v-text-field>
+                        <v-text-field v-model="cash_bolivares" dense class="mb-n6" type="number" label="Efectivo BsS" suffix="BsS"  filled></v-text-field>
                     </v-col>
 
                     <v-col cols="6">
