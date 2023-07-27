@@ -5,3 +5,4 @@ data/data.db
 /logs
 yarn.lock
 aqua.data
+publish.sh
