@@ -210,46 +210,34 @@ let Home = Vue.component('Home', {
 					</v-col>
 
 					<v-col cols="12" sm="6" md="4" lg="4">
-					<v-card :loading="loading" color="#ECEFF1">
-						<v-card-title>Volumen Despachado Hoy</v-card-title>
-						<v-card-text>
-							<v-row>
-								<h1 class="ml-2">{{today_liters_consumption == null ? 0 : today_liters_consumption }} LT</h1>
-								<v-spacer></v-spacer>
-								<v-icon size="80" class="mr-2 mt-n9" color="green ">mdi-trending-up</v-icon>
-							</v-row>
-						</v-card-text>
-					</v-card>
-				</v-col>
-
-				<v-col cols="12" sm="6" md="4" lg="4">
-					<v-card :loading="loading" color="#ECEFF1">
-						<v-card-title>Volumen Despachado esta Semana</v-card-title>
-						<v-card-text>
-							<v-row>
-								<h1 class="ml-2">{{lastweek_liters_consumption == null ? 0 : lastweek_liters_consumption }} LT</h1>
-								<v-spacer></v-spacer>
-								<v-icon size="80" class="mr-2 mt-n9" color="green ">mdi-trending-up</v-icon>
-							</v-row>
-						</v-card-text>
-					</v-card>
-				</v-col>
-
-				<v-col cols="12" sm="6" md="4" lg="4">
-					<v-card :loading="loading" color="#ECEFF1">
-						<v-card-title>Volumen Despachado Este mes</v-card-title>
-						<v-card-text>
-							<v-row>
-								<h1 class="ml-2">{{lastmonth_liters_consumption == null ? 0 : lastmonth_liters_consumption }} LT</h1>
-								<v-spacer></v-spacer>
-								<v-icon size="80" class="mr-2 mt-n9" color="green ">mdi-trending-up</v-icon>
-							</v-row>
-						</v-card-text>
-					</v-card>
-				</v-col>
+						<card-dashboard
+							title="Volumen Despachado Hoy"
+							:data="today_liters_consumption"
+							icon="mdi-trending-up"
+							symbol="LT"
+						/>
+					</v-col>
 
 					<v-col cols="12" sm="6" md="4" lg="4">
-						<v-card :loading="loading" color="#ECEFF1">
+						<card-dashboard
+							title="Volumen Despachado esta Semana"
+							:data="lastweek_liters_consumption"
+							icon="mdi-trending-up"
+							symbol="LT"
+						/>
+					</v-col>
+
+					<v-col cols="12" sm="6" md="4" lg="4">
+						<card-dashboard
+							title="Volumen Despachado Este mes"
+							:data="lastmonth_liters_consumption"
+							icon="mdi-trending-up"
+							symbol="LT"
+						/>
+					</v-col>
+
+					<v-col cols="12" sm="6" md="4" lg="4">
+						<v-card  color="#ECEFF1">
 							<v-card-title>Vendidos Hoy</v-card-title>
 							<v-card-text>
 								<v-row>
@@ -267,7 +255,7 @@ let Home = Vue.component('Home', {
 					</v-col>
 
 					<v-col cols="12" sm="6" md="4" lg="4">
-						<v-card :loading="loading" color="#ECEFF1">
+						<v-card  color="#ECEFF1">
 							<v-card-title>Vendidos Esta Semana</v-card-title>
 							<v-card-text>
 								<v-row>
@@ -285,7 +273,7 @@ let Home = Vue.component('Home', {
 					</v-col>
 
 					<v-col cols="12" sm="6" md="4" lg="4">
-						<v-card :loading="loading" color="#ECEFF1">
+						<v-card  color="#ECEFF1">
 							<v-card-title>Pendientes Despacho</v-card-title>
 							<v-card-text>
 								<v-row>
