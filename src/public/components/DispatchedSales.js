@@ -34,8 +34,7 @@ export default Vue.component('dispatched-sales', {
                 { text: 'Litros', value: 'liters' },
                 { text: 'Tapa', value: 'caps' },
                 { text: 'Total en BsS', value: 'total_bs' },
-                { text: 'Total en $', value: 'total_dolar' },
-                { text: 'Acción', value: 'actions' },
+                { text: 'Total en $', value: 'total_dolar' }
             ],
 
             title_items: 'Articulos Despachados',
