@@ -6,3 +6,4 @@ data/data.db
 yarn.lock
 aqua.data
 publish.sh
+credentials.json
