@@ -5,6 +5,7 @@ const log = require('electron-log');
 const sequelize = require("../connection.js");
 const { Op } = require('sequelize');
 const moment = require('moment');
+const reportErrors = require('../helpers/reportErrors.js');
 
 const Metrics = {
 
@@ -25,6 +26,7 @@ const Metrics = {
             return data[0];
         } catch (error) {
             log.error(error.message);
+            reportErrors(error);
             return { message: error.message, code: 0 };
         }
     },
@@ -85,6 +87,7 @@ const Metrics = {
             };
         } catch (error) {
             log.error(error.message);
+            reportErrors(error);
             return { message: error.message, code: 0 };
         }
     },
@@ -110,6 +113,7 @@ const Metrics = {
 
             return data[0];
         } catch (error) {
+            reportErrors(error);
             log.error(error.message);
             return { message: error.message, code: 0 };
         }
@@ -144,6 +148,7 @@ const Metrics = {
 
         } catch (error) {
             log.error(error.message);
+            reportErrors(error);
             return { message: error.message, code: 0 };
         }
     },
@@ -178,6 +183,7 @@ const Metrics = {
 
         } catch (error) {
             log.error(error.message);
+            reportErrors(error);
             return { message: error.message, code: 0 };
         }
     },

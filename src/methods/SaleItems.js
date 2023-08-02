@@ -6,6 +6,7 @@ const log = require('electron-log');
 const SaleItem = require('../models/SaleItem.js');
 const Sale = require('../models/Sale.js');
 const Product = require('../models/Product.js');
+const reportErrors = require('../helpers/reportErrors.js');
 
 const SaleItems = {
 
@@ -41,6 +42,7 @@ const SaleItems = {
 
 		} catch (error) {
 			log.error(error);
+			reportErrors(error);
 			return { message: error.message, code: 0 };
 		}
 	},
@@ -105,6 +107,7 @@ const SaleItems = {
 				return { message: error.errors[0].message, code: 0 };
 			} else {
 				log.error(error);
+				reportErrors(error);
 				return { message: error.message, code: 0 };
 			}
 
@@ -128,6 +131,7 @@ const SaleItems = {
 
 		} catch (error) {
 			log.error(error);
+			reportErrors(error);
 			return { message: error.message, code: 0 };
 		}
 	},
@@ -172,6 +176,7 @@ const SaleItems = {
 
 		} catch (error) {
 			log.error(error);
+			reportErrors(error);
 			return { message: error.message, code: 0 };
 		}
 	},
@@ -210,6 +215,7 @@ const SaleItems = {
 
 		} catch (error) {
 			log.error(error);
+			reportErrors(error);
 			return { message: error.message, code: 0 };
 		}
 	}
