@@ -1,7 +1,7 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../connection');
 
-const Exchange = sequelize.define('exchange', {
+const BackupDrive = sequelize.define('backup_drive', {
 
 	id: {
 		type: DataTypes.INTEGER,
@@ -10,15 +10,11 @@ const Exchange = sequelize.define('exchange', {
 		primaryKey: true
 	},
 
-	bcv: {
-		type: DataTypes.DECIMAL,
+	file_id: {
+		type: DataTypes.TEXT,
 		allowNull: false,
-		defaultValue: 0
+		defaultValue: ''
 	},
-	
-	date: {
-		type: DataTypes.DATEONLY,
-		allowNull: false
-	}
 });
-module.exports = Exchange;
+
+module.exports = BackupDrive;

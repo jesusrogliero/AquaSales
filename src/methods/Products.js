@@ -6,6 +6,7 @@ const empty = require('../helpers/empty.js');
 const log = require('electron-log');
 const Exchange = require('../models/Exchange.js');
 const isAuth = require('../helpers/auth.js');
+const reportErrors = require('../helpers/reportErrors.js');
 
 const Products = {
 
@@ -29,6 +30,7 @@ const Products = {
             });
         } catch (error) {
             log.error(error.message);
+            reportErrors(error);
             return { message: error.message, code: 0 };
         }
     },
@@ -78,6 +80,7 @@ const Products = {
             }
             else {
                 log.error(error.message);
+                reportErrors(error);
                 return { message: error.message, code: 0 };
             }
 
@@ -121,6 +124,7 @@ const Products = {
 
             return { message: "Precios ajustados correctamente", code: 1 };
         } catch (error) {
+            reportErrors(error);
 
             if (!empty(error.errors)) {
                 log.error(error.errors[0].message);
@@ -153,6 +157,7 @@ const Products = {
 
         } catch (error) {
             log.error(error.message);
+            reportErrors(error);
             return { message: error.message, code: 0 };
         }
     },
@@ -206,6 +211,7 @@ const Products = {
 
         } catch (error) {
             log.error(error.message);
+            reportErrors(error);
             return { message: error.message, code: 0 };
         }
     },
@@ -232,6 +238,7 @@ const Products = {
 
         } catch (error) {
             log.error(error.message);
+            reportErrors(error);
             return { message: error.message, code: 0 };
         }
     }

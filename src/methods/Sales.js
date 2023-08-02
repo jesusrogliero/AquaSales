@@ -8,6 +8,7 @@ const empty = require('../helpers/empty.js');
 const log = require('electron-log');
 const sequelize = require('sequelize');
 const isAuth = require('../helpers/auth.js');
+const reportErrors = require('../helpers/reportErrors.js');
 
 const Sales = {
 
@@ -45,6 +46,7 @@ const Sales = {
 
         } catch (error) {
             log.error(error.message);
+            reportErrors(error);
             return { message: error.message, code: 0 };
         }
     },
@@ -83,6 +85,7 @@ const Sales = {
 
         } catch (error) {
             log.error(error.message);
+            reportErrors(error);
             return { message: error.message, code: 0 };
         }
     },
@@ -99,6 +102,7 @@ const Sales = {
             return { message: "Nueva Venta Creada", code: 1, sale_id: sale.id };
 
         } catch (error) {
+            reportErrors(error);
 
             if (!empty(error.errors)) {
                 log.error(error.errors[0].message);
@@ -152,6 +156,7 @@ const Sales = {
 
         } catch (error) {
             log.error(error.message);
+            reportErrors(error);
             return { message: error.message, code: 0 };
         }
     },
@@ -220,6 +225,7 @@ const Sales = {
 
         } catch (error) {
             log.error(error.message);
+            reportErrors(error);
             return { message: error.message, code: 0 };
         }
     },
@@ -241,6 +247,7 @@ const Sales = {
 
         } catch (error) {
             log.error(error.message);
+            reportErrors(error);
             return { message: error.message, code: 0 };
         }
     },
@@ -280,6 +287,7 @@ const Sales = {
 
         } catch (error) {
             log.error(error);
+            reportErrors(error);
             return { message: error.message, code: 0 };
         }
     }

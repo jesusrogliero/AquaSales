@@ -3,6 +3,7 @@
 const AdminModel = require('../models/Admin.js');
 const log = require('electron-log');
 const Hash = require('../helpers/hash.js');
+const reportErrors = require('../helpers/reportErrors.js');
 
 const Admin = {
 
@@ -21,6 +22,7 @@ const Admin = {
             return data;
         } catch (error) {
             log.error(error.message);
+            reportErrors(error);
             return { message: error.message, code: 0 };
         }
     },
@@ -46,6 +48,7 @@ const Admin = {
             return isPassowrd;
         } catch (error) {
             log.error(error.message);
+            reportErrors(error);
             return { message: error.message, code: 0 };
         }
     },
@@ -63,6 +66,7 @@ const Admin = {
 
             return "Sesión Cerrada";
         } catch (error) {
+            reportErrors(error);
             log.error(error.message);
             return { message: error.message, code: 0 };
         }

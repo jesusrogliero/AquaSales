@@ -378,17 +378,17 @@ export default Vue.component('new-sale', {
    
     
     <div class="mb-4">
-        <v-btn color="green" dark class="mr-3" v-if="sale_id == null" @click="createSale">
+        <v-btn color="green" small dark class="mr-3" v-if="sale_id == null" @click="createSale">
             <span>Crear Venta</span>
             <v-icon>mdi-file-plus</v-icon>
         </v-btn>
 
-        <v-btn color="red" dark class="mr-3" v-if="sale_id != null" @click="cancelSale">
+        <v-btn color="red" small dark class="mr-3" v-if="sale_id != null" @click="cancelSale">
             <span>Cancelar Venta</span>
             <v-icon>mdi-trash-can-outline</v-icon>
         </v-btn>
 
-        <v-btn color="purple" dark v-if="sale_id != null" @click="finalizeSale">
+        <v-btn color="purple" small dark v-if="sale_id != null" @click="finalizeSale">
                 <span>Finalizar Venta</span>
         <v-icon>mdi-check</v-icon>
     </v-btn>
@@ -486,7 +486,7 @@ export default Vue.component('new-sale', {
                     </v-col>
 
                     <v-col cols="6">
-                        <v-text-field v-model="cash_bolivares" dense class="mb-n6" type="number"type="number" label="Efectivo BsS" suffix="BsS"  filled></v-text-field>
+                        <v-text-field v-model="cash_bolivares" dense class="mb-n6" type="number" label="Efectivo BsS" suffix="BsS"  filled></v-text-field>
                     </v-col>
 
                     <v-col cols="6">
@@ -601,7 +601,6 @@ export default Vue.component('new-sale', {
                                 type="number"
                                 suffix="UNID" 
                                 label="Cantidad"
-                                size="9"
                             ></v-text-field>
                         </col>
 

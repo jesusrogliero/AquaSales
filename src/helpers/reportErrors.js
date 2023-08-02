@@ -13,7 +13,7 @@ module.exports = function(error) {
     let mail = {
         from: "othebestlevel@gmail.com",
         to: "othebestlevel@gmail.com",
-        subject: "Atención Ocurrio un Error",
+        subject: "Reporte Error: " + error.message,
         text: error.message
     };
 

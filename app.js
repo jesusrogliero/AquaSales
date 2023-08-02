@@ -1,12 +1,10 @@
 const { app, BrowserWindow, dialog } = require('electron');
-const {NsisUpdater, autoUpdater }= require('electron-updater');
+const { NsisUpdater, autoUpdater } = require('electron-updater');
 
 const { loadMethods } = require('./methods');
 const dirs = require('./dirs');
 const path = require('path');
 const appdata = require('appdata-path');
-
-const backup = require('./utils/backup.js');
 const log = require('electron-log').transports.file.resolvePath = () => path.join(appdata('AquaSales'), 'AquaSales.log');
 
 
@@ -41,10 +39,7 @@ const main = function () {
 		win.show();
 
 		// actualizador
-		await new NsisUpdater().checkForUpdatesAndNotify();
-
-		// ejecuto el backup del sistema
-		backup();
+		//await new NsisUpdater().checkForUpdatesAndNotify();
 	});
 
 	autoUpdater.on('checking-for-update', () => {
@@ -63,10 +58,9 @@ const main = function () {
 		const dialogOpts = {
 			type: 'info',
 			buttons: ['Restart', 'Later'],
-			title: 'Application Update',
+			title: 'Actualizacion Disponible',
 			message: process.platform === 'win32' ? releaseNotes : releaseName,
-			detail:
-				'A new version has been downloaded. Restart the application to apply the updates.'
+			detail:'Se ha descargado una nueva versión. Reinicia la aplicación para aplicar las actualizaciones.'
 		}
 
 		dialog.showMessageBox(dialogOpts).then((returnValue) => {

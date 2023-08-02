@@ -9,6 +9,7 @@ const sequelize = require('sequelize');
 const BCV = require('bcv-divisas');
 const Exchange = require('../models/Exchange.js');
 const moment = require('moment');
+const reportErrors = require('../helpers/reportErrors.js');
 
 const Payments = {
 
@@ -38,6 +39,7 @@ const Payments = {
             });
         } catch (error) {
             log.error(error.message);
+            reportErrors(error);
             return { message: error.message, code: 0 };
         }
     },
@@ -62,6 +64,7 @@ const Payments = {
 
             return { message: "Agregado con exito", code: 1 };
         } catch (error) {
+            reportErrors(error);
 
             if (!empty(error.errors)) {
                 log.error(error.errors[0].message);
@@ -92,6 +95,7 @@ const Payments = {
 
         } catch (error) {
             log.error(error.message);
+            reportErrors(error);
             return { message: error.message, code: 0 };
         }
     },
@@ -105,23 +109,23 @@ const Payments = {
      */
     'show-bcv': async function () {
         try {
-
             let today = moment().format("YYYY-MM-DD");
-
             let exchange = await Exchange.findByPk(1);
 
-            if(exchange.updatedAt != today) {
+            if (exchange.date != today) {
                 let bcv = await BCV.bcvDolar();
-                bcv =  parseFloat(bcv._dolar);
+                bcv = parseFloat(bcv._dolar);
 
                 exchange.bcv = bcv;
+                exchange.date = today;
                 await exchange.save();
             }
 
             return exchange.bcv;
-          
+
         } catch (error) {
             log.error(error.message);
+            reportErrors(error);
             return { message: error.message, code: 0 };
         }
     }
