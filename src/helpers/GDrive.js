@@ -26,8 +26,8 @@ const createFile = async function () {
         },
         media: {
             mimeType: 'application/octet-stream',
-            //body: fs.createReadStream(path.join(appdata('AquaSales'), 'aqua.data')),
-            body: fs.createReadStream('aqua.data')
+            body: fs.createReadStream(path.join(appdata('AquaSales'), 'aqua.data')),
+            //body: fs.createReadStream('aqua.data')
         },
         fields: ['id']
     });
@@ -42,8 +42,8 @@ const updateFile = async function (file_id) {
         },
         media: {
             mimeType: 'application/octet-stream',
-            //body: fs.createReadStream(path.join(appdata('AquaSales'), 'aqua.data'))
-            body: fs.createReadStream('aqua.data')
+            body: fs.createReadStream(path.join(appdata('AquaSales'), 'aqua.data'))
+            //body: fs.createReadStream('aqua.data')
         }
     });
     console.log('estado actualizar: ' + res.status)
@@ -65,7 +65,6 @@ const init = async function () {
         }
     
         chokidar.watch('aqua.data').on('change', async () => {
-            console.log(file);
             updateFile(file.file_id);
         });
     } catch (error) {
