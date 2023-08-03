@@ -1,6 +1,4 @@
 'use strict'
-
-import '../utils/card-dashboard.js';
 import '../components/AdminAutenticate.js';
 
 // componente home
@@ -10,18 +8,13 @@ let Home = Vue.component('Home', {
 		return {
 			loading: false,
 
-			today_sales_bs: null,
-			today_sales_dolar: null,
-			today_sales_units: null,
+			today_sales: {},
+			lastweek_sales: {},
+			lastmonth_sales: {},
+
+			icomes: {},
+
 			pending_dispatch: null,
-
-			lastweek_sales_bs: null,
-			lastweek_sales_dolar: null,
-			lastweek_sales_units: null,
-
-			lastmonth_sales_bs: null,
-			lastmonth_sales_dolar: null,
-			lastmonth_sales_units: null,
 
 			today_liters_consumption: null,
 			lastweek_liters_consumption: null,
@@ -35,12 +28,14 @@ let Home = Vue.component('Home', {
 	async mounted() {
 		this.loading = true;
 		this.saludar();
+		await this.getMetricsIcomes();
 		await this.getMetricsToday();
 		await this.getMetricsLastweek();
 		await this.getMetricsLastmonth();
 		await this.getLitersDispatch();
 		await this.getPendingDispatch();
 		await this.getBcv();
+		console.log(this.icomes);
 		this.loading = false;
 	},
  
@@ -102,7 +97,6 @@ let Home = Vue.component('Home', {
 					throw new Error(response.message)
 				}
 
-
 				this.today_liters_consumption = response.today_liters_consumption;
 				this.lastweek_liters_consumption = response.lastweek_liters_consumption;
 				this.lastmonth_liters_consumption = response.lastmonth_liters_consumption;
@@ -120,9 +114,9 @@ let Home = Vue.component('Home', {
 					throw new Error(response.message)
 				}
 
-				this.today_sales_bs = parseFloat(this.empty(response.today_sales_bs)).toFixed(2);
-				this.today_sales_dolar = parseFloat(this.empty(response.today_sales_dolar)).toFixed(2);
-				this.today_sales_units = response.today_sales_units;
+				this.today_sales.bs = parseFloat(this.empty(response.today_sales_bs)).toFixed(2);
+				this.today_sales.dolar = parseFloat(this.empty(response.today_sales_dolar)).toFixed(2);
+				this.today_sales.units = response.today_sales_units;
 	
 			} catch (error) {
 				alertApp({color: "error", icon: "alert", text: error.message});
@@ -138,9 +132,25 @@ let Home = Vue.component('Home', {
 					throw new Error(response.message)
 				}
 
-				this.lastweek_sales_bs = parseFloat(this.empty(response.lastweek_sales_bs)).toFixed(2);
-				this.lastweek_sales_dolar = parseFloat( this.empty(response.lastweek_sales_dolar)).toFixed(2);
-				this.lastweek_sales_units = response.lastweek_sales_units;
+				this.lastweek_sales.bs = parseFloat(this.empty(response.lastweek_sales_bs)).toFixed(2);
+				this.lastweek_sales.dolar = parseFloat( this.empty(response.lastweek_sales_dolar)).toFixed(2);
+				this.lastweek_sales.units = response.lastweek_sales_units;
+
+			} catch (error) {
+				alertApp({color: "error", icon: "alert", text: error.message});
+			}
+		},
+
+		
+		async getMetricsIcomes() {
+			try {
+				let response = await execute('icomes-metrics');
+
+				if (response.code === 0) {
+					throw new Error(response.message)
+				}
+
+				this.icomes = response;
 
 			} catch (error) {
 				alertApp({color: "error", icon: "alert", text: error.message});
@@ -155,9 +165,9 @@ let Home = Vue.component('Home', {
 					throw new Error(response.message)
 				}
 
-				this.lastmonth_sales_bs = parseFloat(this.empty(response.lastmonth_sales_bs)).toFixed(2);
-				this.lastmonth_sales_dolar = parseFloat(this.empty(response.lastmonth_sales_dolar)).toFixed(2);
-				this.lastmonth_sales_units = response.lastmonth_sales_units;
+				this.lastmonth_sales.bs = parseFloat(this.empty(response.lastmonth_sales_bs)).toFixed(2);
+				this.lastmonth_sales.dolar = parseFloat(this.empty(response.lastmonth_sales_dolar)).toFixed(2);
+				this.lastmonth_sales.units = response.lastmonth_sales_units;
 
 			} catch (error) {
 				alertApp({color: "error", icon: "alert", text: error.message});
@@ -183,57 +193,99 @@ let Home = Vue.component('Home', {
 			<div class="mx-2 mt-10">
 				<v-row>
 					<v-col cols="12" sm="6" md="4" lg="4">
-						<card-dashboard
-							title="INGRESOS HOY"
-							:bs="today_sales_bs"
-							:usd="today_sales_dolar"
-							icon="mdi-trending-up"
-						/>
+						<v-card color="#ECEFF1">
+							<v-card-title>INGRESOS HOY</v-card-title>
+							<v-card-text>
+								<v-row>
+									<v-col cols="12">
+										<h2 class="ml-2"> Pago Movil {{icomes.today_icomes.mobile_payment_icome == null ? 0 : icomes.today_icomes.mobile_payment_icome }}  BsS</h2>
+									</v-col>
+									<v-col cols="12">
+										<h2 class="ml-2">Efectivo BsS {{icomes.today_icomes.cash_bolivares_icome == null ? 0 : icomes.today_icomes.cash_bolivares_icome }}</h2>
+									</v-col>
+									<v-col cols="12">
+										<h2 class="ml-2">Efectivo $ {{icomes.today_icomes.cash_dollar_icome == null ? 0 : icomes.today_icomes.cash_dollar_icome }}</h2>
+									</v-col>
+								</v-row>
+							</v-card-text>
+						</v-card>
 					</v-col>
 
 					<v-col cols="12" sm="6" md="4" lg="4">
-						<card-dashboard
-							title="INGRESOS ESTA SEMANA"
-							:bs="lastweek_sales_bs"
-							:usd="lastweek_sales_dolar"
-							icon="mdi-trending-up"
-						/>
+						<v-card color="#ECEFF1">
+							<v-card-title>INGRESOS ESTA SEMANA</v-card-title>
+							<v-card-text>
+								<v-row>
+									<v-col cols="12">
+										<h2 class="ml-2"> Pago Movil {{icomes.week_icome.mobile_payment_icome == null ? 0 : icomes.week_icome.mobile_payment_icome }}  BsS</h2>
+									</v-col>
+									<v-col cols="12">
+										<h2 class="ml-2">Efectivo BsS {{icomes.week_icome.cash_bolivares_icome == null ? 0 : icomes.week_icome.cash_bolivares_icome }}</h2>
+									</v-col>
+									<v-col cols="12">
+										<h2 class="ml-2">Efectivo $ {{icomes.week_icome.cash_dollar_icome == null ? 0 : icomes.week_icome.cash_dollar_icome }}</h2>
+									</v-col>
+								</v-row>
+							</v-card-text>
+						</v-card>
 					</v-col>
 
 					<v-col cols="12" sm="6" md="4" lg="4">
-						<card-dashboard
-							title="INGRESOS DE ESTE MES"
-							:bs="lastmonth_sales_bs"
-							:usd="lastmonth_sales_dolar"
-							icon="mdi-trending-up"
-						/>
+						<v-card color="#ECEFF1">
+							<v-card-title>INGRESOS DE ESTE MES</v-card-title>
+							<v-card-text>
+								<v-row>
+									<v-col cols="12">
+										<h2 class="ml-2"> Pago Movil {{icomes.month_icome.mobile_payment_icome == null ? 0 : icomes.month_icome.mobile_payment_icome }}  BsS</h2>
+									</v-col>
+									<v-col cols="12">
+										<h2 class="ml-2">Efectivo BsS {{icomes.month_icome.cash_bolivares_icome == null ? 0 : icomes.month_icome.cash_bolivares_icome }}</h2>
+									</v-col>
+									<v-col cols="12">
+										<h2 class="ml-2">Efectivo $ {{icomes.month_icome.cash_dollar_icome == null ? 0 : icomes.month_icome.cash_dollar_icome }}</h2>
+									</v-col>
+								</v-row>
+							</v-card-text>
+						</v-card>
 					</v-col>
 
 					<v-col cols="12" sm="6" md="4" lg="4">
-						<card-dashboard
-							title="Volumen Despachado Hoy"
-							:data="today_liters_consumption"
-							icon="mdi-trending-up"
-							symbol="LT"
-						/>
+					<v-card color="#ECEFF1">
+						<v-card-title>Volumen Despachado Hoy</v-card-title>
+						<v-card-text>
+							<v-row>
+								<h1 class="ml-2">{{today_liters_consumption == null ? 0 : today_liters_consumption }} LT</h1>
+								<v-spacer></v-spacer>
+								<v-icon size="80" class="mr-2 mt-n9" color="green">mdi-trending-up</v-icon>
+							</v-row>
+						</v-card-text>
+					</v-card>
 					</v-col>
 
 					<v-col cols="12" sm="6" md="4" lg="4">
-						<card-dashboard
-							title="Volumen Despachado esta Semana"
-							:data="lastweek_liters_consumption"
-							icon="mdi-trending-up"
-							symbol="LT"
-						/>
+						<v-card color="#ECEFF1">
+							<v-card-title>Volumen Despachado esta Semana</v-card-title>
+							<v-card-text>
+								<v-row>
+									<h1 class="ml-2">{{lastweek_liters_consumption == null ? 0 : lastweek_liters_consumption }} LT</h1>
+									<v-spacer></v-spacer>
+									<v-icon size="80" class="mr-2 mt-n9" color="green">mdi-trending-up</v-icon>
+								</v-row>
+							</v-card-text>
+						</v-card>
 					</v-col>
 
 					<v-col cols="12" sm="6" md="4" lg="4">
-						<card-dashboard
-							title="Volumen Despachado Este mes"
-							:data="lastmonth_liters_consumption"
-							icon="mdi-trending-up"
-							symbol="LT"
-						/>
+						<v-card color="#ECEFF1">
+							<v-card-title>Volumen Despachado Este mes</v-card-title>
+							<v-card-text>
+								<v-row>
+									<h1 class="ml-2">{{lastmonth_liters_consumption == null ? 0 : lastmonth_liters_consumption }} LT</h1>
+									<v-spacer></v-spacer>
+									<v-icon size="80" class="mr-2 mt-n9" color="green">mdi-trending-up</v-icon>
+								</v-row>
+							</v-card-text>
+						</v-card>
 					</v-col>
 
 					<v-col cols="12" sm="6" md="4" lg="4">
@@ -241,7 +293,7 @@ let Home = Vue.component('Home', {
 							<v-card-title>Vendidos Hoy</v-card-title>
 							<v-card-text>
 								<v-row>
-									<h1 class="ml-2">{{today_sales_units == null ? 0 : today_sales_units }} UNID</h1>
+									<h1 class="ml-2">{{today_sales.units == null ? 0 : today_sales.units }} UNID</h1>
 									<v-spacer></v-spacer>
 									<v-img
 									class="mt-n10"
@@ -259,7 +311,7 @@ let Home = Vue.component('Home', {
 							<v-card-title>Vendidos Esta Semana</v-card-title>
 							<v-card-text>
 								<v-row>
-									<h1 class="ml-2">{{lastweek_sales_units == null ? 0 : lastweek_sales_units }} UNID</h1>
+									<h1 class="ml-2">{{lastweek_sales.units == null ? 0 : lastweek_sales.units }} UNID</h1>
 									<v-spacer></v-spacer>
 									<v-img
 									class="mt-n10"

@@ -1,6 +1,7 @@
 'use strict'
 
 const Sale = require('../models/Sale.js');
+const Payment = require('../models/Payment.js');
 const log = require('electron-log');
 const sequelize = require("../connection.js");
 const { Op } = require('sequelize');
@@ -91,6 +92,95 @@ const Metrics = {
             return { message: error.message, code: 0 };
         }
     },
+
+    /**
+    * Metricas los ingresos
+    * 
+    * @returns {json} litros
+    */
+    'icomes-metrics': async function () {
+        try {
+            const today = moment().format("YYYY-MM-DD");
+            const initWeek = moment().startOf('isoWeek').format("YYYY-MM-DD");
+            const initMonth = moment().startOf('month').format("YYYY-MM-DD");
+
+            let today_icomes = await Payment.findAll({
+                attributes: [
+                    [sequelize.literal("sum(mobile_payment)"), 'mobile_payment_icome'],
+                    [sequelize.literal("sum(cash_dollar)"), 'cash_dollar_icome'],
+                    [sequelize.literal("sum(cash_bolivares)"), 'cash_bolivares_icome'],
+                ],
+                include: [
+					{
+						model: Sale,
+						required: true,
+						attributes: []
+					}
+				],
+                where: {
+                    state_id: sequelize.col('sale.state_id'),
+                    createdAt: moment().format("YYYY-MM-DD")
+                },
+                raw: true
+            });
+
+
+            let week_icome = await Payment.findAll({
+                attributes: [
+                    [sequelize.literal("sum(mobile_payment)"), 'mobile_payment_icome'],
+                    [sequelize.literal("sum(cash_dollar)"), 'cash_dollar_icome'],
+                    [sequelize.literal("sum(cash_bolivares)"), 'cash_bolivares_icome'],
+                ],
+                include: [
+					{
+						model: Sale,
+						required: true,
+						attributes: []
+					}
+				],
+                where: {
+                    state_id: sequelize.col('sale.state_id'),
+                    createdAt: {
+                        [Op.between]: [initWeek, today],
+                    }
+                },
+                raw: true
+            });
+
+            let month_icome = await Payment.findAll({
+                attributes: [
+                    [sequelize.literal("sum(mobile_payment)"), 'mobile_payment_icome'],
+                    [sequelize.literal("sum(cash_dollar)"), 'cash_dollar_icome'],
+                    [sequelize.literal("sum(cash_bolivares)"), 'cash_bolivares_icome'],
+                ],
+                include: [
+					{
+						model: Sale,
+						required: true,
+						attributes: []
+					}
+				],
+                where: {
+                    state_id: sequelize.col('sale.state_id'),
+                    createdAt: {
+                        [Op.between]: [initMonth, today],
+                    }
+                },
+                raw: true
+            });
+
+            return {
+                today_icomes: today_icomes[0],
+                week_icome: week_icome[0],
+                month_icome: month_icome[0]
+            };
+        } catch (error) {
+            log.error(error.message);
+            reportErrors(error);
+            return { message: error.message, code: 0 };
+        }
+    },
+
 
     /**
      * Metricas de Ventas
