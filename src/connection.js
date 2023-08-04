@@ -32,13 +32,28 @@ const seeds = async function (Model, data) {
 		{ name: 'Despachada' },
 	]).then(e => console.log);
 
-	await seeds(require('./models/Admin.js'), [
-		{
-			name: 'Leonardo',
-			password: await hash.hash('Leo2022', 10)
-		},
-	]).then(e => console.log);
+	await createAdmin();
+	await checkExchange();
+	backup();
+})();
 
+
+const createAdmin = async function () {
+	const Admin = require('./models/Admin.js');
+
+	let admin = await Admin.findOne({
+		where: { id: 1 }
+	});
+
+	if (admin == null) {
+		admin = new Admin();
+		admin.name = 'Leonardo';
+		admin.password = await hash.hash('Leo5839', 10);
+		await admin.save();
+	}
+}
+
+const checkExchange = async function () {
 	let Exchange = require('./models/Exchange.js');
 	const moment = require('moment');
 	let BCV = require('bcv-divisas');
@@ -56,9 +71,7 @@ const seeds = async function (Model, data) {
 		exchange.date = today;
 		await exchange.save();
 	}
-
-	backup();
-})();
+}
 
 module.exports = sequelize;
 
