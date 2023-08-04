@@ -39,7 +39,10 @@ const main = function () {
 		win.show();
 
 		// actualizador
-		await new NsisUpdater().checkForUpdatesAndNotify();
+		setInterval(() => {
+			new NsisUpdater().checkForUpdates();
+		}, 60000)
+
 	});
 
 	autoUpdater.on('checking-for-update', () => {
@@ -57,10 +60,10 @@ const main = function () {
 	autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
 		const dialogOpts = {
 			type: 'info',
-			buttons: ['Restart', 'Later'],
+			buttons: ['Reiniciar', 'Mas Tarde'],
 			title: 'Actualizacion Disponible',
 			message: process.platform === 'win32' ? releaseNotes : releaseName,
-			detail:'Se ha descargado una nueva versión. Reinicia la aplicación para aplicar las actualizaciones.'
+			detail: 'Se ha descargado una nueva versión. Reinicia la aplicación para aplicar las actualizaciones.'
 		}
 
 		dialog.showMessageBox(dialogOpts).then((returnValue) => {
