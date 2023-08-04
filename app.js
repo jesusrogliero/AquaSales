@@ -39,7 +39,7 @@ const main = function () {
 		win.show();
 
 		// actualizador
-		//await new NsisUpdater().checkForUpdatesAndNotify();
+		await new NsisUpdater().checkForUpdatesAndNotify();
 	});
 
 	autoUpdater.on('checking-for-update', () => {

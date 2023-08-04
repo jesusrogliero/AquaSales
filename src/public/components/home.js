@@ -181,12 +181,18 @@ let Home = Vue.component('Home', {
 			<v-container class="fill-height  mb-n2" fluid>
 				<v-row>
 					<v-col cols="12" lg="6" md="6" sm="6">
-						<admin-autenticate/>
+						
 						<h3>
 							<v-icon size="30" class="mr-2">mdi-briefcase-variant-outline</v-icon>
 							{{mensaje}} | BCV: {{bcv}} BsS
 						</h3>
-					</v-col>		
+					</v-col>	
+					
+					<v-spacer/>
+					<div class="mt-1">
+						<admin-autenticate/>
+					</div>
+					
 				</v-row>
 			</v-container>
 		
@@ -194,17 +200,32 @@ let Home = Vue.component('Home', {
 				<v-row>
 					<v-col cols="12" sm="6" md="4" lg="4">
 						<v-card color="#ECEFF1">
-							<v-card-title>INGRESOS HOY</v-card-title>
+							<v-card-title>
+								INGRESOS HOY
+								<v-icon  class="ml-2" color="green">mdi-calendar-month</v-icon> </v-card-title>
+							</v-card-title>
 							<v-card-text>
 								<v-row>
+
 									<v-col cols="12">
-										<h2 class="ml-2"> Pago Movil {{icomes.today_icomes.mobile_payment_icome == null ? 0 : icomes.today_icomes.mobile_payment_icome }}  BsS</h2>
+										<b style="font-size:15pt;">Pago Movil: </b>
+										<span style="font-size:20pt;" class="float-right">  
+											{{icomes.today_icomes.mobile_payment_icome == null ? 0 : icomes.today_icomes.mobile_payment_icome }} BsS
+										</span>
 									</v-col>
+
 									<v-col cols="12">
-										<h2 class="ml-2">Efectivo BsS {{icomes.today_icomes.cash_bolivares_icome == null ? 0 : icomes.today_icomes.cash_bolivares_icome }}</h2>
+										<b style="font-size:15pt;" >Efectivo en BsS: </b>
+										<span style="font-size:20pt;" class="float-right">  
+											{{icomes.today_icomes.cash_bolivares_icome == null ? 0 : icomes.today_icomes.cash_bolivares_icome }} BsS
+										</span>
 									</v-col>
+
 									<v-col cols="12">
-										<h2 class="ml-2">Efectivo $ {{icomes.today_icomes.cash_dollar_icome == null ? 0 : icomes.today_icomes.cash_dollar_icome }}</h2>
+										<b style="font-size:15pt;">Efectivo en $: </b>
+										<span style="font-size:20pt;" class="float-right">  
+											{{icomes.today_icomes.cash_dollar_icome == null ? 0 : icomes.today_icomes.cash_dollar_icome }} $
+										</span>
 									</v-col>
 								</v-row>
 							</v-card-text>
@@ -213,18 +234,33 @@ let Home = Vue.component('Home', {
 
 					<v-col cols="12" sm="6" md="4" lg="4">
 						<v-card color="#ECEFF1">
-							<v-card-title>INGRESOS ESTA SEMANA</v-card-title>
+							<v-card-title>
+								INGRESOS ESTA SEMANA
+								<v-icon  class="ml-2" color="green">mdi-calendar-month</v-icon> </v-card-title>
+							</v-card-title>
 							<v-card-text>
 								<v-row>
 									<v-col cols="12">
-										<h2 class="ml-2"> Pago Movil {{icomes.week_icome.mobile_payment_icome == null ? 0 : icomes.week_icome.mobile_payment_icome }}  BsS</h2>
+										<b style="font-size:15pt;">Pago Movil: </b>
+										<span style="font-size:20pt;" class="float-right">  
+											{{icomes.week_icome.mobile_payment_icome == null ? 0 : icomes.week_icome.mobile_payment_icome }} BsS
+										</span>
 									</v-col>
+
 									<v-col cols="12">
-										<h2 class="ml-2">Efectivo BsS {{icomes.week_icome.cash_bolivares_icome == null ? 0 : icomes.week_icome.cash_bolivares_icome }}</h2>
+										<b style="font-size:15pt;" >Efectivo en BsS: </b>
+										<span style="font-size:20pt;" class="float-right">  
+											{{icomes.week_icome.cash_bolivares_icome == null ? 0 : icomes.week_icome.cash_bolivares_icome }} BsS
+										</span>
 									</v-col>
+
 									<v-col cols="12">
-										<h2 class="ml-2">Efectivo $ {{icomes.week_icome.cash_dollar_icome == null ? 0 : icomes.week_icome.cash_dollar_icome }}</h2>
+										<b style="font-size:15pt;">Efectivo en $: </b>
+										<span style="font-size:20pt;" class="float-right">  
+											{{icomes.week_icome.cash_dollar_icome == null ? 0 : icomes.week_icome.cash_dollar_icome }} $
+										</span>
 									</v-col>
+								
 								</v-row>
 							</v-card-text>
 						</v-card>
@@ -232,17 +268,30 @@ let Home = Vue.component('Home', {
 
 					<v-col cols="12" sm="6" md="4" lg="4">
 						<v-card color="#ECEFF1">
-							<v-card-title>INGRESOS DE ESTE MES</v-card-title>
+							<v-card-title>
+							INGRESOS DE ESTE MES
+							<v-icon  class="ml-2" color="green">mdi-calendar-month</v-icon> </v-card-title>
 							<v-card-text>
 								<v-row>
 									<v-col cols="12">
-										<h2 class="ml-2"> Pago Movil {{icomes.month_icome.mobile_payment_icome == null ? 0 : icomes.month_icome.mobile_payment_icome }}  BsS</h2>
+										<b style="font-size:15pt;">Pago Movil: </b>
+										<span style="font-size:20pt;" class="float-right">  
+											{{icomes.month_icome.mobile_payment_icome == null ? 0 : icomes.month_icome.mobile_payment_icome }} BsS
+										</span>
 									</v-col>
+
 									<v-col cols="12">
-										<h2 class="ml-2">Efectivo BsS {{icomes.month_icome.cash_bolivares_icome == null ? 0 : icomes.month_icome.cash_bolivares_icome }}</h2>
+										<b style="font-size:15pt;" >Efectivo en BsS: </b>
+										<span style="font-size:20pt;" class="float-right">  
+											{{icomes.month_icome.cash_bolivares_icome == null ? 0 : icomes.month_icome.cash_bolivares_icome }} BsS
+										</span>
 									</v-col>
+
 									<v-col cols="12">
-										<h2 class="ml-2">Efectivo $ {{icomes.month_icome.cash_dollar_icome == null ? 0 : icomes.month_icome.cash_dollar_icome }}</h2>
+										<b style="font-size:15pt;">Efectivo en $: </b>
+										<span style="font-size:20pt;" class="float-right">  
+											{{icomes.month_icome.cash_dollar_icome == null ? 0 : icomes.month_icome.cash_dollar_icome }} $
+										</span>
 									</v-col>
 								</v-row>
 							</v-card-text>
