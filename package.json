@@ -1,6 +1,6 @@
 {
 	"name": "aqua_sales",
-	"version": "1.7.4",
+	"version": "1.7.5",
 	"description": "AquaSales",
 	"main": "app.js",
 	"repository": {
