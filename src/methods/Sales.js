@@ -9,6 +9,7 @@ const log = require('electron-log');
 const sequelize = require('sequelize');
 const isAuth = require('../helpers/auth.js');
 const reportErrors = require('../helpers/reportErrors.js');
+const GBackup = require('../helpers/GDrive.js');
 
 const Sales = {
 
@@ -220,6 +221,7 @@ const Sales = {
                 sale.state_id = 3;
             }
             await sale.save();
+            GBackup();
 
             return { message: 'Venta Finalizada', code: 1 };
 
