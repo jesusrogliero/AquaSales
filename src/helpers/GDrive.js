@@ -7,7 +7,7 @@ const log = require('electron-log');
 const reportErrors = require('./reportErrors.js');
 
 const auth = new google.auth.GoogleAuth({
-    keyFile: './credentials.json',
+    keyFile: path.join(appdata('AquaSales'), 'credentials.json'),
     scopes: ['https://www.googleapis.com/auth/drive'],
 });
 
@@ -26,8 +26,7 @@ const createFile = async function () {
         },
         media: {
             mimeType: 'application/octet-stream',
-            body: fs.createReadStream(path.join(appdata('AquaSales'), 'aqua.data')),
-            //body: fs.createReadStream('aqua.data')
+            body: fs.createReadStream(path.join(appdata('AquaSales'), 'aqua.data'))
         },
         fields: ['id']
     });
@@ -35,7 +34,7 @@ const createFile = async function () {
 };
 
 const updateFile = async function (file_id) {
-    const res = await drive.files.update({
+    await drive.files.update({
         fileId: file_id,
         resource: {
             name: 'aqua.data'
@@ -43,10 +42,8 @@ const updateFile = async function (file_id) {
         media: {
             mimeType: 'application/octet-stream',
             body: fs.createReadStream(path.join(appdata('AquaSales'), 'aqua.data'))
-            //body: fs.createReadStream('aqua.data')
         }
     });
-    console.log('estado actualizar: ' + res.status)
 };
 
 
@@ -54,25 +51,24 @@ const updateFile = async function (file_id) {
 const init = async function () {
     try {
         const BackupDrive = require('../models/BackupDrive.js');
+
         let file = await BackupDrive.findOne();
-    
+
         if (file == null) {
             let file_id = await createFile();
-    
+
             file = new BackupDrive();
             file.file_id = file_id;
             await file.save();
+        }else {
+            await updateFile(file.file_id)
         }
-    
-        chokidar.watch('aqua.data').on('change', async () => {
-            updateFile(file.file_id);
-        });
+
     } catch (error) {
         log.error(error.message);
         reportErrors(error);
+        console.log(error);
     }
-
-  
 }
 
 module.exports = init;

@@ -14,7 +14,6 @@ var AdminAutenticate = Vue.component('admin-autenticate', {
 
     mounted() {
         if (localStorage.getItem('session') == 'active') {
-            console.log(this.session);
             this.session = true;
         }
 
@@ -44,7 +43,7 @@ var AdminAutenticate = Vue.component('admin-autenticate', {
                 if (response.code === 0) {
                     throw new Error(response.message)
                 }
-                console.log(response);
+
                 this.admin_name = null;
                 this.dialog = null;
                 this.session = response;

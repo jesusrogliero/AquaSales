@@ -34,16 +34,14 @@ const seeds = async function (Model, data) {
 
 	await createAdmin();
 	await checkExchange();
-	backup();
+	await backup();
 })();
 
 
 const createAdmin = async function () {
 	const Admin = require('./models/Admin.js');
 
-	let admin = await Admin.findOne({
-		where: { id: 1 }
-	});
+	let admin = await Admin.findOne();
 
 	if (admin == null) {
 		admin = new Admin();

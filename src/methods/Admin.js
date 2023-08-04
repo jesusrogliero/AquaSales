@@ -14,7 +14,7 @@ const Admin = {
      */
     'get-admin-name': async function () {
         try {
-            let data = await AdminModel.findByPk(1, {
+            let data = await AdminModel.findOne({
                 attributes: ['name'],
                 raw: true
             });
@@ -34,7 +34,7 @@ const Admin = {
      */
     'admin-autenticate': async function (password) {
         try {
-            let admin = await AdminModel.findByPk(1);
+            let admin = await AdminModel.findOne();
 
             let isPassowrd = await Hash.checkHash(password, admin.password);
 
@@ -60,7 +60,7 @@ const Admin = {
      */
     'logout': async function () {
         try {
-            let admin = await AdminModel.findByPk(1);
+            let admin = await AdminModel.findOne();
             admin.isAutenticate = false;
             await admin.save();
 
