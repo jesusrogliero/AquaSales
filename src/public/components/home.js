@@ -52,6 +52,7 @@ let Home = Vue.component('Home', {
 			}
 		},
 
+		toNewSale() { this.$router.push('/new_sale'); },
 
 		empty(num) {
 			if (num == NaN || num == undefined || num == null) {
@@ -189,10 +190,18 @@ let Home = Vue.component('Home', {
 					</v-col>	
 					
 					<v-spacer/>
+
+					<div class="mt-1">
+						<v-btn color="transparent" class="mr-2" elevation="0" @click="toNewSale">
+							<v-icon>mdi-point-of-sale</v-icon>
+							<span>Nueva Venta</span>  
+						</v-btn>
+					</div>
+
 					<div class="mt-1">
 						<admin-autenticate/>
 					</div>
-					
+			
 				</v-row>
 			</v-container>
 		
