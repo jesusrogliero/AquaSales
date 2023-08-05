@@ -80,11 +80,11 @@ var AdminAutenticate = Vue.component('admin-autenticate', {
 
     <div>
         <v-btn v-if="session != true" icon @click="openDialog">
-            <v-icon size="30">mdi-account-lock-outline</v-icon>
+            <v-icon size="30">mdi-lock</v-icon>
         </v-btn>
 
         <v-btn v-else icon @click="logout">
-            <v-icon size="30" >mdi-account-lock-open-outline</v-icon>
+            <v-icon size="30" >mdi-lock-open</v-icon>
         </v-btn>
 
         <dialog-base :active="dialog">
