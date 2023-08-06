@@ -13,7 +13,6 @@ export default Vue.component('navigation', {
         toProducts() { this.$router.push('/products'); },
         toSales() { this.$router.push('/sales'); },
         toPayments() { this.$router.push('/payments'); },
-        toNewSale() { this.$router.push('/new_sale'); },
         toDispatchedSales() { this.$router.push('/dispatched_sales')}
     },
 
@@ -34,12 +33,6 @@ export default Vue.component('navigation', {
         <v-btn color="blue lighten-3" class="mr-n3" elevation="0" @click="toHome">
             <v-icon>mdi-home</v-icon>
             <span>Inicio</span>  
-        </v-btn>
-    
-       
-        <v-btn color="blue lighten-3" class="mr-n3" elevation="0" @click="toNewSale">
-            <v-icon>mdi-plus</v-icon>
-            <span>Nueva Venta</span>  
         </v-btn>
         
         <v-btn color="blue lighten-3" class="mr-n3"  elevation="0" @click="toProducts">

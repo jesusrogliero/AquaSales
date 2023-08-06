@@ -125,6 +125,7 @@ export default Vue.component('sales', {
 
                 alertApp({ color: "success", icon: "check", text: response.message });
                 await this.$refs.dataTable_items.getData();
+                await this.$refs.dataTable.getData();
 
             } catch (error) {
                 alertApp({ color: "error", icon: "alert", text: error.message });
@@ -132,6 +133,7 @@ export default Vue.component('sales', {
                 this.dispatch = null;
                 this.item_id = null;
                 this.dialog2 = null;
+                this.sheet = false;
             }
         },
 

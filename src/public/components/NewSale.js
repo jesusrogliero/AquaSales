@@ -82,9 +82,12 @@ export default Vue.component('new-sale', {
                 this.total_units = response.total_units;
                 this.pending_dispatch = response.pending_dispatch;
                 this.total_dispatched = response.total_dispatched;
+
+            } else {
+                this.createSale();
             }
 
-            
+
 
         } catch (error) {
             alertApp({ color: "error", icon: "alert", text: error.message });
@@ -142,11 +145,11 @@ export default Vue.component('new-sale', {
             this.total_units = null;
             this.pending_dispatch = null;
             this.total_dispatched = null;
-      
+
             this.mobile_payment = null,
-            this.reference = null,
-            this.cash_dollar = null,
-            this.cash_bolivares = null;
+                this.reference = null,
+                this.cash_dollar = null,
+                this.cash_bolivares = null;
 
             this.falta_dolar = 0;
             this.falta_bs = 0;
@@ -218,6 +221,7 @@ export default Vue.component('new-sale', {
             } finally {
                 this.cleanSale();
                 this.dialog = null;
+                this.$router.push('/');
             }
         },
 
@@ -254,6 +258,7 @@ export default Vue.component('new-sale', {
 
                 alertApp({ color: "success", icon: "check", text: response.message });
                 this.cleanSale();
+                this.$router.push('/');
 
             } catch (error) {
                 alertApp({ color: "error", icon: "alert", text: error.message });
@@ -275,22 +280,22 @@ export default Vue.component('new-sale', {
             let totalPagadoBolivares = 0;
             const regex = /^[+]?\d*\.?\d+$/;
 
-            if(regex.test(this.mobile_payment)) {
+            if (regex.test(this.mobile_payment)) {
                 totalPagadoBolivares += parseFloat(this.mobile_payment);
             }
 
-            if( regex.test(this.cash_bolivares)) {
+            if (regex.test(this.cash_bolivares)) {
                 totalPagadoBolivares += parseFloat(this.cash_bolivares);
             }
 
-            if(regex.test(cantidadDolaresEnBolivares)) {
+            if (regex.test(cantidadDolaresEnBolivares)) {
                 totalPagadoBolivares += parseFloat(cantidadDolaresEnBolivares);
             }
 
             // Calcula el vuelto y el faltante
             let vuelto = totalPagadoBolivares - this.total_bs;
             let faltante = 0;
-            
+
             this.vuelto_bs = 0;
             this.vuelto_dolar = 0;
             this.falta_bs = 0;
@@ -299,11 +304,11 @@ export default Vue.component('new-sale', {
             // Verifica si hay vuelto o faltante
             if (vuelto >= 0) {
                 this.vuelto_bs = parseFloat(vuelto.toFixed(2));
-                this.vuelto_dolar =  parseFloat(vuelto / this.bcv).toFixed(2);
+                this.vuelto_dolar = parseFloat(vuelto / this.bcv).toFixed(2);
             } else {
                 faltante = vuelto * -1;
                 this.falta_bs = faltante.toFixed(2);
-                this.falta_dolar =  parseFloat(faltante / this.bcv).toFixed(2);
+                this.falta_dolar = parseFloat(faltante / this.bcv).toFixed(2);
             }
         },
 
@@ -378,10 +383,6 @@ export default Vue.component('new-sale', {
    
     
     <div class="mb-4">
-        <v-btn color="green" small dark class="mr-3" v-if="sale_id == null" @click="createSale">
-            <span>Crear Venta</span>
-            <v-icon>mdi-file-plus</v-icon>
-        </v-btn>
 
         <v-btn color="red" small dark class="mr-3" v-if="sale_id != null" @click="cancelSale">
             <span>Cancelar Venta</span>
