@@ -19,7 +19,7 @@ const main = function () {
 		minHeight: 900,
 		webPreferences: {
 			nodeIntegration: true,
-			contextIsolation: false,
+			contextIsolation: false
 		},
 	});
 
@@ -37,24 +37,7 @@ const main = function () {
 
 	win.once('ready-to-show', async () => {
 		win.show();
-
-		// actualizador
-		setInterval(() => {
-			new NsisUpdater().checkForUpdates();
-		}, 60000)
-
-	});
-
-	autoUpdater.on('checking-for-update', () => {
-		win.webContents.send('message', 'Checking for update...');
-	});
-
-	autoUpdater.on('update-available', (info) => {
-		win.webContents.send('message', 'Update available.');
-	});
-
-	autoUpdater.on('update-not-available', (info) => {
-		win.webContents.send('Update not available.');
+		new NsisUpdater().checkForUpdates();
 	});
 
 	autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
@@ -71,9 +54,23 @@ const main = function () {
 		})
 	});
 
+	/*
+	autoUpdater.on('checking-for-update', () => {
+		win.webContents.send('message', 'Checking for update...');
+	});
+
+	autoUpdater.on('update-available', (info) => {
+		win.webContents.send('message', 'Update available.');
+	});
+
+	autoUpdater.on('update-not-available', (info) => {
+		win.webContents.send('Update not available.');
+	});
+
 	autoUpdater.on('error', (err) => {
 		win.webContents.send('Error in auto-updater. ' + err);
 	});
+	*/
 };
 
 app.whenReady().then(() => main());

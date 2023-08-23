@@ -7,6 +7,7 @@ let routes = [
     {path: "/payments", component: () => import("./components/Payments.js") },
     {path: "/new_sale", component: () => import("./components/NewSale.js") },
     {path: "/dispatched_sales", component: () => import("./components/DispatchedSales.js") },
+    {path: "/report_sumary", component: () => import("./components/SumarySales.js") },
 ];
 
 // exportando rutas designadas

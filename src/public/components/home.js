@@ -53,7 +53,8 @@ let Home = Vue.component('Home', {
 		},
 
 		toNewSale() { this.$router.push('/new_sale'); },
-
+		toReport() { this.$router.push('/report_sumary'); },
+	
 		empty(num) {
 			if (num == NaN || num == undefined || num == null) {
 				return 0;
@@ -195,6 +196,13 @@ let Home = Vue.component('Home', {
 						<v-btn color="transparent" class="mr-2" elevation="0" @click="toNewSale">
 							<v-icon>mdi-point-of-sale</v-icon>
 							<span>Nueva Venta</span>  
+						</v-btn>
+					</div>
+
+					<div class="mt-1">
+						<v-btn color="red" text class="mr-2" elevation="0" @click="toReport">
+							<v-icon>mdi-deskphone</v-icon>
+							<span>Reportes</span>  
 						</v-btn>
 					</div>
 
