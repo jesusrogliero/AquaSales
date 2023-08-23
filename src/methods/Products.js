@@ -43,7 +43,7 @@ const Products = {
      */
     'create-product': async function (params) {
         try {
-            if(! await isAuth()) throw new Error('Usted no esta Autorizado');
+            if (! await isAuth()) throw new Error('Usted no esta Autorizado');
 
             if (params.cap > params.quantity) throw new Error('No puedes ingresar mas tapas que porductos');
 
@@ -171,7 +171,7 @@ const Products = {
      */
     'update-product': async function (params) {
         try {
-            if(! await isAuth()) throw new Error('Usted no esta Autorizado');
+            if (! await isAuth()) throw new Error('Usted no esta Autorizado');
 
             if (empty(params.name)) throw new Error("El nombre del producto es obligatorio");
             if (empty(params.liters)) throw new Error("Los litros del producto es obligatorio");
@@ -226,13 +226,13 @@ const Products = {
      */
     'destroy-product': async function (id) {
         try {
-            if(! await isAuth()) throw new Error('Usted no esta Autorizado');
+            if (! await isAuth()) throw new Error('Usted no esta Autorizado');
 
             let product = await Product.findByPk(id);
 
             if (product === null) throw new Error("Este producto no existe");
 
-            product.destroy();
+            await product.destroy();
 
             return { message: "Eliminado Correctamente", code: 1 };
 
