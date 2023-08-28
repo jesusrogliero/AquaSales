@@ -187,40 +187,25 @@ const Metrics = {
      * 
      * @returns {json} pago
      */
-    'metrics-sales-today': async function () {
+    'total-sales': async function () {
         try {
-            let data = await Sale.findAll({
+            const today = moment().format("YYYY-MM-DD");
+            const initWeek = moment().startOf('isoWeek').format("YYYY-MM-DD");
+            const initMonth = moment().startOf('month').format("YYYY-MM-DD");
+
+            let sale_today = await Sale.findAll({
                 attributes: [
                     [sequelize.literal("sum(total_bs)"), 'today_sales_bs'],
                     [sequelize.literal("sum(total_dolar)"), 'today_sales_dolar'],
                     [sequelize.literal("sum(total_units)"), 'today_sales_units'],
                 ],
                 where: {
-                    createdAt: moment().format("YYYY-MM-DD")
+                    createdAt: today
                 },
                 raw: true
             });
 
-            return data[0];
-        } catch (error) {
-            reportErrors(error);
-            log.error(error.message);
-            return { message: error.message, code: 0 };
-        }
-    },
-
-    /**
-     * Metricas de Ventas
-     * 
-     * @returns {json} pago
-     */
-    'metrics-sales-lastweek': async function () {
-        try {
-
-            const initWeek = moment().startOf('isoWeek').format("YYYY-MM-DD");
-            const today = moment().format("YYYY-MM-DD");
-
-            let data = await Sale.findAll({
+            let sale_week = await Sale.findAll({
                 attributes: [
                     [sequelize.literal("sum(total_bs)"), 'lastweek_sales_bs'],
                     [sequelize.literal("sum(total_dolar)"), 'lastweek_sales_dolar'],
@@ -234,28 +219,7 @@ const Metrics = {
                 raw: true
             });
 
-            return data[0];
-
-        } catch (error) {
-            log.error(error.message);
-            reportErrors(error);
-            return { message: error.message, code: 0 };
-        }
-    },
-
-
-    /**
-     * Metricas de Ventas
-     * 
-     * @returns {json} pago
-     */
-    'metrics-sales-lastmonth': async function () {
-        try {
-
-            const initMonth = moment().startOf('month').format("YYYY-MM-DD");
-            const today = moment().format("YYYY-MM-DD");
-
-            let data = await Sale.findAll({
+            let sale_mounth = await Sale.findAll({
                 attributes: [
                     [sequelize.literal("sum(total_bs)"), 'lastmonth_sales_bs'],
                     [sequelize.literal("sum(total_dolar)"), 'lastmonth_sales_dolar'],
@@ -269,14 +233,19 @@ const Metrics = {
                 raw: true
             });
 
-            return data[0];
+
+            return {
+                sale_today: sale_today[0],
+                sale_week: sale_week[0],
+                sale_mounth: sale_mounth[0]
+            };
 
         } catch (error) {
-            log.error(error.message);
             reportErrors(error);
+            log.error(error.message);
             return { message: error.message, code: 0 };
         }
-    },
+    }
 
 };
 

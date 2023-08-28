@@ -7,6 +7,7 @@ let Home = Vue.component('Home', {
 	data: function () {
 		return {
 			loading: false,
+			details: false,
 
 			today_sales: {},
 			lastweek_sales: {},
@@ -26,19 +27,14 @@ let Home = Vue.component('Home', {
 	},
 
 	async mounted() {
-		this.loading = true;
 		this.saludar();
 		await this.getMetricsIcomes();
-		await this.getMetricsToday();
-		await this.getMetricsLastweek();
-		await this.getMetricsLastmonth();
+		await this.getMetricsTotal();
 		await this.getLitersDispatch();
 		await this.getPendingDispatch();
 		await this.getBcv();
-		console.log(this.icomes);
-		this.loading = false;
 	},
- 
+
 	methods: {
 
 		saludar() {
@@ -54,7 +50,7 @@ let Home = Vue.component('Home', {
 
 		toNewSale() { this.$router.push('/new_sale'); },
 		toReport() { this.$router.push('/report_sumary'); },
-	
+
 		empty(num) {
 			if (num == NaN || num == undefined || num == null) {
 				return 0;
@@ -71,11 +67,10 @@ let Home = Vue.component('Home', {
 				}
 				this.bcv = response;
 			} catch (error) {
-				alertApp({color: "error", icon: "alert", text: error.message});
+				alertApp({ color: "error", icon: "alert", text: error.message });
 			}
 
 		},
-
 
 		async getPendingDispatch() {
 			try {
@@ -86,7 +81,7 @@ let Home = Vue.component('Home', {
 				}
 				this.pending_dispatch = response.pending_dispatch;
 			} catch (error) {
-				alertApp({color: "error", icon: "alert", text: error.message});
+				alertApp({ color: "error", icon: "alert", text: error.message });
 			}
 
 		},
@@ -103,47 +98,36 @@ let Home = Vue.component('Home', {
 				this.lastweek_liters_consumption = response.lastweek_liters_consumption;
 				this.lastmonth_liters_consumption = response.lastmonth_liters_consumption;
 			} catch (error) {
-				alertApp({color: "error", icon: "alert", text: error.message});
+				alertApp({ color: "error", icon: "alert", text: error.message });
 			}
 
 		},
 
-		async getMetricsToday() {
+		async getMetricsTotal() {
 			try {
-				let response = await execute('metrics-sales-today');
+				let response = await execute('total-sales');
 
 				if (response.code === 0) {
 					throw new Error(response.message)
 				}
 
-				this.today_sales.bs = parseFloat(this.empty(response.today_sales_bs)).toFixed(2);
-				this.today_sales.dolar = parseFloat(this.empty(response.today_sales_dolar)).toFixed(2);
-				this.today_sales.units = response.today_sales_units;
-	
+				this.today_sales.bs = parseFloat(this.empty(response.sale_today.today_sales_bs)).toFixed(2);
+				this.today_sales.dolar = parseFloat(this.empty(response.sale_today.today_sales_dolar)).toFixed(2);
+				this.today_sales.units = response.sale_today.today_sales_units;
+
+				this.lastweek_sales.bs = parseFloat(this.empty(response.sale_week.lastweek_sales_bs)).toFixed(2);
+				this.lastweek_sales.dolar = parseFloat(this.empty(response.sale_week.lastweek_sales_dolar)).toFixed(2);
+				this.lastweek_sales.units = response.sale_week.lastweek_sales_units;
+
+				this.lastmonth_sales.bs = parseFloat(this.empty(response.sale_mounth.lastmonth_sales_bs)).toFixed(2);
+				this.lastmonth_sales.dolar = parseFloat(this.empty(response.sale_mounth.lastmonth_sales_dolar)).toFixed(2);
+				this.lastmonth_sales.units = response.sale_mounth.lastmonth_sales_units;
+
 			} catch (error) {
-				alertApp({color: "error", icon: "alert", text: error.message});
+				alertApp({ color: "error", icon: "alert", text: error.message });
 			}
 		},
 
-
-		async getMetricsLastweek() {
-			try {
-				let response = await execute('metrics-sales-lastweek');
-
-				if (response.code === 0) {
-					throw new Error(response.message)
-				}
-
-				this.lastweek_sales.bs = parseFloat(this.empty(response.lastweek_sales_bs)).toFixed(2);
-				this.lastweek_sales.dolar = parseFloat( this.empty(response.lastweek_sales_dolar)).toFixed(2);
-				this.lastweek_sales.units = response.lastweek_sales_units;
-
-			} catch (error) {
-				alertApp({color: "error", icon: "alert", text: error.message});
-			}
-		},
-
-		
 		async getMetricsIcomes() {
 			try {
 				let response = await execute('icomes-metrics');
@@ -155,26 +139,10 @@ let Home = Vue.component('Home', {
 				this.icomes = response;
 
 			} catch (error) {
-				alertApp({color: "error", icon: "alert", text: error.message});
+				alertApp({ color: "error", icon: "alert", text: error.message });
 			}
 		},
 
-		async getMetricsLastmonth() {
-			try {
-				let response = await execute('metrics-sales-lastmonth');
-
-				if (response.code === 0) {
-					throw new Error(response.message)
-				}
-
-				this.lastmonth_sales.bs = parseFloat(this.empty(response.lastmonth_sales_bs)).toFixed(2);
-				this.lastmonth_sales.dolar = parseFloat(this.empty(response.lastmonth_sales_dolar)).toFixed(2);
-				this.lastmonth_sales.units = response.lastmonth_sales_units;
-
-			} catch (error) {
-				alertApp({color: "error", icon: "alert", text: error.message});
-			}
-		}
 	},
 
 	template: `
@@ -191,6 +159,14 @@ let Home = Vue.component('Home', {
 					</v-col>	
 					
 					<v-spacer/>
+
+					<div class="mt-1">
+						<v-btn color="green" @click="details=!details" text class="mr-2" elevation="0">
+							<v-icon>mdi-currency-usd</v-icon>
+							<span v-if="details">Totales</span> 
+							<span v-else>Detalles</span>  
+						</v-btn>
+					</div>
 
 					<div class="mt-1">
 						<v-btn color="transparent" class="mr-2" elevation="0" @click="toNewSale">
@@ -222,7 +198,7 @@ let Home = Vue.component('Home', {
 								<v-icon  class="ml-2" color="green">mdi-calendar-month</v-icon> </v-card-title>
 							</v-card-title>
 							<v-card-text>
-								<v-row>
+								<v-row v-if="details">
 
 									<v-col cols="12">
 										<b style="font-size:15pt;">Pago Movil: </b>
@@ -245,6 +221,23 @@ let Home = Vue.component('Home', {
 										</span>
 									</v-col>
 								</v-row>
+
+								<v-row v-else>
+
+									<v-col cols="12">
+										<b style="font-size:15pt;">Total BsS: </b>
+										<span style="font-size:20pt;" class="float-right">  
+											{{today_sales.bs == null ? 0 : today_sales.bs }} BsS
+										</span>
+									</v-col>
+
+									<v-col cols="12">
+										<b style="font-size:15pt;" >Total $: </b>
+										<span style="font-size:20pt;" class="float-right">  
+											{{today_sales.dolar == null ? 0 : today_sales.dolar }} $
+										</span>
+									</v-col>
+								</v-row>
 							</v-card-text>
 						</v-card>
 					</v-col>
@@ -256,7 +249,7 @@ let Home = Vue.component('Home', {
 								<v-icon  class="ml-2" color="green">mdi-calendar-month</v-icon> </v-card-title>
 							</v-card-title>
 							<v-card-text>
-								<v-row>
+								<v-row v-if="details">
 									<v-col cols="12">
 										<b style="font-size:15pt;">Pago Movil: </b>
 										<span style="font-size:20pt;" class="float-right">  
@@ -279,6 +272,23 @@ let Home = Vue.component('Home', {
 									</v-col>
 								
 								</v-row>
+
+								<v-row v-else>
+
+									<v-col cols="12">
+										<b style="font-size:15pt;">Total BsS: </b>
+										<span style="font-size:20pt;" class="float-right">  
+											{{lastweek_sales.bs == null ? 0 : lastweek_sales.bs }} BsS
+										</span>
+									</v-col>
+
+									<v-col cols="12">
+										<b style="font-size:15pt;" >Total $: </b>
+										<span style="font-size:20pt;" class="float-right">  
+											{{lastweek_sales.dolar == null ? 0 : lastweek_sales.dolar }} $
+										</span>
+									</v-col>
+								</v-row>
 							</v-card-text>
 						</v-card>
 					</v-col>
@@ -289,7 +299,7 @@ let Home = Vue.component('Home', {
 							INGRESOS DE ESTE MES
 							<v-icon  class="ml-2" color="green">mdi-calendar-month</v-icon> </v-card-title>
 							<v-card-text>
-								<v-row>
+								<v-row v-if="details">
 									<v-col cols="12">
 										<b style="font-size:15pt;">Pago Movil: </b>
 										<span style="font-size:20pt;" class="float-right">  
@@ -308,6 +318,23 @@ let Home = Vue.component('Home', {
 										<b style="font-size:15pt;">Efectivo en $: </b>
 										<span style="font-size:20pt;" class="float-right">  
 											{{icomes.month_icome.cash_dollar_icome == null ? 0 : icomes.month_icome.cash_dollar_icome }} $
+										</span>
+									</v-col>
+								</v-row>
+
+								<v-row v-else>
+
+									<v-col cols="12">
+										<b style="font-size:15pt;">Total BsS: </b>
+										<span style="font-size:20pt;" class="float-right">  
+											{{lastmonth_sales.bs == null ? 0 : lastmonth_sales.bs }} BsS
+										</span>
+									</v-col>
+
+									<v-col cols="12">
+										<b style="font-size:15pt;" >Total $: </b>
+										<span style="font-size:20pt;" class="float-right">  
+											{{lastmonth_sales.dolar == null ? 0 : lastmonth_sales.dolar }} $
 										</span>
 									</v-col>
 								</v-row>
