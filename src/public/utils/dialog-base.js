@@ -2,19 +2,31 @@
 
 export default Vue.component('dialog-base', {
 
-    props: ['active', 'hide'],
-
-    data: function () {
+    props: ["active", "hide", "max-width"],
+    
+    data: function(){
         return {
+            maxWindow: 640
+        }
+    },
 
-        };
+    created: function(){
+        if( this.maxWidth > 0 )
+            this.maxWindow = this.maxWidth;
+    },
+
+    watch: {
+        maxWidth: function(value){
+            if(  value > 0 )
+                this.maxWindow = value;
+        }
     },
 
     template: `
     
     <v-dialog
         transition="dialog-bottom-transition"
-        max-width="600"
+        :max-width = "maxWindow"
         v-model="active"
     >
         <template v-slot:default="dialog">
