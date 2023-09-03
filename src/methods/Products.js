@@ -68,7 +68,8 @@ const Products = {
                 price_dolar: price_dolar,
                 price_bs: price_bs,
                 cap: params.cap,
-                is_dolar: params.is_dolar
+                is_dolar: params.is_dolar,
+                is_combo: params.is_combo
             });
 
             return { message: "Agregado con exito", code: 1 };
@@ -204,6 +205,7 @@ const Products = {
             product.price_bs = price_bs;
             product.price_dolar = price_dolar;
             product.cap = params.cap;
+            product.is_combo = params.is_combo;
 
             await product.save();
 

@@ -14,6 +14,7 @@ export default Vue.component('products', {
             price: null,
             cap: null,
             is_dolar: false,
+            is_combo: false,
 
             requiredRule: [v => !!v || 'Este campo es requerido!!'],
 			numberRule: [
@@ -55,6 +56,7 @@ export default Vue.component('products', {
 					this.quantity = response.quantity;
                     this.cap = response.cap;
                     this.is_dolar = response.is_dolar;
+                    this.is_combo = response.is_combo;
 
                     this.price = response.price_bs;
                     if(response.is_dolar) {
@@ -82,6 +84,7 @@ export default Vue.component('products', {
 			this.dialog = null;
             this.cap = null;
             this.is_dolar = false;
+            this.is_combo = false;
 		},
 
         validate() {
@@ -101,7 +104,8 @@ export default Vue.component('products', {
                     quantity: this.quantity,
                     price: this.price,
                     cap: this.cap,
-                    is_dolar: this.is_dolar
+                    is_dolar: this.is_dolar,
+                    is_combo: this.is_combo
                 });
 
 				if (response.code == 0)
@@ -128,7 +132,8 @@ export default Vue.component('products', {
                     quantity: this.quantity,
                     price: this.price,
                     cap: this.cap,
-                    is_dolar: this.is_dolar
+                    is_dolar: this.is_dolar,
+                    is_combo: this.is_combo
                 });
 
 				if (response.code == 0)
@@ -228,6 +233,12 @@ export default Vue.component('products', {
                         <v-text-field v-model="cap" suffix="UNID" :rules="numberRule" type="number" label="Cantidad de Tapas" required
                             placeholder="Ingresa la cantidad de tapas"></v-text-field>
                         </v-col>
+
+                        <v-col cols="12" lg="6" md="6" sm="6"  class="mt-2">
+                            <v-switch v-model="is_combo" label="Es un Combo" ></v-switch>
+                        </v-col>
+
+                     
                     </v-row>
                 </v-form>
             </template>

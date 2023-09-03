@@ -100,6 +100,12 @@ const Product = sequelize.define("products", {
         defaultValue: 0
     },
 
+    is_combo: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false
+    },
+
     price_dolar: {
         type: DataTypes.DECIMAL,
         allowNull: false,
