@@ -17,6 +17,7 @@ const main = function () {
 		show: false,
 		minWidth: 1110,
 		minHeight: 900,
+		title: `AquaSales - V${app.getVersion()}`,
 		webPreferences: {
 			nodeIntegration: true,
 			contextIsolation: false
