@@ -7,7 +7,7 @@ let Home = Vue.component('Home', {
 	data: function () {
 		return {
 			loading: false,
-			details: false,
+			details: true,
 
 			today_sales: {},
 			lastweek_sales: {},

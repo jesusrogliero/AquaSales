@@ -77,6 +77,15 @@ const SaleItems = {
 			let total_dolar = parseFloat( (product.price_dolar * params.quantity).toFixed(2) );
 			let total_bs = product.price_bs * params.quantity;
 
+
+			let pending_dispatch = params.quantity * product.quantity;
+			let dispatched = 0;
+
+			if(!product.is_combo) {
+				pending_dispatch = 0;
+				dispatched = params.quantity * product.quantity;
+			}
+
 			let item = await SaleItem.create({
 				sale_id: sale.id,
 				product_id: params.product_id,
@@ -86,7 +95,8 @@ const SaleItems = {
 				caps: product.cap * (params.quantity * product.quantity),
 				liters: product.liters * params.quantity,
 				units: params.quantity * product.quantity,
-				pending_dispatch: params.quantity * product.quantity
+				pending_dispatch: pending_dispatch,
+				dispatched: dispatched
 			});
 
 			sale.total_dolar = sale.total_dolar + item.total_dolar;
@@ -97,6 +107,7 @@ const SaleItems = {
 			sale.total_caps = sale.total_caps + item.caps;
 			sale.total_liters = sale.total_liters + item.liters;
 			sale.pending_dispatch = sale.pending_dispatch + item.pending_dispatch;
+			sale.total_dispatched = sale.total_dispatched + item.dispatched;
 
 			await sale.save();
 			return { message: "Agregado con exito", code: 1 };
