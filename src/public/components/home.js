@@ -88,9 +88,9 @@ let Home = Vue.component('Home', {
 
 		
 
-		async sumeryReportPdf(days) {
+		async sumeryReportPdf(period) {
 			try {
-				let response = await execute('sumary-report',days );
+				let response = await execute('sumary-report',period );
 
 				if (response.code === 0) {
 					throw new Error(response.message)
@@ -213,7 +213,7 @@ let Home = Vue.component('Home', {
 						<v-card color="#ECEFF1">
 							<v-card-title>
 								INGRESOS HOY
-								<v-icon @click="sumeryReportPdf(0)"  class="ml-2" color="green">mdi-calendar-month</v-icon> 
+								<v-icon @click="sumeryReportPdf('TODAY')"  class="ml-2" color="green">mdi-calendar-month</v-icon> 
 							</v-card-title>
 							</v-card-title>
 							<v-card-text>
@@ -265,7 +265,7 @@ let Home = Vue.component('Home', {
 						<v-card color="#ECEFF1">
 							<v-card-title>
 								INGRESOS ESTA SEMANA
-								<v-icon @click="sumeryReportPdf(7)" class="ml-2" color="green">mdi-calendar-month</v-icon> </v-card-title>
+								<v-icon @click="sumeryReportPdf('WEEK')" class="ml-2" color="green">mdi-calendar-month</v-icon> </v-card-title>
 							</v-card-title>
 							<v-card-text>
 								<v-row v-if="details">
@@ -316,7 +316,7 @@ let Home = Vue.component('Home', {
 						<v-card color="#ECEFF1">
 							<v-card-title>
 							INGRESOS DE ESTE MES
-							<v-icon  @click="sumeryReportPdf(30)" class="ml-2" color="green">mdi-calendar-month</v-icon> </v-card-title>
+							<v-icon  @click="sumeryReportPdf('MOUNTH')" class="ml-2" color="green">mdi-calendar-month</v-icon> </v-card-title>
 							<v-card-text>
 								<v-row v-if="details">
 									<v-col cols="12">
