@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Example 1</title>
+
+  <style>
+    .clearfix:after {
+      content: "";
+      display: table;
+      clear: both;
+    }
+
+    a {
+      color: #5D6975;
+      text-decoration: underline;
+    }
+
+    body {
+      position: relative;
+      width: 21cm;
+      height: 29.7cm;
+      margin: 0 auto;
+      color: #001028;
+      background: #FFFFFF;
+      font-family: Arial, sans-serif;
+      font-size: 12px;
+      font-family: Arial;
+    }
+
+    header {
+      padding: 10px 0;
+      margin-bottom: 30px;
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+
+    #logo {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    #logo img {
+      width: 90px;
+    }
+
+    h1 {
+      border-top: 1px solid #5D6975;
+      border-bottom: 1px solid #5D6975;
+      color: #5D6975;
+      font-size: 2.4em;
+      line-height: 1.4em;
+      font-weight: normal;
+      text-align: center;
+      margin: 0 0 20px 0;
+      background: url(https://lh3.googleusercontent.com/u/0/drive-viewer/AK7aPaCUr7Ns77AaXTUgluYS1fPxXojU9LTtPjwJIu09QDJMtW884j9MNzkrRHJiUOWm-9Gz_nGlTDh5rzMPEpbQDq11BI5VYQ=w2764-h1704);
+    }
+
+    #project {
+      float: right;
+    }
+
+    #project span {
+      color: #5D6975;
+      text-align: right;
+      width: 52px;
+      margin-right: 10px;
+      display: inline-block;
+      font-size: 0.8em;
+    }
+
+    #company {
+      float: left;
+      text-align: left;
+    }
+
+    #project div,
+    #company div {
+      white-space: nowrap;
+      font-size: 12pt;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      border-spacing: 0;
+      margin-bottom: 20px;
+    }
+
+    table tr:nth-child(2n-1) td {
+      background: #F5F5F5;
+    }
+
+    table th,
+    table td {
+      text-align: center;
+    }
+
+    table th {
+      padding: 5px 20px;
+      color: #5D6975;
+      border-bottom: 1px solid #C1CED9;
+      white-space: nowrap;
+      font-weight: normal;
+    }
+
+    table .service,
+    table .desc {
+      text-align: left;
+    }
+
+    table td {
+      padding: 20px;
+      text-align: right;
+    }
+
+    table td.service,
+    table td.desc {
+      vertical-align: top;
+    }
+
+    table td.unit,
+    table td.qty,
+    table td.total {
+      font-size: 1.2em;
+    }
+
+    table td.grand {
+      border-top: 1px solid #5D6975;
+      ;
+    }
+
+    #notices .notice {
+      color: #5D6975;
+      font-size: 1.2em;
+    }
+
+    .border {
+      border: solid black 1px;
+    }
+
+    footer {
+      color: #5D6975;
+      width: 100%;
+      height: 30px;
+      position: absolute;
+      bottom: 0;
+      border-top: 1px solid #C1CED9;
+      padding: 8px 0;
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+  <header class="clearfix">
+    <div id="company" class="clearfix">
+      <div><span style="font-weight: bold;">INVERSIONES SAN MIGUEL ARCANGEL <br/>  AGUA PURIFICADA C.A</span></div>
+      <div><span>RIF: J-503525320</span></div>
+      <div><span>Calle Florida, Casa Nro 15 Sector La Cooperativa<br /> Maracay Edo. Aragua</span></div>
+      <div><span>Tlf:. (0412) 505.67.93</span></div>
+    </div>
+
+    <div id="project">
+      <div id="logo">
+        <img src="https://lh3.googleusercontent.com/u/0/drive-viewer/AK7aPaCnGMqoHQ8_IpZD1ArKXKgwdHsOr46J1thFE40-I2BKF0d4vC1GpfsgFxrapeUPhxGcXcqfgBP5gK3pqVwGLQ4YJgJCdw=w2764-h1704">
+      </div>
+    </div>
+
+  </header>
+
+  <main>
+    <h1>{{this.title}}</h1>
+    <table>
+      <thead>
+        <tr>
+          <th class="service">FECHA</th>
+          <th class="desc">PAGO MOVIL</th>
+          <th>USD EFEC</th>
+          <th>BSS EFEC</th>
+          <th>UNID</th>
+          <th>LITROS</th>
+          <th>TAPAS</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each sales}}
+        <tr>
+          <td class="unit">{{this.createdAt}}</td>
+          <td class="unit">{{this.mobile_payment}}</td>
+          <td class="unit">{{this.cash_dollar}}</td>
+          <td class="unit">{{this.cash_bolivares}}</td>
+          <td class="unit">{{this.sales_units}}</td>
+          <td class="unit">{{this.liters_consumption}}</td>
+          <td class="unit">{{this.total_caps}}</td>
+        </tr>
+        {{/each}}
+
+        <tr class="border">
+          {{#each totals_sales}}
+          <td class="total"></td>
+          <td>TOTAL</td>
+          <td class="total">{{this.total_sales_bs}}</td>
+          <td class="total">{{this.total_sales_dolar}}</td>
+          <td class="total">{{this.total_sales_units}}</td>
+          <td class="total">{{this.total_sales_liters}}</td>
+          <td class="total">{{this.total_sales_caps}}</td>
+          {{/each}}
+        </tr>
+      </tbody>
+    </table>
+</body>
+
+</html>

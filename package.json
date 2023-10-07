@@ -1,6 +1,6 @@
 {
 	"name": "aqua_sales",
-	"version": "1.9.0",
+	"version": "1.13.0",
 	"description": "AquaSales",
 	"main": "app.js",
 	"repository": {
@@ -54,6 +54,7 @@
 		"googleapis": "^123.0.0",
 		"moment": "^2.29.4",
 		"nodemailer": "^6.9.3",
+		"pdf-creator-node": "^2.3.5",
 		"sequelize": "^6.6.5",
 		"sqlite3": "^5.0.2"
 	}

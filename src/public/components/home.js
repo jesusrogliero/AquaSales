@@ -86,6 +86,24 @@ let Home = Vue.component('Home', {
 
 		},
 
+		
+
+		async sumeryReportPdf(days) {
+			try {
+				let response = await execute('sumary-report',days );
+
+				if (response.code === 0) {
+					throw new Error(response.message)
+				}
+
+				alertApp({color: "success",icon: "check", text: response.message});
+				
+			} catch (error) {
+				alertApp({ color: "error", icon: "alert", text: error.message });
+			}
+
+		},
+
 		async getLitersDispatch() {
 			try {
 				let response = await execute('liters-dispatch');
@@ -195,7 +213,8 @@ let Home = Vue.component('Home', {
 						<v-card color="#ECEFF1">
 							<v-card-title>
 								INGRESOS HOY
-								<v-icon  class="ml-2" color="green">mdi-calendar-month</v-icon> </v-card-title>
+								<v-icon @click="sumeryReportPdf(0)"  class="ml-2" color="green">mdi-calendar-month</v-icon> 
+							</v-card-title>
 							</v-card-title>
 							<v-card-text>
 								<v-row v-if="details">
@@ -246,7 +265,7 @@ let Home = Vue.component('Home', {
 						<v-card color="#ECEFF1">
 							<v-card-title>
 								INGRESOS ESTA SEMANA
-								<v-icon  class="ml-2" color="green">mdi-calendar-month</v-icon> </v-card-title>
+								<v-icon @click="sumeryReportPdf(7)" class="ml-2" color="green">mdi-calendar-month</v-icon> </v-card-title>
 							</v-card-title>
 							<v-card-text>
 								<v-row v-if="details">
@@ -297,7 +316,7 @@ let Home = Vue.component('Home', {
 						<v-card color="#ECEFF1">
 							<v-card-title>
 							INGRESOS DE ESTE MES
-							<v-icon  class="ml-2" color="green">mdi-calendar-month</v-icon> </v-card-title>
+							<v-icon  @click="sumeryReportPdf(30)" class="ml-2" color="green">mdi-calendar-month</v-icon> </v-card-title>
 							<v-card-text>
 								<v-row v-if="details">
 									<v-col cols="12">

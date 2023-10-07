@@ -193,11 +193,19 @@ const Metrics = {
             const initWeek = moment().startOf('isoWeek').format("YYYY-MM-DD");
             const initMonth = moment().startOf('month').format("YYYY-MM-DD");
 
-            let sale_today = await Sale.findAll({
+            let sale_today = await Payment.findAll({
                 attributes: [
-                    [sequelize.literal("sum(total_bs)"), 'today_sales_bs'],
-                    [sequelize.literal("sum(total_dolar)"), 'today_sales_dolar'],
-                    [sequelize.literal("sum(total_units)"), 'today_sales_units'],
+                    [sequelize.literal("( sum(mobile_payment) + sum(cash_bolivares) )  || ' BsS' "), 'today_sales_bs'],
+                    [sequelize.literal("sum(cash_dollar) || ' $' "), 'today_sales_dolar'],
+                    [sequelize.literal("sum(total_units) || ' UNID' "), 'today_sales_units'],
+                    
+                ],
+                include: [
+                    {
+                        model: Sale,
+                        required: true,
+                        attributes: [],
+                    }
                 ],
                 where: {
                     createdAt: today
@@ -205,11 +213,18 @@ const Metrics = {
                 raw: true
             });
 
-            let sale_week = await Sale.findAll({
+            let sale_week = await Payment.findAll({
                 attributes: [
-                    [sequelize.literal("sum(total_bs)"), 'lastweek_sales_bs'],
-                    [sequelize.literal("sum(total_dolar)"), 'lastweek_sales_dolar'],
-                    [sequelize.literal("sum(total_units)"), 'lastweek_sales_units'],
+                    [sequelize.literal("( sum(mobile_payment) + sum(cash_bolivares) )  || ' BsS' "), 'lastweek_sales_bs'],
+                    [sequelize.literal("sum(cash_dollar) || ' $' "), 'lastweek_sales_dolar'],
+                    [sequelize.literal("sum(total_units) || ' UNID' "), 'lastweek_sales_units'], 
+                ],
+                include: [
+                    {
+                        model: Sale,
+                        required: true,
+                        attributes: [],
+                    }
                 ],
                 where: {
                     createdAt: {
@@ -219,11 +234,18 @@ const Metrics = {
                 raw: true
             });
 
-            let sale_mounth = await Sale.findAll({
+            let sale_mounth = await Payment.findAll({
                 attributes: [
-                    [sequelize.literal("sum(total_bs)"), 'lastmonth_sales_bs'],
-                    [sequelize.literal("sum(total_dolar)"), 'lastmonth_sales_dolar'],
-                    [sequelize.literal("sum(total_units)"), 'lastmonth_sales_units'],
+                    [sequelize.literal("( sum(mobile_payment) + sum(cash_bolivares) )  || ' BsS' "), 'lastmonth_sales_bs'],
+                    [sequelize.literal("sum(cash_dollar) || ' $' "), 'lastmonth_sales_dolar'],
+                    [sequelize.literal("sum(total_units) || ' UNID' "), 'lastmonth_sales_units'], 
+                ],
+                include: [
+                    {
+                        model: Sale,
+                        required: true,
+                        attributes: [],
+                    }
                 ],
                 where: {
                     createdAt: {
