@@ -54,6 +54,7 @@
 		"googleapis": "^123.0.0",
 		"moment": "^2.29.4",
 		"nodemailer": "^6.9.3",
+		"pdf-creator-node": "^2.3.5",
 		"sequelize": "^6.6.5",
 		"sqlite3": "^5.0.2"
 	}
