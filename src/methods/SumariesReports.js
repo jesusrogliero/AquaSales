@@ -7,7 +7,7 @@ const sequelize = require("../connection.js");
 const { Op } = require('sequelize');
 const moment = require('moment');
 const reportErrors = require('../helpers/reportErrors.js');
-const pdf = require('../helpers/ExportPdf.js');
+const createPdfFromTemplate = require('../helpers/ExportPdf.js');
 
 const Sumaries = {
 
@@ -67,11 +67,23 @@ const Sumaries = {
      * 
      * @returns {json} pago
     */
-    'sumary-report': async function (days) {
-        let initDate = moment();
-        let finalDate = moment().subtract(days, 'days');
-
+    'sumary-report': async function (period) {
+        
         try {
+            let initDate = null;
+            let finalDate = null;
+    
+            if (period == 'WEEK') {
+                finalDate = moment().format("YYYY-MM-DD");
+                initDate = moment().startOf('isoWeek').format("YYYY-MM-DD");
+            } else if (period === 'MONTH') {
+                initDate = moment().startOf('month').format("YYYY-MM-DD");
+                finalDate = moment().format("YYYY-MM-DD");
+            } else { // HOY
+                initDate = moment().format("YYYY-MM-DD");
+                finalDate = moment().format("YYYY-MM-DD");
+            }
+
             let option = {
                 attributes: [
                     sequelize.col('payment.createdAt'),
@@ -92,7 +104,7 @@ const Sumaries = {
                 ],
                 where: {
                     createdAt: {
-                        [Op.between]: [finalDate.format("YYYY-MM-DD"), initDate.format("YYYY-MM-DD")]
+                        [Op.between]: [initDate, finalDate]
                     }
                 },
                 raw: true
@@ -117,17 +129,22 @@ const Sumaries = {
                 ],
                 where: {
                     createdAt: {
-                        [Op.between]: [finalDate.format("YYYY-MM-DD"), initDate.format("YYYY-MM-DD")]
+                        [Op.between]: [initDate, finalDate]
                     }
                 },
                 raw: true
             });
 
-            pdf({
+
+            createPdfFromTemplate('sumarySales.html', {
                 title: `Resumen de Venta`,
                 sales: sales,
                 totals_sales: totals_sales
-            }, 'sumarySales.html');
+            })
+                .catch((error) => {
+                    throw new Error('Error al Crear el PDF');
+                });
+
 
             return { message: 'Reporte Creado Correctamente', code: 1 };
 
