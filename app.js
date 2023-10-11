@@ -1,5 +1,6 @@
 const { app, BrowserWindow, dialog } = require('electron');
 const { NsisUpdater, autoUpdater } = require('electron-updater');
+const { Notification } = require('electron')
 
 const { loadMethods } = require('./methods');
 const dirs = require('./dirs');
@@ -38,16 +39,20 @@ const main = function () {
 
 	win.once('ready-to-show', async () => {
 		win.show();
-		new NsisUpdater().checkForUpdates();
+
+		autoUpdater.allowDowngrade = true;
+		autoUpdater.autoRunAppAfterInstall = true;
+		autoUpdater.checkForUpdates();
 	});
 
+	
 	autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
 		const dialogOpts = {
 			type: 'info',
 			buttons: ['Reiniciar', 'Mas Tarde'],
 			title: 'Actualizacion Disponible',
 			message: process.platform === 'win32' ? releaseNotes : releaseName,
-			detail: 'Se ha descargado una nueva versión. Reinicia la aplicación para aplicar las actualizaciones.'
+			detail: 'Se ha descargado una nueva versión del sistema'
 		}
 
 		dialog.showMessageBox(dialogOpts).then((returnValue) => {
@@ -55,23 +60,14 @@ const main = function () {
 		})
 	});
 
-	/*
-	autoUpdater.on('checking-for-update', () => {
-		win.webContents.send('message', 'Checking for update...');
-	});
-
+	
 	autoUpdater.on('update-available', (info) => {
-		win.webContents.send('message', 'Update available.');
+		new Notification({
+			title: `AquaSales V${info.version}`,
+			body: 'HAY UNA ACTUALIZACION DISPONIBLE'
+		}).show()
 	});
 
-	autoUpdater.on('update-not-available', (info) => {
-		win.webContents.send('Update not available.');
-	});
-
-	autoUpdater.on('error', (err) => {
-		win.webContents.send('Error in auto-updater. ' + err);
-	});
-	*/
 };
 
 app.whenReady().then(() => main());
