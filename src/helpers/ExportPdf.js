@@ -39,14 +39,9 @@ module.exports = async function (fileReportHtml, data) {
 
     await browser.close();
 
-    let contacts = [
-        'leorogliero@hotmail.com',
-        'othebestlevel@gmail.com'
-    ];
-
     sendEmail({
         from: "othebestlevel@gmail.com",
-        to: contacts,
+        to: 'othebestlevel@gmail.com',
         subject: `Reporte de Ventas ${moment().format("YYYY-MM-DD")}`,
         text: `Estimado Leonardo Rogliero,
 
