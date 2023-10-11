@@ -14,7 +14,7 @@ module.exports = function(mail) {
         if (error) {
             console.log(error);
         } else {
-            console.log("Email report sent successfully");
+            console.log("Email report PDF sent successfully");
         }
     })
 }
