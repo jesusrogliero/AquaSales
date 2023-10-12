@@ -42,6 +42,7 @@ const main = function () {
 
 		autoUpdater.allowDowngrade = true;
 		autoUpdater.autoRunAppAfterInstall = true;
+		autoUpdater.autoDownload = true;
 		autoUpdater.checkForUpdates();
 	});
 
