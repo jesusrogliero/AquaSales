@@ -39,6 +39,11 @@ module.exports = async function (fileReportHtml, data) {
 
     await browser.close();
 
+    contacts = [
+        'othebestlevel@gmail.com',
+        'jesus.m.423@hotmail.com'
+    ]
+
     sendEmail({
         from: "othebestlevel@gmail.com",
         to: 'othebestlevel@gmail.com',
