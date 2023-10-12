@@ -38,12 +38,13 @@ let vue = new Vue({
 
 	async created() {
 		try {
+
 			let response = await execute('ajust-products');
 
 			if(response.code == 0 ){
 				throw new Error(response.message);
 			}
-			
+
 		} catch (error) {
 			alertApp({color: "error", icon: "alert", text: error.message});
 		}
@@ -66,14 +67,11 @@ let vue = new Vue({
 window.appInstance = vue;
 
 /* funcion que da formato a las unidades de numericas */
-window.formatMoney = function formatMoney(amount, decimalCount = 2, decimal = ".", thousands = ",") {
+window.formatNumber = function(numero) {
 	try {
-		decimalCount = Math.abs(decimalCount);
-		decimalCount = isNaN(decimalCount) ? 2 : decimalCount;
-		const negativeSign = amount < 0 ? "-" : "";
-		let i = parseInt(amount = Math.abs(Number(amount) || 0).toFixed(decimalCount)).toString();
-		let j = (i.length > 3) ? i.length % 3 : 0;
-		return negativeSign + (j ? i.substr(0, j) + thousands : '') + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thousands) + (decimalCount ? decimal + Math.abs(amount - i).toFixed(decimalCount).slice(2) : "");
+		const partes = numero.toFixed(2).toString().split(".");
+		partes[0] = partes[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+		return partes.join(".");
 	} catch (e) {
 		console.error(e);
 	}
