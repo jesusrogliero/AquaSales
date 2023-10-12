@@ -22,7 +22,9 @@ let Home = Vue.component('Home', {
 			lastmonth_liters_consumption: null,
 
 			bcv: 0,
-			mensaje: ''
+			mensaje: '',
+
+			formatNumber: window.formatNumber
 		};
 	},
 
@@ -222,21 +224,21 @@ let Home = Vue.component('Home', {
 									<v-col cols="12">
 										<b style="font-size:15pt;">Pago Movil: </b>
 										<span style="font-size:20pt;" class="float-right">  
-											{{icomes.today_icomes.mobile_payment_icome == null ? 0 : icomes.today_icomes.mobile_payment_icome }} BsS
+											{{icomes.today_icomes.mobile_payment_icome == null ? 0 : formatNumber(icomes.today_icomes.mobile_payment_icome) }} BsS
 										</span>
 									</v-col>
 
 									<v-col cols="12">
 										<b style="font-size:15pt;" >Efectivo en BsS: </b>
 										<span style="font-size:20pt;" class="float-right">  
-											{{icomes.today_icomes.cash_bolivares_icome == null ? 0 : icomes.today_icomes.cash_bolivares_icome }} BsS
+											{{icomes.today_icomes.cash_bolivares_icome == null ? 0 : formatNumber(icomes.today_icomes.cash_bolivares_icome) }} BsS
 										</span>
 									</v-col>
 
 									<v-col cols="12">
 										<b style="font-size:15pt;">Efectivo en $: </b>
 										<span style="font-size:20pt;" class="float-right">  
-											{{icomes.today_icomes.cash_dollar_icome == null ? 0 : icomes.today_icomes.cash_dollar_icome }} $
+											{{icomes.today_icomes.cash_dollar_icome == null ? 0 : formatNumber(icomes.today_icomes.cash_dollar_icome) }} $
 										</span>
 									</v-col>
 								</v-row>
@@ -272,21 +274,21 @@ let Home = Vue.component('Home', {
 									<v-col cols="12">
 										<b style="font-size:15pt;">Pago Movil: </b>
 										<span style="font-size:20pt;" class="float-right">  
-											{{icomes.week_icome.mobile_payment_icome == null ? 0 : icomes.week_icome.mobile_payment_icome }} BsS
+											{{icomes.week_icome.mobile_payment_icome == null ? 0 : formatNumber(icomes.week_icome.mobile_payment_icome) }} BsS
 										</span>
 									</v-col>
 
 									<v-col cols="12">
 										<b style="font-size:15pt;" >Efectivo en BsS: </b>
 										<span style="font-size:20pt;" class="float-right">  
-											{{icomes.week_icome.cash_bolivares_icome == null ? 0 : icomes.week_icome.cash_bolivares_icome }} BsS
+											{{icomes.week_icome.cash_bolivares_icome == null ? 0 : formatNumber(icomes.week_icome.cash_bolivares_icome) }} BsS
 										</span>
 									</v-col>
 
 									<v-col cols="12">
 										<b style="font-size:15pt;">Efectivo en $: </b>
 										<span style="font-size:20pt;" class="float-right">  
-											{{icomes.week_icome.cash_dollar_icome == null ? 0 : icomes.week_icome.cash_dollar_icome }} $
+											{{icomes.week_icome.cash_dollar_icome == null ? 0 : formatNumber(icomes.week_icome.cash_dollar_icome) }} $
 										</span>
 									</v-col>
 								
@@ -297,14 +299,14 @@ let Home = Vue.component('Home', {
 									<v-col cols="12">
 										<b style="font-size:15pt;">Total BsS: </b>
 										<span style="font-size:20pt;" class="float-right">  
-											{{lastweek_sales.bs == null ? 0 : lastweek_sales.bs }} BsS
+											{{lastweek_sales.bs == null ? 0 : formatNumber(lastweek_sales.bs) }} BsS
 										</span>
 									</v-col>
 
 									<v-col cols="12">
 										<b style="font-size:15pt;" >Total $: </b>
 										<span style="font-size:20pt;" class="float-right">  
-											{{lastweek_sales.dolar == null ? 0 : lastweek_sales.dolar }} $
+											{{lastweek_sales.dolar == null ? 0 : formatNumber(lastweek_sales.dolar) }} $
 										</span>
 									</v-col>
 								</v-row>
@@ -322,21 +324,21 @@ let Home = Vue.component('Home', {
 									<v-col cols="12">
 										<b style="font-size:15pt;">Pago Movil: </b>
 										<span style="font-size:20pt;" class="float-right">  
-											{{icomes.month_icome.mobile_payment_icome == null ? 0 : icomes.month_icome.mobile_payment_icome }} BsS
+											{{icomes.month_icome.mobile_payment_icome == null ? 0 : formatNumber(icomes.month_icome.mobile_payment_icome) }} BsS
 										</span>
 									</v-col>
 
 									<v-col cols="12">
 										<b style="font-size:15pt;" >Efectivo en BsS: </b>
 										<span style="font-size:20pt;" class="float-right">  
-											{{icomes.month_icome.cash_bolivares_icome == null ? 0 : icomes.month_icome.cash_bolivares_icome }} BsS
+											{{icomes.month_icome.cash_bolivares_icome == null ? 0 : formatNumber(icomes.month_icome.cash_bolivares_icome) }} BsS
 										</span>
 									</v-col>
 
 									<v-col cols="12">
 										<b style="font-size:15pt;">Efectivo en $: </b>
 										<span style="font-size:20pt;" class="float-right">  
-											{{icomes.month_icome.cash_dollar_icome == null ? 0 : icomes.month_icome.cash_dollar_icome }} $
+											{{icomes.month_icome.cash_dollar_icome == null ? 0 : formatNumber(icomes.month_icome.cash_dollar_icome) }} $
 										</span>
 									</v-col>
 								</v-row>
@@ -405,7 +407,7 @@ let Home = Vue.component('Home', {
 							<v-card-title>Vendidos Hoy</v-card-title>
 							<v-card-text>
 								<v-row>
-									<h1 class="ml-2">{{today_sales.units == null ? 0 : today_sales.units }} UNID</h1>
+									<h1 class="ml-2">{{today_sales.units == null ? '0 UNID' : today_sales.units }} </h1>
 									<v-spacer></v-spacer>
 									<v-img
 									class="mt-n10"
@@ -423,7 +425,7 @@ let Home = Vue.component('Home', {
 							<v-card-title>Vendidos Esta Semana</v-card-title>
 							<v-card-text>
 								<v-row>
-									<h1 class="ml-2">{{lastweek_sales.units == null ? 0 : lastweek_sales.units }} UNID</h1>
+									<h1 class="ml-2">{{lastweek_sales.units == null ? '0 UNID' : lastweek_sales.units }}</h1>
 									<v-spacer></v-spacer>
 									<v-img
 									class="mt-n10"
