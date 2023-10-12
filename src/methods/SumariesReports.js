@@ -68,15 +68,15 @@ const Sumaries = {
      * @returns {json} pago
     */
     'sumary-report': async function (period) {
-        
+
         try {
             let initDate = null;
             let finalDate = null;
-    
+
             if (period == 'WEEK') {
                 finalDate = moment().format("YYYY-MM-DD");
                 initDate = moment().startOf('isoWeek').format("YYYY-MM-DD");
-            } else if (period === 'MONTH') {
+            } else if (period === 'MOUNTH') {
                 initDate = moment().startOf('month').format("YYYY-MM-DD");
                 finalDate = moment().format("YYYY-MM-DD");
             } else { // HOY
@@ -134,7 +134,6 @@ const Sumaries = {
                 },
                 raw: true
             });
-
 
             createPdfFromTemplate('sumarySales.html', {
                 title: `Resumen de Venta`,
