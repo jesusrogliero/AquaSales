@@ -135,14 +135,11 @@ const Sumaries = {
                 raw: true
             });
 
-            createPdfFromTemplate('sumarySales.html', {
+           await createPdfFromTemplate('sumarySales.html', {
                 title: `Resumen de Venta`,
                 sales: sales,
                 totals_sales: totals_sales
-            })
-                .catch((error) => {
-                    throw new Error('Error al Crear el PDF');
-                });
+            });
 
 
             return { message: 'Reporte Creado Correctamente', code: 1 };
