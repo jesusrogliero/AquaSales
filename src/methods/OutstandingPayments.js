@@ -6,13 +6,15 @@ const empty = require('../helpers/empty.js');
 const log = require('electron-log');
 const isAuth = require('../helpers/auth.js');
 const reportErrors = require('../helpers/reportErrors.js');
+const Product = require('../models/Product.js');
 
 const OutstandingPayments = {
+
 
     /**
      * Ruta que muestra todos los pagos pendientes
      * 
-     * @returns json
+     * @returns items
      */
     'index-outstanding-payments': async function () {
         try {
@@ -21,11 +23,21 @@ const OutstandingPayments = {
                     'id', 'client', 'createdAt', 'updatedAt',
                     [sequelize.literal("debt_bs || ' BsS'"), 'debt_bs'],
                     [sequelize.literal("debt_dolar || ' $'"), 'debt_dolar'],
+                    [sequelize.literal("product.name "), 'product'],
+                    [sequelize.literal("outstanding_payments.quantity || ' UNID'"), 'quantity']
+                ],
+                include: [
+                    {
+                        model: Product,
+                        required: true,
+                        attributes: []
+                    }
                 ],
                 raw: true
             });
+
         } catch (error) {
-            log.error(error.message);
+            log.error(error);
             reportErrors(error);
             return { message: error.message, code: 0 };
         }
@@ -40,10 +52,21 @@ const OutstandingPayments = {
     'create-outstanding-payment': async function (params) {
         try {
 
+            let product = await Product.findByPk(params.product_id);
+
+            if (empty(product)) {
+                throw new Error('El producto no existe')
+            }
+
+            let debt_bs = product.price_bs * params.quantity;
+            let debt_dolar = product.price_dolar * params.quantity;
+
             await OutstandingPayment.create({
                 client: params.client,
-                debt_bs: params.debt_bs == null ? 0 : params.debt_bs,
-                debt_dolar: params.debt_dolar == null ? 0 : params.debt_dolar
+                product_id: params.product_id,
+                quantity: params.quantity,
+                debt_bs,
+                debt_dolar
             });
 
             return { message: "Agregado con exito", code: 1 };
@@ -92,18 +115,30 @@ const OutstandingPayments = {
      */
     'update-outstanding-payment': async function (params) {
         try {
+            if (! await isAuth()) throw new Error('Usted no esta Autorizado');
+
             if (empty(params.client)) throw new Error('EL nombre del cliente es requerido');
-            if (params.debt_bs < 0 ) throw new Error('El monto en bolivares no es correcto');
-            if (params.debt_dolar < 0) throw new Error('El monto en dolares no es correcto');
+            if (params.quantity < 0) throw new Error('La cantidad es requerida');
 
             let outstanding_payment = await OutstandingPayment.findByPk(params.id);
 
             if (outstanding_payment === null) throw new Error("El pago pendiente no existe");
 
+            let product = await Product.findByPk(params.product_id);
+
+            if (empty(product)) {
+                throw new Error('El producto no existe')
+            }
+
+            let debt_bs = product.price_bs * params.quantity;
+            let debt_dolar = product.price_dolar * quantity;
 
             outstanding_payment.client = params.client;
-            outstanding_payment.debt_bs = params.debt_bs;
-            outstanding_payment.debt_dolar = params.debt_dolar;
+            outstanding_payment.product_id = params.product_id;
+            outstanding_payment.quantity = params.quantity;
+            outstanding_payment.debt_bs = debt_bs;
+            outstanding_payment.debt_dolar = debt_dolar;
+
             await outstanding_payment.save();
 
             return { message: "Actualizado Correctamente", code: 1 };

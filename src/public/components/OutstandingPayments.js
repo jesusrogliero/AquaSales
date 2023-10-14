@@ -2,6 +2,7 @@
 import "../utils/data-table.js";
 import "../utils/dialog-base.js";
 import "../utils/dialog-confirm.js";
+import "../utils/autocomplete.js";
 
 export default Vue.component('outstanding-payments', {
     
@@ -9,6 +10,8 @@ export default Vue.component('outstanding-payments', {
         return {
             id: null,
             client: null,
+            product_id: null,
+            quantity: null,
             debt_bs: null,
             debt_dolar: null,
 
@@ -16,6 +19,8 @@ export default Vue.component('outstanding-payments', {
 		
             headers: [
                 { text: 'Cliente', value: 'client' },
+                { text: 'Producto', value: 'product' },
+                { text: 'Cantidad', value: 'quantity' },
                 { text: 'Deuda en BsS', value: 'debt_bs' },
                 { text: 'Deuda en USD', value: 'debt_dolar' },
                 { text: 'Acción', value: 'actions' },
@@ -40,6 +45,8 @@ export default Vue.component('outstanding-payments', {
 
 					this.id = response.id;
 					this.client = response.client;
+                    this.product_id = response.product_id;
+                    this.quantity = response.quantity;
 					this.debt_bs = response.debt_bs;
 					this.debt_dolar = response.debt_dolar;
 				}
@@ -49,6 +56,10 @@ export default Vue.component('outstanding-payments', {
 			}
 
 		},
+
+        getSelectProduct(product_id) {
+            this.product_id = product_id;
+        },
 
         closeDialog() {
 			this.$refs.form.reset();
@@ -75,8 +86,8 @@ export default Vue.component('outstanding-payments', {
 			try {
                 let response = await execute('create-outstanding-payment', {
                     client: this.client,
-                    debt_bs: this.debt_bs,
-                    debt_dolar: this.debt_dolar,
+                    product_id: this.product_id,
+                    quantity: this.quantity
                 });
 
 				if (response.code == 0)
@@ -99,8 +110,8 @@ export default Vue.component('outstanding-payments', {
                 let response = await execute('update-outstanding-payment', {
                     id: this.id,
                     client: this.client,
-                    debt_bs: this.debt_bs,
-                    debt_dolar: this.debt_dolar,
+                    product_id: this.product_id,
+                    quantity: this.quantity
                 });
 
 				if (response.code == 0)
@@ -156,7 +167,7 @@ export default Vue.component('outstanding-payments', {
         </dialog-confirm>
 
         <!-- Dialogo para crear o actualizar recursos -->
-        <dialog-base :active="dialog == 'new' || dialog == 'edit'">
+        <dialog-base :active="dialog == 'new' || dialog == 'edit'" max-width="300">
             <template v-slot:dialog-title>
                 <span class="title">{{ dialog == 'edit' ? 'Editar Pago Pendiente' : 'Nuevo Pago Pendiente'}}</span>
             </template>
@@ -166,20 +177,37 @@ export default Vue.component('outstanding-payments', {
                 <v-form ref="form" v-model="valid" lazy-validation>
                     <v-row>
 
-                        <v-col cols="12" lg="6" md="6" sm="6"  class="mt-2">
+                        <v-col cols="12" class="mb-n5">
                             <v-text-field v-model="client" :rules="requiredRule" label="Cliente" required
                                 placeholder="Ingresa el nombre del Cliente"></v-text-field>
                         </v-col>
 
-                        <v-col cols="12" lg="6" md="6" sm="6"  class="mt-2">
-                            <v-text-field v-model="debt_bs" type="number" label="Deuda en BsS"
-                                placeholder="Ingresa el pago pendiente en Bolivares" suffix="Lt"></v-text-field>
+                        <v-col cols="12" class="mb-n5">
+                            <v-text-field v-model="quantity" type="number" label="Cantidad"
+                                placeholder="Ingresa la cantidad pendiente" suffix="Lt"></v-text-field>
                         </v-col>
 
-                        <v-col cols="12" lg="6" md="6" sm="6"  class="mt-2">
-                            <v-text-field v-model="debt_dolar" suffix="UNID" type="number" label="Deuda en USD"
-                                placeholder="Ingresa el pago pendiente en Dolares"></v-text-field>
+                        <v-col cols="12" class="mb-n5">
+                            <autocomplete-form
+                                uri="index-products"
+                                label="Selecciona un Producto"
+                                column="name" 
+                                itemValue="id" 
+                                :defaultValue="product_id"
+                                :getSelect="getSelectProduct" 
+                            />
                         </v-col>
+
+                        <v-col cols="6"  v-if="dialog == 'edit'">
+                        <v-text-field v-model="debt_bs" suffix="BsS" type="number" readonly label="Deuda en BsS"
+                            placeholder="Ingresa el pago pendiente en Dolares"></v-text-field>
+                    </v-col>
+
+                    <v-col cols="6" v-if="dialog == 'edit'">
+                    <v-text-field v-model="debt_dolar" suffix="USD" type="number" readonly label="Deuda en USD"
+                        placeholder="Ingresa el pago pendiente en Dolares"></v-text-field>
+                </v-col>
+                       
                     </v-row>
                 </v-form>
             </template>
