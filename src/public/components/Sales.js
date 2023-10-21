@@ -26,7 +26,7 @@ export default Vue.component('sales', {
                 { text: 'Acción', value: 'actions' },
             ],
 
-            title: 'Ventas Pendientes por Despachar',
+            title: 'Recargas Pendientes',
             url: 'sales-pending-dispatch',
             dialog: null,
             dialog2: null,
