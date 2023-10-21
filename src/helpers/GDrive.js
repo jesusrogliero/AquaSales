@@ -1,6 +1,5 @@
 const { google } = require('googleapis');
 const fs = require('fs');
-const chokidar = require('chokidar');
 const appdata = require('appdata-path');
 const path = require('path');
 const log = require('electron-log');

@@ -38,7 +38,7 @@ export default Vue.component('navigation', {
         
         <v-btn color="blue lighten-3" class="mr-n3" elevation="0" @click="toSales">
             <v-icon>mdi-clipboard-clock-outline</v-icon>
-            <span>Ventas</span>  
+            <span>Recargas Pendientes</span>  
         </v-btn>
 
         <v-btn color="blue lighten-3" class="mr-n3" elevation="0" @click="toOutstandingPayment">

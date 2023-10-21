@@ -21,6 +21,10 @@ let Home = Vue.component('Home', {
 			lastweek_liters_consumption: null,
 			lastmonth_liters_consumption: null,
 
+			variacionToday: {},
+			variacionWeek: {},
+			variacionMounth: {},
+
 			bcv: 0,
 			mensaje: '',
 
@@ -34,7 +38,8 @@ let Home = Vue.component('Home', {
 		await this.getMetricsTotal();
 		await this.getLitersDispatch();
 		await this.getPendingDispatch();
-		await this.getBcv();
+		await this.getVariacion();
+		this.getBcv();
 	},
 
 	methods: {
@@ -88,18 +93,18 @@ let Home = Vue.component('Home', {
 
 		},
 
-		
+
 
 		async sumeryReportPdf(period) {
 			try {
-				let response = await execute('sumary-report',period );
+				let response = await execute('sumary-report', period);
 
 				if (response.code === 0) {
 					throw new Error(response.message)
 				}
 
-				alertApp({color: "success",icon: "check", text: response.message});
-				
+				alertApp({ color: "success", icon: "check", text: response.message });
+
 			} catch (error) {
 				alertApp({ color: "error", icon: "alert", text: error.message });
 			}
@@ -162,6 +167,14 @@ let Home = Vue.component('Home', {
 				alertApp({ color: "error", icon: "alert", text: error.message });
 			}
 		},
+
+		async getVariacion() {
+			this.variacionToday = await execute('variacion-sales');
+			this.variacionWeek = await execute('variacion-sales', 'WEEK');
+			this.variacionMounth = await execute('variacion-sales', 'MOUNTH');
+
+			console.log(this.variacionToday);
+		}
 
 	},
 
@@ -265,10 +278,12 @@ let Home = Vue.component('Home', {
 
 					<v-col cols="12" sm="6" md="4" lg="4">
 						<v-card color="#ECEFF1">
+							
 							<v-card-title>
 								INGRESOS ESTA SEMANA
-								<v-icon @click="sumeryReportPdf('WEEK')" class="ml-2" color="green">mdi-calendar-month</v-icon> </v-card-title>
+								<v-icon @click="sumeryReportPdf('WEEK')" class="ml-2" color="green">mdi-calendar-month</v-icon>  
 							</v-card-title>
+
 							<v-card-text>
 								<v-row v-if="details">
 									<v-col cols="12">
@@ -297,17 +312,18 @@ let Home = Vue.component('Home', {
 								<v-row v-else>
 
 									<v-col cols="12">
-										<b style="font-size:15pt;">Total BsS: </b>
+										<b style="font-size:15pt;">Total BsS:</b>
 										<span style="font-size:20pt;" class="float-right">  
 											{{lastweek_sales.bs == null ? 0 : formatNumber(lastweek_sales.bs) }} BsS
 										</span>
 									</v-col>
 
 									<v-col cols="12">
-										<b style="font-size:15pt;" >Total $: </b>
+										<b style="font-size:15pt;" class="mt-n4">Total $</b>
 										<span style="font-size:20pt;" class="float-right">  
 											{{lastweek_sales.dolar == null ? 0 : formatNumber(lastweek_sales.dolar) }} $
 										</span>
+										
 									</v-col>
 								</v-row>
 							</v-card-text>
@@ -348,14 +364,14 @@ let Home = Vue.component('Home', {
 									<v-col cols="12">
 										<b style="font-size:15pt;">Total BsS: </b>
 										<span style="font-size:20pt;" class="float-right">  
-											{{lastmonth_sales.bs == null ? 0 : lastmonth_sales.bs }} BsS
+											{{lastmonth_sales.bs == null ? 0 : formatNumber( lastmonth_sales.bs ) }} BsS
 										</span>
 									</v-col>
 
 									<v-col cols="12">
 										<b style="font-size:15pt;" >Total $: </b>
 										<span style="font-size:20pt;" class="float-right">  
-											{{lastmonth_sales.dolar == null ? 0 : lastmonth_sales.dolar }} $
+											{{lastmonth_sales.dolar == null ? 0 : formatNumber( lastmonth_sales.dolar ) }} $
 										</span>
 									</v-col>
 								</v-row>
@@ -365,25 +381,38 @@ let Home = Vue.component('Home', {
 
 					<v-col cols="12" sm="6" md="4" lg="4">
 					<v-card color="#ECEFF1">
-						<v-card-title>Volumen Despachado Hoy</v-card-title>
+						<v-card-title>
+							Despachado Hoy 
+						</v-card-title>
 						<v-card-text>
-							<v-row>
-								<h1 class="ml-2">{{today_liters_consumption == null ? 0 : today_liters_consumption }} LT</h1>
-								<v-spacer></v-spacer>
-								<v-icon size="80" class="mr-2 mt-n9" color="green">mdi-trending-up</v-icon>
-							</v-row>
+						<v-row>
+						<h1 class="ml-2">{{today_liters_consumption == null ? 0 : today_liters_consumption }} LT</h1>
+						<v-spacer></v-spacer>
+						<v-img
+								class="mt-n9"
+								height="80"
+								max-width="80"
+								src="../public/resources/images/botella.png"
+							></v-img>
+					</v-row>
+							
 						</v-card-text>
 					</v-card>
 					</v-col>
 
 					<v-col cols="12" sm="6" md="4" lg="4">
 						<v-card color="#ECEFF1">
-							<v-card-title>Volumen Despachado esta Semana</v-card-title>
+							<v-card-title>Despachado esta Semana</v-card-title>
 							<v-card-text>
 								<v-row>
 									<h1 class="ml-2">{{lastweek_liters_consumption == null ? 0 : lastweek_liters_consumption }} LT</h1>
 									<v-spacer></v-spacer>
-									<v-icon size="80" class="mr-2 mt-n9" color="green">mdi-trending-up</v-icon>
+									<v-img
+										class="mt-n9"
+										height="80"
+										max-width="80"
+										src="../public/resources/images/botella-de-agua.png"
+									></v-img>
 								</v-row>
 							</v-card-text>
 						</v-card>
@@ -391,7 +420,7 @@ let Home = Vue.component('Home', {
 
 					<v-col cols="12" sm="6" md="4" lg="4">
 						<v-card color="#ECEFF1">
-							<v-card-title>Volumen Despachado Este mes</v-card-title>
+							<v-card-title>Despachado Este mes</v-card-title>
 							<v-card-text>
 								<v-row>
 									<h1 class="ml-2">{{lastmonth_liters_consumption == null ? 0 : lastmonth_liters_consumption }} LT</h1>
@@ -404,17 +433,20 @@ let Home = Vue.component('Home', {
 
 					<v-col cols="12" sm="6" md="4" lg="4">
 						<v-card  color="#ECEFF1">
-							<v-card-title>Vendidos Hoy</v-card-title>
+							<v-card-title>
+							<span  class="mt-n3">
+							Vendidos Hoy 
+								<v-icon v-if="variacionToday.variacionUNIT > 0" size="50" class="mr-n4" color="green" >mdi-triangle-small-up</v-icon>  
+								<v-icon v-else size="50" class="mr-n4" color="red" >mdi-triangle-small-up</v-icon>  
+								<span>{{variacionToday.variacionUNIT}}%</span>
+							</span>
+							</v-card-title>
 							<v-card-text>
-								<v-row>
-									<h1 class="ml-2">{{today_sales.units == null ? '0 UNID' : today_sales.units }} </h1>
+								<v-row  class="mt-n2">
+									<h1 class="ml-2 mb-2">{{today_sales.units == null ? '0 UNID' : today_sales.units }} </h1>
 									<v-spacer></v-spacer>
-									<v-img
-									class="mt-n10"
-									height="80"
-									max-width="80"
-									src="../public/resources/images/botella.png"
-								></v-img>
+									<v-icon v-if="variacionToday.variacionUNIT > 0" size="80" class="mr-2 mt-n15" color="green">mdi-trending-up</v-icon>
+									<v-icon v-else size="80" class="mr-2 mt-n15" color="red">mdi-trending-down</v-icon>
 								</v-row>
 							</v-card-text>
 						</v-card>
@@ -422,17 +454,21 @@ let Home = Vue.component('Home', {
 
 					<v-col cols="12" sm="6" md="4" lg="4">
 						<v-card  color="#ECEFF1">
-							<v-card-title>Vendidos Esta Semana</v-card-title>
+							<v-card-title>
+							
+							<span class="mt-n3">
+							Vendidos Esta Semana
+								<v-icon v-if="variacionWeek.variacionUNIT > 0" size="50" class="mr-n2" color="green" >mdi-triangle-small-up</v-icon> 
+								<v-icon v-else size="50" class="mr-n4" color="red" >mdi-triangle-small-down</v-icon>   
+								<span>{{variacionWeek.variacionUNIT}}%</span>
+							</span>
+							</v-card-title>
 							<v-card-text>
-								<v-row>
-									<h1 class="ml-2">{{lastweek_sales.units == null ? '0 UNID' : lastweek_sales.units }}</h1>
+								<v-row class="mt-n2">
+									<h1 class="ml-2 mb-2">{{lastweek_sales.units == null ? '0 UNID' : lastweek_sales.units }}</h1>
 									<v-spacer></v-spacer>
-									<v-img
-									class="mt-n10"
-									height="80"
-									max-width="80"
-									src="../public/resources/images/botella-de-agua.png"
-								></v-img>
+									<v-icon v-if="variacionWeek.variacionUNIT > 0" size="80" class="mr-2 mt-n15" color="green">mdi-trending-up</v-icon>
+									<v-icon v-else size="80" class="mr-2 mt-n15" color="red">mdi-trending-down</v-icon>
 								</v-row>
 							</v-card-text>
 						</v-card>
@@ -440,7 +476,7 @@ let Home = Vue.component('Home', {
 
 					<v-col cols="12" sm="6" md="4" lg="4">
 						<v-card  color="#ECEFF1">
-							<v-card-title>Pendientes Despacho</v-card-title>
+							<v-card-title>Recargas Pendientes</v-card-title>
 							<v-card-text>
 								<v-row>
 									<h1 class="ml-2">{{pending_dispatch == null ? 0 : pending_dispatch }} UNID</h1>
