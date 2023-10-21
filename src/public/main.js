@@ -69,6 +69,7 @@ window.appInstance = vue;
 /* funcion que da formato a las unidades de numericas */
 window.formatNumber = function(numero) {
 	try {
+		numero = parseFloat(numero);
 		const partes = numero.toFixed(2).toString().split(".");
 		partes[0] = partes[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 		return partes.join(".");
