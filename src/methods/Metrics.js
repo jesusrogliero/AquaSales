@@ -111,12 +111,12 @@ const Metrics = {
                     [sequelize.literal("sum(cash_bolivares)"), 'cash_bolivares_icome'],
                 ],
                 include: [
-					{
-						model: Sale,
-						required: true,
-						attributes: []
-					}
-				],
+                    {
+                        model: Sale,
+                        required: true,
+                        attributes: []
+                    }
+                ],
                 where: {
                     state_id: sequelize.col('sale.state_id'),
                     createdAt: moment().format("YYYY-MM-DD")
@@ -132,12 +132,12 @@ const Metrics = {
                     [sequelize.literal("sum(cash_bolivares)"), 'cash_bolivares_icome'],
                 ],
                 include: [
-					{
-						model: Sale,
-						required: true,
-						attributes: []
-					}
-				],
+                    {
+                        model: Sale,
+                        required: true,
+                        attributes: []
+                    }
+                ],
                 where: {
                     state_id: sequelize.col('sale.state_id'),
                     createdAt: {
@@ -154,12 +154,12 @@ const Metrics = {
                     [sequelize.literal("sum(cash_bolivares)"), 'cash_bolivares_icome'],
                 ],
                 include: [
-					{
-						model: Sale,
-						required: true,
-						attributes: []
-					}
-				],
+                    {
+                        model: Sale,
+                        required: true,
+                        attributes: []
+                    }
+                ],
                 where: {
                     state_id: sequelize.col('sale.state_id'),
                     createdAt: {
@@ -198,7 +198,7 @@ const Metrics = {
                     [sequelize.literal("( sum(mobile_payment) + sum(cash_bolivares) )  || ' BsS' "), 'today_sales_bs'],
                     [sequelize.literal("sum(cash_dollar) || ' $' "), 'today_sales_dolar'],
                     [sequelize.literal("sum(total_units) || ' UNID' "), 'today_sales_units'],
-                    
+
                 ],
                 include: [
                     {
@@ -217,7 +217,7 @@ const Metrics = {
                 attributes: [
                     [sequelize.literal("( sum(mobile_payment) + sum(cash_bolivares) )  || ' BsS' "), 'lastweek_sales_bs'],
                     [sequelize.literal("sum(cash_dollar) || ' $' "), 'lastweek_sales_dolar'],
-                    [sequelize.literal("sum(total_units) || ' UNID' "), 'lastweek_sales_units'], 
+                    [sequelize.literal("sum(total_units) || ' UNID' "), 'lastweek_sales_units'],
                 ],
                 include: [
                     {
@@ -238,7 +238,7 @@ const Metrics = {
                 attributes: [
                     [sequelize.literal("( sum(mobile_payment) + sum(cash_bolivares) )  || ' BsS' "), 'lastmonth_sales_bs'],
                     [sequelize.literal("sum(cash_dollar) || ' $' "), 'lastmonth_sales_dolar'],
-                    [sequelize.literal("sum(total_units) || ' UNID' "), 'lastmonth_sales_units'], 
+                    [sequelize.literal("sum(total_units) || ' UNID' "), 'lastmonth_sales_units'],
                 ],
                 include: [
                     {
@@ -267,7 +267,115 @@ const Metrics = {
             log.error(error.message);
             return { message: error.message, code: 0 };
         }
+    },
+
+
+    /**
+    * Porcentaje de ventas 
+    * 
+    * @returns {json} pago
+    */
+    'variacion-sales': async function (period) {
+        try {
+
+            // Calculo data del periodo actual
+            let nowinitDate = null;
+            let nowfinalDate = null;
+
+            if (period == 'WEEK') {
+                nowfinalDate = moment().format("YYYY-MM-DD");
+                nowinitDate = moment().startOf('isoWeek').format("YYYY-MM-DD");
+            } else if (period === 'MOUNTH') {
+                nowinitDate = moment().startOf('month').format("YYYY-MM-DD");
+                nowfinalDate = moment().format("YYYY-MM-DD");
+            } else { // HOY
+                nowinitDate = moment().format("YYYY-MM-DD");
+                nowfinalDate = moment().format("YYYY-MM-DD");
+            }
+
+
+            let now_sales = await Payment.findAll({
+                attributes: [
+                    [sequelize.literal("sum(mobile_payment) + sum(cash_bolivares)"), 'sales_bs'],
+                    [sequelize.literal("sum(cash_dollar)"), 'sales_dolar'],
+                    [sequelize.literal("sum(total_units)"), 'sales_units'],
+                ],
+                include: [
+                    {
+                        model: Sale,
+                        required: true,
+                        attributes: [],
+                    }
+                ],
+                where: {
+                    createdAt: {
+                        [Op.between]: [nowinitDate, nowfinalDate],
+                    }
+                },
+                raw: true
+            });
+
+
+            // Calculo data del periodo pasado
+            let lastInitDate = null;
+            let lastFinalDate = null;
+
+            if (period == 'WEEK') {
+                lastInitDate = moment().subtract(1, 'weeks').startOf('week').format("YYYY-MM-DD");
+                lastFinalDate = moment().subtract(1, 'weeks').endOf('week').format("YYYY-MM-DD");
+
+            } else if (period === 'MOUNTH') {
+                lastInitDate = moment().subtract(1, 'months').startOf('month').format("YYYY-MM-DD");
+                lastFinalDate = moment().subtract(1, 'months').endOf('month').format("YYYY-MM-DD");
+            } else { // HOY
+                lastInitDate = moment().subtract(1, 'days').startOf('day').format("YYYY-MM-DD");
+                lastFinalDate = moment().subtract(1, 'days').endOf('day').format("YYYY-MM-DD");
+            }
+
+
+            let last_sales = await Payment.findAll({
+                attributes: [
+                    [sequelize.literal("sum(mobile_payment) + sum(cash_bolivares)"), 'sales_bs'],
+                    [sequelize.literal("sum(cash_dollar)"), 'sales_dolar'],
+                    [sequelize.literal("sum(total_units)"), 'sales_units'],
+                ],
+                include: [
+                    {
+                        model: Sale,
+                        required: true,
+                        attributes: [],
+                    }
+                ],
+                where: {
+                    createdAt: {
+                        [Op.between]: [lastInitDate, lastFinalDate],
+                    }
+                },
+                raw: true
+            });
+
+            let diferenciaBs = now_sales[0].sales_bs - last_sales[0].sales_bs;
+            let diferenciaUSD = now_sales[0].sales_dolar - last_sales[0].sales_dolar;
+            let diferenciaUNIT = now_sales[0].sales_units - last_sales[0].sales_units;
+
+            let variacionBsS = ((diferenciaBs / last_sales[0].sales_bs) * 100);
+            let variacionUSD = ((diferenciaUSD / last_sales[0].sales_dolar) * 100);
+            let variacionUNIT = ((diferenciaUNIT / last_sales[0].sales_units) * 100);
+
+            return {
+                variacionBsS: isNaN(variacionBsS) ? 0 : variacionBsS.toFixed(0),
+                variacionUSD: isNaN(variacionUSD) ? 0 : variacionUSD.toFixed(0),
+                variacionUNIT: isNaN(variacionUNIT) ? 0 : variacionUNIT.toFixed(0)
+            };
+
+        } catch (error) {
+            reportErrors(error);
+            log.error(error.message);
+            return { message: error.message, code: 0 };
+        }
     }
+
+
 
 };
 
