@@ -150,6 +150,61 @@ const Sumaries = {
             return { message: error.message, code: 0 };
         }
 
+    },
+
+     /**
+     * Resumen de ventas del dia detallado 
+     * 
+     * @returns {json} datalle de venta
+    */
+     'sumary-today': async function (period) {
+
+        try {
+            
+
+            let option = {
+                attributes: [
+                    sequelize.col('payment.createdAt'),
+                    [sequelize.literal("sum(mobile_payment) || ' BsS' "), 'mobile_payment'],
+                    [sequelize.literal("sum(cash_dollar) || ' $' "), 'cash_dollar'],
+                    [sequelize.literal("sum(cash_bolivares) || ' BsS' "), 'cash_bolivares'],
+                    [sequelize.literal("sum(total_units) || ' UNID' "), 'sales_units'],
+                    [sequelize.literal("sum(total_liters) || ' Lts' "), 'liters_consumption'],
+                    [sequelize.literal("sum(total_caps)  || ' UNID' "), 'total_caps'],
+                ],
+                group: [sequelize.col('payment.createdAt')],
+                include: [
+                    {
+                        model: Payment,
+                        required: true,
+                        attributes: [],
+                    }
+                ],
+                where: {
+                    createdAt: moment().format("YYYY-MM-DD")
+                },
+                raw: true
+            };
+
+            let sales = await Sale.findAll(option);
+
+          
+
+           await createPdfFromTemplate('sumarySales.html', {
+                title: `Resumen de Venta`,
+                sales: sales,
+                totals_sales: totals_sales
+            });
+
+
+            return { message: 'Reporte Creado Correctamente', code: 1 };
+
+        } catch (error) {
+            log.error(error.message);
+            reportErrors(error);
+            return { message: error.message, code: 0 };
+        }
+
     }
 
 };
