@@ -45,18 +45,16 @@
 		"eslint-plugin-react": "^7.26.0"
 	},
 	"dependencies": {
+		"@navpreetdevpuri/html-pdf": "^3.0.9",
 		"appdata-path": "^1.0.0",
 		"bcrypt": "^5.1.0",
 		"bcv-divisas": "^1.2.6",
-		"chokidar": "^3.5.3",
 		"electron-log": "^4.4.1",
 		"electron-updater": "^6.1.1",
 		"googleapis": "^123.0.0",
 		"handlebars": "^4.7.8",
 		"moment": "^2.29.4",
 		"nodemailer": "^6.9.3",
-		"pdf-creator-node": "^2.3.5",
-		"puppeteer": "^20.0.0",
 		"sequelize": "^6.6.5",
 		"sqlite3": "^5.0.2"
 	}
