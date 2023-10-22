@@ -1,5 +1,5 @@
 'use strict'
-import '../components/AdminAutenticate.js';
+import './AdminAutenticate.js';
 
 // componente home
 let Home = Vue.component('Home', {
@@ -39,7 +39,7 @@ let Home = Vue.component('Home', {
 		await this.getLitersDispatch();
 		await this.getPendingDispatch();
 		await this.getVariacion();
-		this.getBcv();
+		await this.getBcv();
 	},
 
 	methods: {
