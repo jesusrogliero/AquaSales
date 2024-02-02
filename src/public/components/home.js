@@ -437,7 +437,7 @@ let Home = Vue.component('Home', {
 							<span  class="mt-n3">
 							Vendidos Hoy 
 								<v-icon v-if="variacionToday.variacionUNIT > 0" size="50" class="mr-n4" color="green" >mdi-triangle-small-up</v-icon>  
-								<v-icon v-else size="50" class="mr-n4" color="red" >mdi-triangle-small-up</v-icon>  
+								<v-icon v-else size="50" class="mr-n4" color="red" >mdi-triangle-small-down</v-icon>  
 								<span>{{variacionToday.variacionUNIT}}%</span>
 							</span>
 							</v-card-title>
@@ -445,7 +445,7 @@ let Home = Vue.component('Home', {
 								<v-row  class="mt-n2">
 									<h1 class="ml-2 mb-2">{{today_sales.units == null ? '0 UNID' : today_sales.units }} </h1>
 									<v-spacer></v-spacer>
-									<v-icon v-if="variacionToday.variacionUNIT > 0" size="80" class="mr-2 mt-n15" color="green">mdi-trending-up</v-icon>
+									<v-icon v-if="variacionToday.variacionUNIT > 0" size="80" class="mr-2 mt-n15" color="green" >mdi-trending-up</v-icon>
 									<v-icon v-else size="80" class="mr-2 mt-n15" color="red">mdi-trending-down</v-icon>
 								</v-row>
 							</v-card-text>
