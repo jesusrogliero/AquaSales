@@ -26,29 +26,33 @@ module.exports = async function (fileReportHtml, data) {
         console.log('Carpeta creada y permisos establecidos.');
     }
 
-    let pdf = path.join(rutaCarpeta, '/reporte' + moment().format("YYYY-MM-DD") + '.pdf');
+    let pdf = path.join(rutaCarpeta, '/reporte_' + moment().format("YYYY-MM-DD") + '.pdf');
 
     var options = { format: 'Letter' };
 
-    await PDF.create(html, options).toFile(pdf, function (err, res) {
+    PDF.create(html, options).toFile(pdf, function (err, res) {
         if (err) return console.log(err);
+
+        setTimeout(()=> {
+            const shell = require('electron').shell;
+            shell.openPath(pdf);
         
-        const shell = require('electron').shell;
-        shell.openPath(pdf);
-    
-        sendEmail({
-            from: "othebestlevel@gmail.com",
-            to: 'othebestlevel@gmail.com, leorogliero@hotmail.com',
-            subject: `Reporte de Ventas ${moment().format("YYYY-MM-DD")}`,
-            text: `Estimado Leonardo Rogliero,
-    
-            Me complace informarte que el sistema de ventas ha generado y enviado automáticamente el resumen de ventas. Este informe detalla las ventas realizadas, los ingresos generados y otros datos relevantes.
-            `,
-            attachments: [{
-                filename: 'resumen_de_ventas.pdf',
-                path: pdf
-            }]
-        });
+            sendEmail({
+                from: "othebestlevel@gmail.com",
+                to: 'othebestlevel@gmail.com, leorogliero@hotmail.com',
+                subject: `Reporte de Ventas ${moment().format("YYYY-MM-DD")}`,
+                text: `Estimado Leonardo Rogliero,
+        
+                Me complace informarte que el sistema de ventas ha generado y enviado automáticamente el resumen de ventas. Este informe detalla las ventas realizadas, los ingresos generados y otros datos relevantes.
+                `,
+                attachments: [{
+                    filename: 'resumen_de_ventas.pdf',
+                    path: pdf
+                }]
+            });
+        }, 3000)
+        
+       
     });
 
 }

@@ -4,9 +4,10 @@ const Sale = require('../models/Sale.js');
 const Payment = require('../models/Payment.js');
 const log = require('electron-log');
 const sequelize = require("../connection.js");
-const { Op } = require('sequelize');
+const { Op, QueryTypes  } = require('sequelize');
 const moment = require('moment');
 const reportErrors = require('../helpers/reportErrors.js');
+
 
 const Metrics = {
 
@@ -43,43 +44,37 @@ const Metrics = {
             const initWeek = moment().startOf('isoWeek').format("YYYY-MM-DD");
             const initMonth = moment().startOf('month').format("YYYY-MM-DD");
 
-            let today_liters = await Sale.findAll({
-                attributes: [
-                    [sequelize.literal("sum(total_liters)"), 'today_liters_consumption'],
-                ],
-                where: {
-                    state_id: 3,
-                    createdAt: moment().format("YYYY-MM-DD")
-                },
-                raw: true
-            });
+            let Query = `
+            select 
+            sum((sales_items.liters / sales_items.units) * sales_items.dispatched ) as today_liters_consumption
+            from sales 
+            INNER join sales_items ON sales.id = sales_items.sale_id 
+            where sales_items.updatedAt = "${today}"
+            `
+   
+            const today_liters = await sequelize.query(Query, { type: QueryTypes.SELECT, raw: true });
 
 
-            let week_liters = await Sale.findAll({
-                attributes: [
-                    [sequelize.literal("sum(total_liters)"), 'lastweek_liters_consumption'],
-                ],
-                where: {
-                    state_id: 3,
-                    createdAt: {
-                        [Op.between]: [initWeek, today],
-                    }
-                },
-                raw: true
-            });
+            Query = `
+            select 
+            sum((sales_items.liters / sales_items.units) * sales_items.dispatched ) as lastweek_liters_consumption
+            from sales 
+            INNER join sales_items ON sales.id = sales_items.sale_id 
+            where sales_items.updatedAt BETWEEN "${initWeek}" AND "${today}"
+            `
+   
+            const week_liters = await sequelize.query(Query, { type: QueryTypes.SELECT, raw: true });
+            
 
-            let month_liters = await Sale.findAll({
-                attributes: [
-                    [sequelize.literal("sum(total_liters)"), 'lastmonth_liters_consumption'],
-                ],
-                where: {
-                    state_id: 3,
-                    createdAt: {
-                        [Op.between]: [initMonth, today],
-                    }
-                },
-                raw: true
-            });
+            Query = `
+            select 
+            sum((sales_items.liters / sales_items.units) * sales_items.dispatched ) as lastmonth_liters_consumption
+            from sales 
+            INNER join sales_items ON sales.id = sales_items.sale_id 
+            where sales_items.updatedAt BETWEEN "${initMonth}" AND "${today}" 
+            `
+   
+            const month_liters = await sequelize.query(Query, { type: QueryTypes.SELECT, raw: true });
 
             return {
                 today_liters_consumption: today_liters[0].today_liters_consumption,
