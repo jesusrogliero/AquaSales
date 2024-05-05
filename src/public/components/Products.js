@@ -15,6 +15,7 @@ export default Vue.component('products', {
             cap: null,
             is_dolar: false,
             is_combo: false,
+            is_active: false,
 
             requiredRule: [v => !!v || 'Este campo es requerido!!'],
 			numberRule: [
@@ -30,6 +31,7 @@ export default Vue.component('products', {
                 { text: 'Cantidad de Tapas', value: 'cap' },
                 { text: 'Precio en $', value: 'price_dolar' },
                 { text: 'Precio en BsS', value: 'price_bs' },
+                { text: 'Activo', value: 'is_active' },
                 { text: 'Acción', value: 'actions' },
               ],
 
@@ -57,6 +59,7 @@ export default Vue.component('products', {
                     this.cap = response.cap;
                     this.is_dolar = response.is_dolar;
                     this.is_combo = response.is_combo;
+                    this.is_active = response.is_active;
 
                     this.price = response.price_bs;
                     if(response.is_dolar) {
@@ -85,6 +88,7 @@ export default Vue.component('products', {
             this.cap = null;
             this.is_dolar = false;
             this.is_combo = false;
+            this.is_active = false;
 		},
 
         validate() {
@@ -105,7 +109,8 @@ export default Vue.component('products', {
                     price: this.price,
                     cap: this.cap,
                     is_dolar: this.is_dolar,
-                    is_combo: this.is_combo
+                    is_combo: this.is_combo,
+                    is_active: this.is_active
                 });
 
 				if (response.code == 0)
@@ -133,7 +138,8 @@ export default Vue.component('products', {
                     price: this.price,
                     cap: this.cap,
                     is_dolar: this.is_dolar,
-                    is_combo: this.is_combo
+                    is_combo: this.is_combo,
+                    is_active: this.is_active
                 });
 
 				if (response.code == 0)
@@ -236,6 +242,10 @@ export default Vue.component('products', {
 
                         <v-col cols="12" lg="6" md="6" sm="6"  class="mt-2">
                             <v-switch v-model="is_combo" label="Es un Combo" ></v-switch>
+                        </v-col>
+
+                        <v-col cols="12" lg="6" md="6" sm="6"  class="mt-2">
+                            <v-switch v-model="is_active" label="Producto de venta" ></v-switch>
                         </v-col>
 
                      
