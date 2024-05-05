@@ -586,7 +586,7 @@ export default Vue.component('new-sale', {
 
                         <col cols="4">
                             <autocomplete-form 
-                                uri="index-products"
+                                uri="index-sale-products"
                                 label="Selecciona un Producto"
                                 column="name" 
                                 itemValue="id" 
