@@ -98,11 +98,11 @@ export default Vue.component('data-table', {
         >
             <template v-slot:item.actions="{ item }">
 
-                <v-icon class="mr-2" color="green" @click="show(item.id)" v-if="typeof show == 'function'">
+                <v-icon class="mr-2" color="green" @click="show(item.id)" v-if="typeof show === 'function'">
                     mdi-format-list-bulleted
                 </v-icon>
 
-                <v-icon class="mr-2" color="primary" v-if="typeof update == 'function'"
+                <v-icon class="mr-2" color="primary" v-if="typeof update === 'function'"
                     @click="update(item.id, 'edit')">
                     mdi-pencil
                 </v-icon>
