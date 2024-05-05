@@ -19,7 +19,7 @@ const Products = {
         try {
             return await Product.findAll({
                 attributes: [
-                    'id', 'name', 'createdAt', 'updatedAt',
+                    'id', 'name', 'createdAt', 'updatedAt', 'is_active',
                     [sequelize.literal("liters || ' Lt'"), 'liters'],
                     [sequelize.literal("quantity || ' UNID'"), 'quantity'],
                     [sequelize.literal("cap || ' UNID'"), 'cap'],
@@ -34,6 +34,34 @@ const Products = {
             return { message: error.message, code: 0 };
         }
     },
+
+        /**
+     * Ruta que muestra todos los Productos activos
+     * 
+     * @returns products
+     */
+        'index-sale-products': async function () {
+            try {
+                return await Product.findAll({
+                    attributes: [
+                        'id', 'name', 'createdAt', 'updatedAt',
+                        [sequelize.literal("liters || ' Lt'"), 'liters'],
+                        [sequelize.literal("quantity || ' UNID'"), 'quantity'],
+                        [sequelize.literal("cap || ' UNID'"), 'cap'],
+                        [sequelize.literal("price_bs || ' BsS'"), 'price_bs'],
+                        [sequelize.literal("price_dolar || ' $'"), 'price_dolar'],
+                    ],
+                    where: {
+                        is_active: true
+                    },
+                    raw: true
+                });
+            } catch (error) {
+                log.error(error.message);
+                reportErrors(error);
+                return { message: error.message, code: 0 };
+            }
+        },
 
     /**
      * Metodo que crea un nuevo producto
@@ -69,7 +97,8 @@ const Products = {
                 price_bs: price_bs,
                 cap: params.cap,
                 is_dolar: params.is_dolar,
-                is_combo: params.is_combo
+                is_combo: params.is_combo,
+                is_active: params.is_active
             });
 
             return { message: "Agregado con exito", code: 1 };
@@ -206,6 +235,7 @@ const Products = {
             product.price_dolar = price_dolar;
             product.cap = params.cap;
             product.is_combo = params.is_combo;
+            product.is_active = params.is_active;
 
             await product.save();
 
