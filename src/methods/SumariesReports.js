@@ -6,6 +6,8 @@ const log = require('electron-log');
 const sequelize = require("../connection.js");
 const { Op } = require('sequelize');
 const moment = require('moment');
+const reports = require("../helpers/server_export.js");
+
 const reportErrors = require('../helpers/reportErrors.js');
 const createPdfFromTemplate = require('../helpers/ExportPdf.js');
 
@@ -135,13 +137,21 @@ const Sumaries = {
                 raw: true
             });
 
-           await createPdfFromTemplate('sumarySales.html', {
+           
+            let params = {
                 title: `Resumen de Venta`,
                 sales: sales,
                 totals_sales: totals_sales
-            });
+            };
 
+            if(period == 'WEEK' || period === 'MOUNTH') {
+                await reports("report_pdf", params);
+            }else {
+                await reports("report_whatsapp", params);
+            }
+          
 
+    
             return { message: 'Reporte Creado Correctamente', code: 1 };
 
         } catch (error) {
@@ -161,7 +171,6 @@ const Sumaries = {
 
         try {
             
-
             let option = {
                 attributes: [
                     sequelize.col('payment.createdAt'),
@@ -188,14 +197,12 @@ const Sumaries = {
 
             let sales = await Sale.findAll(option);
 
-          
-
+            
            await createPdfFromTemplate('sumarySales.html', {
                 title: `Resumen de Venta`,
                 sales: sales,
                 totals_sales: totals_sales
             });
-
 
             return { message: 'Reporte Creado Correctamente', code: 1 };
 
