@@ -7,7 +7,7 @@ const methodsLoaded = {};
 const nodes = Queue();
 
 
-ipcMain.setMaxListeners(15);
+ipcMain.setMaxListeners(50);
 
 const loadMethods = function (files) {
   try {
