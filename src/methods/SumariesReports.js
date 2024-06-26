@@ -74,16 +74,20 @@ const Sumaries = {
         try {
             let initDate = null;
             let finalDate = null;
+            let title = "";
 
             if (period == 'WEEK') {
                 finalDate = moment().format("YYYY-MM-DD");
                 initDate = moment().startOf('isoWeek').format("YYYY-MM-DD");
+                title = `Resumen de Venta de esta semana`;
             } else if (period === 'MOUNTH') {
                 initDate = moment().startOf('month').format("YYYY-MM-DD");
                 finalDate = moment().format("YYYY-MM-DD");
+                title = `Resumen de Venta de este mes`;
             } else { // HOY
                 initDate = moment().format("YYYY-MM-DD");
                 finalDate = moment().format("YYYY-MM-DD");
+                title = `Resumen de Venta de hoy`;
             }
 
             let option = {
@@ -96,7 +100,7 @@ const Sumaries = {
                     [sequelize.literal("sum(total_liters) || ' Lts' "), 'liters_consumption'],
                     [sequelize.literal("sum(total_caps)  || ' UNID' "), 'total_caps'],
                 ],
-                group: [sequelize.col('payment.createdAt')],
+                //group: [sequelize.col('payment.createdAt')],
                 include: [
                     {
                         model: Sale,
@@ -137,21 +141,15 @@ const Sumaries = {
                 raw: true
             });
 
-           
+
+
             let params = {
-                title: `Resumen de Venta`,
+                title: title,
                 sales: sales,
                 totals_sales: totals_sales
             };
-
-            if(period == 'WEEK' || period === 'MOUNTH') {
-                await reports("report_pdf", params);
-            }else {
-                await reports("report_whatsapp", params);
-            }
-          
-
-    
+            await reports("report_whatsapp", params);
+        
             return { message: 'Reporte Creado Correctamente', code: 1 };
 
         } catch (error) {
@@ -162,15 +160,15 @@ const Sumaries = {
 
     },
 
-     /**
-     * Resumen de ventas del dia detallado 
-     * 
-     * @returns {json} datalle de venta
-    */
-     'sumary-today': async function (period) {
+    /**
+    * Resumen de ventas del dia detallado 
+    * 
+    * @returns {json} datalle de venta
+   */
+    'sumary-today': async function (period) {
 
         try {
-            
+
             let option = {
                 attributes: [
                     sequelize.col('payment.createdAt'),
@@ -197,8 +195,8 @@ const Sumaries = {
 
             let sales = await Sale.findAll(option);
 
-            
-           await createPdfFromTemplate('sumarySales.html', {
+
+            await createPdfFromTemplate('sumarySales.html', {
                 title: `Resumen de Venta`,
                 sales: sales,
                 totals_sales: totals_sales
@@ -212,7 +210,7 @@ const Sumaries = {
             return { message: error.message, code: 0 };
         }
 
-    }
+    },
 
 };
 
