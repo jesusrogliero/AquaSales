@@ -1,5 +1,5 @@
 const { app, BrowserWindow, dialog } = require('electron');
-const { NsisUpdater, autoUpdater } = require('electron-updater');
+const { autoUpdater } = require('electron-updater');
 const { Notification } = require('electron')
 
 const { loadMethods } = require('./methods');
@@ -46,7 +46,7 @@ const main = function () {
 		autoUpdater.checkForUpdates();
 	});
 
-	
+
 	autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
 		const dialogOpts = {
 			type: 'info',
@@ -61,7 +61,7 @@ const main = function () {
 		})
 	});
 
-	
+
 	autoUpdater.on('update-available', (info) => {
 		new Notification({
 			title: `AquaSales V${info.version}`,
