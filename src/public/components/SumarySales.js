@@ -27,11 +27,6 @@ export default Vue.component('report-sumary', {
 		}
 	},
 
-	methods: {
-
-
-	},
-
 	template: `
   
     <data-table 

@@ -11,12 +11,13 @@ export default Vue.component('dispatched-sales', {
             sheet: false,
 
             headers: [
+                { text: 'Nro Venta', value: 'id' },
                 { text: 'Cliente', value: 'client' },
-                { text: 'Total en $', value: 'total_dolar' },
-                { text: 'Total en BsS', value: 'total_bs' },
-                { text: 'Total Tapas', value: 'total_caps' },
-                { text: 'Unidades', value: 'total_units' },
-                { text: 'Total Despachado', value: 'total_dispatched' },
+                { text: 'Total ($)', value: 'total_dolar' },
+                { text: 'Total (BsS)', value: 'total_bs' },
+                { text: 'Tapas (UNID)', value: 'total_caps' },
+                { text: 'Unidades (UNID)', value: 'total_units' },
+                { text: 'Despachado (UNID)', value: 'total_dispatched' },
                 { text: 'Creado el', value: 'createdAt' },
                 { text: 'Actualizado el', value: 'updatedAt' },
                 { text: 'Acción', value: 'actions' },
@@ -109,6 +110,8 @@ export default Vue.component('dispatched-sales', {
             :title="title"
             :destroy="openDialog"
             :details="openDialog"
+            :sortBy="['id']"
+            :sortDesc="[true]"
         ></data-table>
 
         <div v-if="dialog == 'details' && id != null">

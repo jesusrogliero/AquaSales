@@ -26,7 +26,8 @@ const Payments = {
                     [sequelize.literal("mobile_payment || ' BsS'"), 'mobile_payment'],
                     [sequelize.literal("cash_dollar || ' $'"), 'cash_dollar'],
                     [sequelize.literal("cash_bolivares || ' BsS'"), 'cash_bolivares'],
-                    [sequelize.col('sale.client'), 'client']
+                    [sequelize.col('sale.client'), 'client'],
+                    [sequelize.col('sale.id'), 'sale_id']
                 ],
                 include: [
                     {

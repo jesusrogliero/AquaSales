@@ -19,15 +19,17 @@ const SaleItems = {
 		try {
 			return await SaleItem.findAll({
 				attributes: [
-					'id', 'createdAt', 'updatedAt',
+					'id',
+					'caps',
+					'units',
+					'total_bs',
+					'total_dolar',
+					'pending_dispatch',
+					'dispatched',
+					'createdAt',
+					'updatedAt',
 					[sequelize.col('product.name'), 'product_name'],
-					[sequelize.literal("caps || ' UNID'"), 'caps'],
-					[sequelize.literal("sales_items.liters || ' LT'"), 'liters'],
-					[sequelize.literal("units || ' UNID'"), 'units'],
-					[sequelize.literal("total_bs || ' BsS'"), 'total_bs'],
-					[sequelize.literal("total_dolar || ' $'"), 'total_dolar'],
-					[sequelize.literal("pending_dispatch || ' UNID'"), 'pending_dispatch'],
-					[sequelize.literal("dispatched || ' UNID'"), 'dispatched']
+					[sequelize.col('sales_items.liters'), 'liters'],
 				],
 				include: [
 					{
@@ -56,45 +58,40 @@ const SaleItems = {
 	 * @returns message
 	 */
 	'create-item': async function (params) {
-
 		try {
 			if (empty(params.quantity)) throw new Error('Debes ingresar la cantidad a vender');
 			if (params.quantity < 1) throw new Error('Debes ingresar una cantidad correcta');
 
-			const sale = await Sale.findOne({
-				where: { id: params.sale_id }
-			});
+			const [sale, product] = await Promise.all([
+				Sale.findOne({ where: { id: params.sale_id } }),
+				Product.findOne({ where: { id: params.product_id } })
+			]);
 
 			if (sale.state_id == 2) throw new Error('Esta Venta ya fue procesada');
 			if (sale.state_id == 3) throw new Error('Esta Venta ya fue Despachada');
-
-			const product = await Product.findOne({
-				where: { id: params.product_id }
-			});
-
 			if (empty(product)) throw new Error('El producto no existe');
 
-			let total_dolar = parseFloat( (product.price_dolar * params.quantity).toFixed(2) );
-			let total_bs = product.price_bs * params.quantity;
+			let total_dolar = parseFloat((product.price_dolar * params.quantity).toFixed(2));
+			let total_bs = parseFloat((product.price_bs * params.quantity).toFixed(2));
 
-
-			let pending_dispatch = params.quantity * product.quantity;
+			let pending_dispatch = 0;
 			let dispatched = 0;
 
-			if(!product.is_combo) {
-				pending_dispatch = 0;
-				dispatched = params.quantity * product.quantity;
+			if (product.is_combo) {
+				pending_dispatch = (params.quantity * product.quantity);
+			} else {
+				dispatched = (params.quantity * product.quantity);
 			}
 
-			let item = await SaleItem.create({
+			const item = await SaleItem.create({
 				sale_id: sale.id,
 				product_id: params.product_id,
 				quantity: params.quantity,
 				total_bs: total_bs,
 				total_dolar: total_dolar,
-				caps: product.cap * (params.quantity * product.quantity),
-				liters: product.liters * params.quantity,
-				units: params.quantity * product.quantity,
+				caps: (product.cap * (params.quantity * product.quantity)),
+				liters: (product.liters * params.quantity),
+				units: (params.quantity * product.quantity),
 				pending_dispatch: pending_dispatch,
 				dispatched: dispatched
 			});

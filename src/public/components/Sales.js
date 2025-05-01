@@ -15,14 +15,15 @@ export default Vue.component('sales', {
             item_pending_dispatch: null,
 
             headers: [
+                { text: 'Nro Venta', value: 'id' },
                 { text: 'Cliente', value: 'client' },
-                { text: 'Total en $', value: 'total_dolar' },
-                { text: 'Total en BsS', value: 'total_bs' },
-                { text: 'Total Tapas', value: 'total_caps' },
-                { text: 'Unidades', value: 'total_units' },
-                { text: 'Pendiente por Despachar', value: 'pending_dispatch' },
-                { text: 'Total Despachado', value: 'total_dispatched' },
-                { text: 'Creado el', value: 'createdAt' },
+                { text: 'Total ($)', value: 'total_dolar' },
+                { text: 'Total (BsS)', value: 'total_bs' },
+                { text: 'Total Tapas (UNID)', value: 'total_caps' },
+                { text: 'Unidades (UNID)', value: 'total_units' },
+                { text: 'Pendiente por Despachar (UNID)', value: 'pending_dispatch' },
+                { text: 'Total Despachado (UNID)', value: 'total_dispatched' }, 
+                { text: 'Actualizado', value: 'updatedAt' },
                 { text: 'Acción', value: 'actions' },
             ],
 
@@ -39,13 +40,13 @@ export default Vue.component('sales', {
 
             headers_items: [
                 { text: 'Producto', value: 'product_name' },
-                { text: 'Cantidad', value: 'units' },
-                { text: 'Pendiente por Despachar', value: 'pending_dispatch' },
-                { text: 'Despachado', value: 'dispatched' },
-                { text: 'Litros', value: 'liters' },
-                { text: 'Tapa', value: 'caps' },
-                { text: 'Total en BsS', value: 'total_bs' },
-                { text: 'Total en $', value: 'total_dolar' },
+                { text: 'Cantidad (UNID)', value: 'units' },
+                { text: 'Por Despachar (UNID)', value: 'pending_dispatch' },
+                { text: 'Despachado (UNID)', value: 'dispatched' },
+                { text: 'Litros (LT)', value: 'liters' },
+                { text: 'Tapa (UNID)', value: 'caps' },
+                { text: 'Total (BsS)', value: 'total_bs' },
+                { text: 'Total ($)', value: 'total_dolar' },
                 { text: 'Acción', value: 'actions' },
             ],
 
@@ -217,6 +218,8 @@ export default Vue.component('sales', {
             :title="title"
             :destroy="openDialog"
             :details="openDialog"
+            :sortBy="['id']"
+            :sortDesc="[true]"
         ></data-table>
 
 

@@ -236,7 +236,7 @@ export default Vue.component('products', {
                         </v-col>
 
                         <v-col cols="12" lg="6" md="6" sm="6"  class="mt-2">
-                        <v-text-field v-model="cap" suffix="UNID" :rules="numberRule" type="number" label="Cantidad de Tapas" required
+                        <v-text-field v-model="cap" suffix="UNID" type="number" label="Cantidad de Tapas" required
                             placeholder="Ingresa la cantidad de tapas"></v-text-field>
                         </v-col>
 

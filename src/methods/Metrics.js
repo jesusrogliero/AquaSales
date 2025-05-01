@@ -4,7 +4,7 @@ const Sale = require('../models/Sale.js');
 const Payment = require('../models/Payment.js');
 const log = require('electron-log');
 const sequelize = require("../connection.js");
-const { Op, QueryTypes  } = require('sequelize');
+const { Op, QueryTypes } = require('sequelize');
 const moment = require('moment');
 const reportErrors = require('../helpers/reportErrors.js');
 
@@ -51,7 +51,7 @@ const Metrics = {
             INNER join sales_items ON sales.id = sales_items.sale_id 
             where sales_items.updatedAt = "${today}"
             `
-   
+
             const today_liters = await sequelize.query(Query, { type: QueryTypes.SELECT, raw: true });
 
 
@@ -62,9 +62,9 @@ const Metrics = {
             INNER join sales_items ON sales.id = sales_items.sale_id 
             where sales_items.updatedAt BETWEEN "${initWeek}" AND "${today}"
             `
-   
+
             const week_liters = await sequelize.query(Query, { type: QueryTypes.SELECT, raw: true });
-            
+
 
             Query = `
             select 
@@ -73,7 +73,7 @@ const Metrics = {
             INNER join sales_items ON sales.id = sales_items.sale_id 
             where sales_items.updatedAt BETWEEN "${initMonth}" AND "${today}" 
             `
-   
+
             const month_liters = await sequelize.query(Query, { type: QueryTypes.SELECT, raw: true });
 
             return {
@@ -266,13 +266,12 @@ const Metrics = {
 
 
     /**
-    * Porcentaje de ventas 
-    * 
-    * @returns {json} pago
-    */
+     * Porcentaje de ventas 
+     * 
+     * @returns {json} pago
+     */
     'variacion-sales': async function (period) {
         try {
-
             // Calculo data del periodo actual
             let nowinitDate = null;
             let nowfinalDate = null;
@@ -288,6 +287,20 @@ const Metrics = {
                 nowfinalDate = moment().format("YYYY-MM-DD");
             }
 
+            // Calculo data del periodo anterior
+            let lastInitDate = null;
+            let lastFinalDate = null;
+
+            if (period == 'WEEK') {
+                lastFinalDate = moment().subtract(1, 'weeks').endOf('isoWeek').format("YYYY-MM-DD");
+                lastInitDate = moment().subtract(1, 'weeks').startOf('isoWeek').format("YYYY-MM-DD");
+            } else if (period === 'MOUNTH') {
+                lastInitDate = moment().subtract(1, 'months').startOf('month').format("YYYY-MM-DD");
+                lastFinalDate = moment().subtract(1, 'months').endOf('month').format("YYYY-MM-DD");
+            } else { // HOY
+                lastInitDate = moment().subtract(1, 'days').format("YYYY-MM-DD");
+                lastFinalDate = moment().subtract(1, 'days').format("YYYY-MM-DD");
+            }
 
             let now_sales = await Payment.findAll({
                 attributes: [
@@ -309,24 +322,6 @@ const Metrics = {
                 },
                 raw: true
             });
-
-
-            // Calculo data del periodo pasado
-            let lastInitDate = null;
-            let lastFinalDate = null;
-
-            if (period == 'WEEK') {
-                lastInitDate = moment().subtract(1, 'weeks').startOf('week').format("YYYY-MM-DD");
-                lastFinalDate = moment().subtract(1, 'weeks').endOf('week').format("YYYY-MM-DD");
-
-            } else if (period === 'MOUNTH') {
-                lastInitDate = moment().subtract(1, 'months').startOf('month').format("YYYY-MM-DD");
-                lastFinalDate = moment().subtract(1, 'months').endOf('month').format("YYYY-MM-DD");
-            } else { // HOY
-                lastInitDate = moment().subtract(1, 'days').startOf('day').format("YYYY-MM-DD");
-                lastFinalDate = moment().subtract(1, 'days').endOf('day').format("YYYY-MM-DD");
-            }
-
 
             let last_sales = await Payment.findAll({
                 attributes: [
@@ -353,9 +348,14 @@ const Metrics = {
             let diferenciaUSD = now_sales[0].sales_dolar - last_sales[0].sales_dolar;
             let diferenciaUNIT = now_sales[0].sales_units - last_sales[0].sales_units;
 
-            let variacionBsS = ((diferenciaBs / last_sales[0].sales_bs) * 100);
-            let variacionUSD = ((diferenciaUSD / last_sales[0].sales_dolar) * 100);
-            let variacionUNIT = ((diferenciaUNIT / last_sales[0].sales_units) * 100);
+            let variacionBsS = last_sales[0].sales_bs === 0 ? 0 : ((diferenciaBs / last_sales[0].sales_bs) * 100);
+            let variacionUSD = last_sales[0].sales_dolar === 0 ? 0 : ((diferenciaUSD / last_sales[0].sales_dolar) * 100);
+            let variacionUNIT = last_sales[0].sales_units === 0 ? 0 : ((diferenciaUNIT / last_sales[0].sales_units) * 100);
+
+            // Check for infinity
+            variacionBsS = isFinite(variacionBsS) ? variacionBsS : 100;
+            variacionUSD = isFinite(variacionUSD) ? variacionUSD : 100;
+            variacionUNIT = isFinite(variacionUNIT) ? variacionUNIT : 100;
 
             return {
                 variacionBsS: isNaN(variacionBsS) ? 0 : variacionBsS.toFixed(0),
@@ -364,13 +364,11 @@ const Metrics = {
             };
 
         } catch (error) {
-            reportErrors(error);
             log.error(error.message);
+            reportErrors(error);
             return { message: error.message, code: 0 };
         }
     }
-
-
 
 };
 
