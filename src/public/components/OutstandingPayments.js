@@ -18,7 +18,7 @@ export default Vue.component('outstanding-payments', {
             requiredRule: [v => !!v || 'Este campo es requerido!!'],
 		
             headers: [
-                { text: 'Cliente', value: 'client' },
+                { text: 'Observación', value: 'client' },
                 { text: 'Producto', value: 'product' },
                 { text: 'Cantidad', value: 'quantity' },
                 { text: 'Deuda en BsS', value: 'debt_bs' },
@@ -175,11 +175,18 @@ export default Vue.component('outstanding-payments', {
             <template v-slot:dialog-content>
 
                 <v-form ref="form" v-model="valid" lazy-validation>
-                    <v-row>
+                    <v-row class="pt-5">
 
-                        <v-col cols="12" class="mb-n5">
-                            <v-text-field v-model="client" :rules="requiredRule" label="Cliente" required
-                                placeholder="Ingresa el nombre del Cliente"></v-text-field>
+                        <v-col cols="12" class="mb-n7">
+                            <v-textarea 
+                                v-model="client" 
+                                :rules="requiredRule" 
+                                label="Observación" 
+                                required
+                                auto-grow
+                                outlined
+                                rows="1"
+                                placeholder="Ingresa una nota"></v-textarea>
                         </v-col>
 
                         <v-col cols="12" class="mb-n5">

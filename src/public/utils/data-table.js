@@ -1,7 +1,7 @@
 'use strict';
 
 export default Vue.component('data-table', {
-    props: ["headers", "url", "sale_id", "title", 'add', 'update', 'show', 'destroy', 'details'],
+    props: ["headers", "url", "sale_id", "title", 'add', 'update', 'show', 'destroy', 'details', 'sortBy', 'sortDesc'],
 
     data: function () {
         return {
@@ -36,6 +36,15 @@ export default Vue.component('data-table', {
             catch (error) {
                 alertApp({color:"error", text: error.message, icon: "alert" }); 
             }
+        },
+
+        showtext() {
+            this.showText = !this.showText;
+            if(this.showText){
+                setTimeout(() => {
+                    document.getElementById("searchProduct").click();
+                },100);
+            }  
         }
     },
 
@@ -68,7 +77,7 @@ export default Vue.component('data-table', {
             <v-btn
                 color="primary"
                 icon
-                @click="showText =!showText"
+                @click="showtext"
             >
                 <v-icon>mdi-magnify</v-icon>
             </v-btn> 
@@ -84,6 +93,7 @@ export default Vue.component('data-table', {
                         placeholder="Buscar Producto"
                         single-line
                         hide-details
+                        id="searchProduct"
                     ></v-text-field>
                 </v-slide-x-transition>
             </div>
@@ -95,6 +105,9 @@ export default Vue.component('data-table', {
             :items="data"
             :search="search"
             :itemsPerPage="itemsPerPage"
+            :sort-by="sortBy"
+            :sort-desc="sortDesc"
+            multi-sort
         >
             <template v-slot:item.actions="{ item }">
 

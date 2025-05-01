@@ -22,14 +22,17 @@ const Sales = {
         try {
             return await Sale.findAll({
                 attributes: [
-                    'id', 'client', 'createdAt', 'updatedAt',
-                    [sequelize.literal("total_units || ' UNID'"), 'total_units'],
-                    [sequelize.literal("pending_dispatch || ' UNID'"), 'pending_dispatch'],
-                    [sequelize.literal("total_dispatched || ' UNID'"), 'total_dispatched'],
-                    [sequelize.literal("total_liters || ' LT'"), 'total_liters'],
-                    [sequelize.literal("total_caps || ' UNID'"), 'total_caps'],
-                    [sequelize.literal("total_bs || ' BsS'"), 'total_bs'],
-                    [sequelize.literal("total_dolar || ' $'"), 'total_dolar'],
+                    'id',
+                    'client',
+                    "total_units",
+                    "pending_dispatch",
+                    "total_dispatched",
+                    "total_liters",
+                    "total_caps",
+                    "total_bs",
+                    "total_dolar",
+                    'createdAt',
+                    'updatedAt',
                     [sequelize.col('sales_state.name'), 'state']
                 ],
                 include: [
@@ -61,14 +64,17 @@ const Sales = {
         try {
             return await Sale.findAll({
                 attributes: [
-                    'id', 'client', 'createdAt', 'updatedAt',
-                    [sequelize.literal("total_units || ' UNID'"), 'total_units'],
-                    [sequelize.literal("pending_dispatch || ' UNID'"), 'pending_dispatch'],
-                    [sequelize.literal("total_dispatched || ' UNID'"), 'total_dispatched'],
-                    [sequelize.literal("total_liters || ' LT'"), 'total_liters'],
-                    [sequelize.literal("total_caps || ' UNID'"), 'total_caps'],
-                    [sequelize.literal("total_bs || ' BsS'"), 'total_bs'],
-                    [sequelize.literal("total_dolar || ' $'"), 'total_dolar'],
+                    'id',
+                    'client',
+                    "total_units",
+                    "pending_dispatch",
+                    "total_dispatched",
+                    "total_liters",
+                    "total_caps",
+                    "total_bs",
+                    "total_dolar",
+                    'createdAt',
+                    'updatedAt',
                     [sequelize.col('sales_state.name'), 'state']
                 ],
                 include: [

@@ -45,14 +45,8 @@ let Home = Vue.component('Home', {
 	methods: {
 
 		saludar() {
-			let hora = new Date().getHours();
-			if (hora >= 6 && hora < 12) {
-				this.mensaje = '¡Buenos días!';
-			} else if (hora >= 12 && hora < 18) {
-				this.mensaje = '¡Buenas tardes!';
-			} else {
-				this.mensaje = '¡Buenas noches!';
-			}
+			const hora = new Date().getHours();
+			this.mensaje = hora < 12 ? '¡Buenos días!' : hora < 18 ? '¡Buenas tardes!' : '¡Buenas noches!';
 		},
 
 		toNewSale() { this.$router.push('/new_sale'); },
@@ -130,23 +124,25 @@ let Home = Vue.component('Home', {
 
 		async getMetricsTotal() {
 			try {
-				let response = await execute('total-sales');
+				const { sale_today, sale_week, sale_mounth } = await execute('total-sales');
 
-				if (response.code === 0) {
-					throw new Error(response.message)
-				}
+				this.today_sales = {
+					bs: parseFloat(this.empty(sale_today.today_sales_bs)).toFixed(2),
+					dolar: parseFloat(this.empty(sale_today.today_sales_dolar)).toFixed(2),
+					units: sale_today.today_sales_units,
+				};
 
-				this.today_sales.bs = parseFloat(this.empty(response.sale_today.today_sales_bs)).toFixed(2);
-				this.today_sales.dolar = parseFloat(this.empty(response.sale_today.today_sales_dolar)).toFixed(2);
-				this.today_sales.units = response.sale_today.today_sales_units;
+				this.lastweek_sales = {
+					bs: parseFloat(this.empty(sale_week.lastweek_sales_bs)).toFixed(2),
+					dolar: parseFloat(this.empty(sale_week.lastweek_sales_dolar)).toFixed(2),
+					units: sale_week.lastweek_sales_units,
+				};
 
-				this.lastweek_sales.bs = parseFloat(this.empty(response.sale_week.lastweek_sales_bs)).toFixed(2);
-				this.lastweek_sales.dolar = parseFloat(this.empty(response.sale_week.lastweek_sales_dolar)).toFixed(2);
-				this.lastweek_sales.units = response.sale_week.lastweek_sales_units;
-
-				this.lastmonth_sales.bs = parseFloat(this.empty(response.sale_mounth.lastmonth_sales_bs)).toFixed(2);
-				this.lastmonth_sales.dolar = parseFloat(this.empty(response.sale_mounth.lastmonth_sales_dolar)).toFixed(2);
-				this.lastmonth_sales.units = response.sale_mounth.lastmonth_sales_units;
+				this.lastmonth_sales = {
+					bs: parseFloat(this.empty(sale_mounth.lastmonth_sales_bs)).toFixed(2),
+					dolar: parseFloat(this.empty(sale_mounth.lastmonth_sales_dolar)).toFixed(2),
+					units: sale_mounth.lastmonth_sales_units,
+				};
 
 			} catch (error) {
 				alertApp({ color: "error", icon: "alert", text: error.message });
@@ -160,7 +156,7 @@ let Home = Vue.component('Home', {
 				if (response.code === 0) {
 					throw new Error(response.message)
 				}
-
+				
 				this.icomes = response;
 
 			} catch (error) {
@@ -172,8 +168,6 @@ let Home = Vue.component('Home', {
 			this.variacionToday = await execute('variacion-sales');
 			this.variacionWeek = await execute('variacion-sales', 'WEEK');
 			this.variacionMounth = await execute('variacion-sales', 'MOUNTH');
-
-			console.log(this.variacionToday);
 		}
 
 	},
@@ -389,9 +383,9 @@ let Home = Vue.component('Home', {
 						<h1 class="ml-2">{{today_liters_consumption == null ? 0 : today_liters_consumption }} LT</h1>
 						<v-spacer></v-spacer>
 						<v-img
-								class="mt-n9"
-								height="80"
-								max-width="80"
+								class="mt-n14"
+								height="100"
+								max-width="100"
 								src="../public/resources/images/botella.png"
 							></v-img>
 					</v-row>
@@ -420,7 +414,13 @@ let Home = Vue.component('Home', {
 
 					<v-col cols="12" sm="6" md="4" lg="4">
 						<v-card color="#ECEFF1">
-							<v-card-title>Despachado Este mes</v-card-title>
+							<v-card-title>
+							<span  class="mt-n3">
+								Despachado Este mes 
+								<v-icon v-if="variacionMounth.variacionUNIT > 0" size="50" class="mr-n4" color="green" >mdi-triangle-small-up</v-icon>  
+								<v-icon v-else size="50" class="mr-n4" color="red" >mdi-triangle-small-down</v-icon>  
+								<span>{{variacionMounth.variacionUNIT}}%</span>
+							</span></v-card-title>
 							<v-card-text>
 								<v-row>
 									<h1 class="ml-2">{{lastmonth_liters_consumption == null ? 0 : lastmonth_liters_consumption }} LT</h1>

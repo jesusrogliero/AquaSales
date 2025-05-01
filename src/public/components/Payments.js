@@ -8,6 +8,7 @@ export default Vue.component('payments', {
             id: null,
 
             headers: [
+                { text: 'Nro Venta', value: 'sale_id' },
                 { text: 'Fecha de Pago', value: 'createdAt' },
                 { text: 'Cliente', value: 'client' },
                 { text: 'Pago Movil', value: 'mobile_payment' },
@@ -32,6 +33,8 @@ export default Vue.component('payments', {
             :url="url" 
             :headers="headers" 
             :title="title"
+            :sortBy="['sale_id']"
+            :sortDesc="[true]"
         ></data-table>
     </div>
     `

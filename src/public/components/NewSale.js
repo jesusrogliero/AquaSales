@@ -43,13 +43,13 @@ export default Vue.component('new-sale', {
 
             headers: [
                 { text: 'Producto', value: 'product_name' },
-                { text: 'Unidades', value: 'units' },
-                { text: 'Litros', value: 'liters' },
-                { text: 'Tapa', value: 'caps' },
-                { text: 'Total en BsS', value: 'total_bs' },
-                { text: 'Total en $', value: 'total_dolar' },
-                { text: 'Pendiente por Despachar', value: 'pending_dispatch' },
-                { text: 'Despachado', value: 'dispatched' },
+                { text: 'Unidades (UNID)', value: 'units', align: 'center' },
+                { text: 'Litros (LT)', value: 'liters', align: 'center'},
+                { text: 'Tapa (UNID)', value: 'caps', align: 'center'},
+                { text: 'Total (BsS)', value: 'total_bs', align: 'center' },
+                { text: 'Total ($)', value: 'total_dolar', align: 'center'},
+                { text: 'Por Despachar (UNID)', value: 'pending_dispatch', align: 'center'},
+                { text: 'Despachados (UNID)', value: 'dispatched', align: 'center'},
                 { text: 'Acción', value: 'actions' },
             ],
 
