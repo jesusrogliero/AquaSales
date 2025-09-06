@@ -1,4 +1,4 @@
-const { app, BrowserWindow, dialog } = require('electron');
+const { app, BrowserWindow, dialog, Menu, globalShortcut } = require('electron');
 const { autoUpdater } = require('electron-updater');
 const { Notification } = require('electron')
 
@@ -21,7 +21,8 @@ const main = function () {
 		title: `AquaSales - V${app.getVersion()}`,
 		webPreferences: {
 			nodeIntegration: true,
-			contextIsolation: false
+			contextIsolation: false,
+			devTools: app.isPackaged,
 		},
 	});
 
@@ -29,6 +30,19 @@ const main = function () {
 	win.setMenuBarVisibility(false)
 	win.loadFile(dirs.public + 'index.html');
 
+	// Modo produccion
+	if (app.isPackaged) {
+		Menu.setApplicationMenu(null);
+		
+	 	globalShortcut.register('CommandOrControl+Shift+I', () => false);
+		globalShortcut.register('CommandOrControl+Shift+J', () => false);
+		globalShortcut.register('F12', () => false);
+		globalShortcut.register('CommandOrControl+R', () => false);
+		globalShortcut.register('F5', () => false);
+
+	} else {
+		console.log('Modo desarrollo');
+	}
 
 	// cargando el listado de archivos
 	const fs = require('fs');
@@ -43,7 +57,10 @@ const main = function () {
 		autoUpdater.allowDowngrade = true;
 		autoUpdater.autoRunAppAfterInstall = true;
 		autoUpdater.autoDownload = true;
-		autoUpdater.checkForUpdates();
+		
+		if(app.isPackaged) {
+			autoUpdater.checkForUpdates();
+		}	
 	});
 
 
