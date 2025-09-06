@@ -425,7 +425,8 @@ let Home = Vue.component('Home', {
 								<v-row>
 									<h1 class="ml-2">{{lastmonth_liters_consumption == null ? 0 : lastmonth_liters_consumption }} LT</h1>
 									<v-spacer></v-spacer>
-									<v-icon size="80" class="mr-2 mt-n9" color="green">mdi-trending-up</v-icon>
+									<v-icon v-if="variacionMounth.variacionUNIT > 0" size="80" class="mr-2 mt-n10" color="green" >mdi-trending-up</v-icon>
+									<v-icon v-else size="80" class="mr-2 mt-n10" color="red">mdi-trending-down</v-icon>
 								</v-row>
 							</v-card-text>
 						</v-card>
