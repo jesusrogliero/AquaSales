@@ -52,8 +52,7 @@ const main = function () {
 	});
 
 	win.once('ready-to-show', async () => {
-		win.show();
-
+	
 		autoUpdater.allowDowngrade = true;
 		autoUpdater.autoRunAppAfterInstall = true;
 		autoUpdater.autoDownload = true;
@@ -61,6 +60,8 @@ const main = function () {
 		if(app.isPackaged) {
 			autoUpdater.checkForUpdates();
 		}	
+		
+		win.show();
 	});
 
 
