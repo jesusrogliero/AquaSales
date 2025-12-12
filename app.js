@@ -37,9 +37,7 @@ const main = function () {
 	 	globalShortcut.register('CommandOrControl+Shift+I', () => false);
 		globalShortcut.register('CommandOrControl+Shift+J', () => false);
 		globalShortcut.register('F12', () => false);
-		globalShortcut.register('CommandOrControl+R', () => false);
 		globalShortcut.register('F5', () => false);
-
 	} else {
 		console.log('Modo desarrollo');
 	}

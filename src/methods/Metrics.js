@@ -3,7 +3,7 @@
 const Sale = require('../models/Sale.js');
 const Payment = require('../models/Payment.js');
 const log = require('electron-log');
-const sequelize = require("../connection.js");
+const { sequelize, clientWhatsapp } = require("../connection.js");
 const { Op, QueryTypes } = require('sequelize');
 const moment = require('moment');
 const reportErrors = require('../helpers/reportErrors.js');

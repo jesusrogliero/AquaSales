@@ -87,7 +87,7 @@ var AdminAutenticate = Vue.component('admin-autenticate', {
             <v-icon size="30" >mdi-lock-open</v-icon>
         </v-btn>
 
-        <dialog-base :active="dialog">
+        <dialog-base :active="dialog" :max-width="350">
             <template v-slot:dialog-title>
                 <span class="title">Hola {{admin_name}}!!, Ingresa tu contraseña</span>
             </template>

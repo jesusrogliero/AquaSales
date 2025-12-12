@@ -5,8 +5,8 @@ const Sale = require('../models/Sale.js');
 const empty = require('../helpers/empty.js');
 const log = require('electron-log');
 const sequelize = require('sequelize');
+const axios = require('axios');
 
-const BCV = require('bcv-divisas');
 const Exchange = require('../models/Exchange.js');
 const moment = require('moment');
 const reportErrors = require('../helpers/reportErrors.js');
@@ -114,9 +114,8 @@ const Payments = {
             let exchange = await Exchange.findByPk(1);
 
             if (exchange.date != today) {
-                let bcv = await BCV.bcvDolar();
-                bcv = parseFloat(bcv._dolar);
-
+                const response = await axios.get('https://ve.dolarapi.com/v1/dolares/oficial');
+                let bcv = parseFloat(response.data.promedio);
                 exchange.bcv = bcv;
                 exchange.date = today;
                 await exchange.save();

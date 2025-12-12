@@ -11,23 +11,22 @@ ipcMain.setMaxListeners(50);
 
 const loadMethods = function (files) {
   try {
-    for (const index in files) {
-      const file = files[index];
+    for (const file of files) {
       const methodsFile = require(dirs.methods + file);
 
-      for (const index in methodsFile) {
-        if (methodsLoaded[index])
-          throw 'Disculpe el siguiente metodo (' + index + ')  ha sido repetido';
+      for (const [name, method] of Object.entries(methodsFile)) {
+        if (methodsLoaded[name])
+          throw `Disculpe el siguiente metodo (${name}) ha sido repetido`;
 
-        if (typeof methodsFile[index] != 'function')
+        if (typeof method !== 'function')
           throw 'Disculpe intento agregar un atributo que no es un metodo';
 
-        methodsLoaded[index] = methodsFile[index];
+        methodsLoaded[name] = method;
       }
     }
 
     const methods = Object.keys(methodsLoaded);
-    console.log('Methods loaded ' + methods.length);
+    console.log(`Methods loaded ${methods.length}`);
 
     return methods;
   } catch (error) {
@@ -43,32 +42,23 @@ const executeMethod = async function ({ name, params }) {
     const key = `${Date.now()}-${Math.random()}-${nodes.size()}`;
     nodes.add({ params, name, key });
 
-    // verificando el metopdo que esta en el frente
-    let aux = nodes.front();
-
     // realizando la espera 10ms evaluando si la llamada fue realizada
-    while (!nodes.empty() && aux.key != key) {
+    while (!nodes.empty() && nodes.front().key !== key) {
       await sleep(10);
-      aux = nodes.front();
     }
 
-    log.info('Method executing...\n', { name: aux.name, params: aux.params }, '\n\n');
+    const current = nodes.front();
+    log.info('Method executing...\n', { name: current.name, params: current.params }, '\n\n');
 
-    const method = methodsLoaded[aux.name];
+    const method = methodsLoaded[current.name];
     if (!method) throw 'Disculpe el metodo no ha sido encontrado';
 
-    let time = Date.now();
-    let response = null;
+    const startTime = Date.now();
+    const response = method.constructor.name === 'AsyncFunction' 
+      ? await method(current.params)
+      : method(current.params);
 
-    if (method.constructor.name != 'AsyncFunction') response = method(aux.params);
-    else
-      response = await method(aux.params)
-        .then(t => t)
-        .catch(error => {
-          throw error;
-        });
-
-    time = Date.now() - time;
+    const time = Date.now() - startTime;
     return { response, time };
   } catch (error) {
     log.error(error);
@@ -83,12 +73,7 @@ const executeMethod = async function ({ name, params }) {
 ipcMain.on('asynchronous-execute-send', async (event, arg) => {
   const { idp } = arg;
   try {
-    const response = await executeMethod(arg)
-      .then(t => t)
-      .catch(error => {
-        throw error;
-      });
-
+    const response = await executeMethod(arg);
     event.reply('asynchronous-execute-response', { ...response, idp });
   } catch (error) {
     event.reply('asynchronous-execute-response', { error, idp });

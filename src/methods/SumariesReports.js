@@ -1,15 +1,12 @@
 'use strict'
-
 const Sale = require('../models/Sale.js');
 const Payment = require('../models/Payment.js');
 const log = require('electron-log');
-const sequelize = require("../connection.js");
+const { sequelize, clientWhatsapp } = require("../connection.js");
 const { Op } = require('sequelize');
 const moment = require('moment');
-const reports = require("../helpers/server_export.js");
 
 const reportErrors = require('../helpers/reportErrors.js');
-const createPdfFromTemplate = require('../helpers/ExportPdf.js');
 
 const Sumaries = {
 
@@ -141,67 +138,16 @@ const Sumaries = {
                 raw: true
             });
 
-
-
-            let params = {
-                title: title,
-                sales: sales,
-                totals_sales: totals_sales
-            };
-            await reports("report_whatsapp", params);
+            let reports = `*${title}* \n\n`;
+            reports += `*Totales de Ventas* \n`;
+            reports += `• Total Ventas en Bolivares: ${totals_sales[0].total_sales_bs ? totals_sales[0].total_sales_bs : '0 BsS'} \n`;
+            reports += `• Total Ventas en Dolares: ${totals_sales[0].total_sales_dolar ? totals_sales[0].total_sales_dolar : '0 $'} \n`;
+            reports += `• Total Unidades Vendidas: ${totals_sales[0].total_sales_units ? totals_sales[0].total_sales_units : '0 UNID'} \n`;
+            reports += `• Total Litros Vendidos: ${totals_sales[0].total_sales_liters ? totals_sales[0].total_sales_liters : '0 Lts'} \n`;
+            reports += `• Total Tapas Vendidas: ${totals_sales[0].total_sales_caps ? totals_sales[0].total_sales_caps : '0 UNID'} \n\n`;
+            clientWhatsapp.sendMessage('393758906893@c.us', reports );
+            clientWhatsapp.sendMessage('584127559111@c.us', reports );
         
-            return { message: 'Reporte Creado Correctamente', code: 1 };
-
-        } catch (error) {
-            log.error(error.message);
-            reportErrors(error);
-            return { message: error.message, code: 0 };
-        }
-
-    },
-
-    /**
-    * Resumen de ventas del dia detallado 
-    * 
-    * @returns {json} datalle de venta
-   */
-    'sumary-today': async function (period) {
-
-        try {
-
-            let option = {
-                attributes: [
-                    sequelize.col('payment.createdAt'),
-                    [sequelize.literal("sum(mobile_payment) || ' BsS' "), 'mobile_payment'],
-                    [sequelize.literal("sum(cash_dollar) || ' $' "), 'cash_dollar'],
-                    [sequelize.literal("sum(cash_bolivares) || ' BsS' "), 'cash_bolivares'],
-                    [sequelize.literal("sum(total_units) || ' UNID' "), 'sales_units'],
-                    [sequelize.literal("sum(total_liters) || ' Lts' "), 'liters_consumption'],
-                    [sequelize.literal("sum(total_caps)  || ' UNID' "), 'total_caps'],
-                ],
-                group: [sequelize.col('payment.createdAt')],
-                include: [
-                    {
-                        model: Payment,
-                        required: true,
-                        attributes: [],
-                    }
-                ],
-                where: {
-                    createdAt: moment().format("YYYY-MM-DD")
-                },
-                raw: true
-            };
-
-            let sales = await Sale.findAll(option);
-
-
-            await createPdfFromTemplate('sumarySales.html', {
-                title: `Resumen de Venta`,
-                sales: sales,
-                totals_sales: totals_sales
-            });
-
             return { message: 'Reporte Creado Correctamente', code: 1 };
 
         } catch (error) {
