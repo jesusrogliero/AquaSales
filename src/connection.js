@@ -3,6 +3,9 @@ const appdata = require('appdata-path');
 const path = require('path');
 const hash = require('./helpers/hash.js');
 const backup = require('./helpers/GDrive.js');
+const log = require('electron-log');
+const reportErrors = require('./helpers/reportErrors.js');
+const axios = require('axios');
 
 const sequelize = new Sequelize({
 	dialect: 'sqlite',
@@ -18,7 +21,8 @@ const seeds = async function (Model, data) {
 			});
 		}
 	} catch (error) {
-		console.log(error);
+		log.error(error.message);
+		reportErrors(error);
 	}
 };
 
@@ -52,24 +56,28 @@ const createAdmin = async function () {
 }
 
 const checkExchange = async function () {
-	let Exchange = require('./models/Exchange.js');
-	const moment = require('moment');
-	let BCV = require('bcv-divisas');
+    try {
+        let Exchange = require('./models/Exchange.js');
+        const moment = require('moment');
 
-	let exchange = await Exchange.findByPk(1);
+        let exchange = await Exchange.findByPk(1);
 
-	if (exchange == null) {
-		let today = moment().format("YYYY-MM-DD");
-
-		let bcv = await BCV.bcvDolar();
-		bcv = parseFloat(bcv._dolar);
-
-		exchange = new Exchange();
-		exchange.bcv = bcv;
-		exchange.date = today;
-		await exchange.save();
-	}
-}
+        if (exchange == null) {
+            let today = moment().format("YYYY-MM-DD");
+            if (exchange.date != today) {
+                const response = await axios.get('https://ve.dolarapi.com/v1/dolares/oficial');
+                let bcv = parseFloat(response.data.promedio);
+                exchange = new Exchange();
+                exchange.bcv = bcv;
+                exchange.date = today;
+                await exchange.save();
+            }
+        }
+    } catch (error) {
+        log.error(error.message);
+        reportErrors(error);
+    }
+};
 
 module.exports = sequelize;
 
