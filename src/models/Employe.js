@@ -1,5 +1,5 @@
 const { DataTypes } = require("sequelize");
-const sequelize = require('../connection.js');
+const { sequelize } = require('../connection.js');
 const BackupDrive = require('../models/BackupDrive.js');
 
 const Employe = sequelize.define("employe", {

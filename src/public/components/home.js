@@ -222,7 +222,7 @@ let Home = Vue.component('Home', {
 						<v-card color="#ECEFF1">
 							<v-card-title>
 								INGRESOS HOY
-								<v-icon @click="sumeryReportPdf('TODAY')"  class="ml-2" color="green">mdi-calendar-month</v-icon> 
+								<v-icon @click="sumeryReportPdf('TODAY')"  class="ml-2" color="green">mdi-whatsapp</v-icon> 
 							</v-card-title>
 							</v-card-title>
 							<v-card-text>
@@ -275,7 +275,7 @@ let Home = Vue.component('Home', {
 							
 							<v-card-title>
 								INGRESOS ESTA SEMANA
-								<v-icon @click="sumeryReportPdf('WEEK')" class="ml-2" color="green">mdi-calendar-month</v-icon>  
+								<v-icon @click="sumeryReportPdf('WEEK')" class="ml-2" color="green">mdi-whatsapp</v-icon>  
 							</v-card-title>
 
 							<v-card-text>
@@ -328,7 +328,7 @@ let Home = Vue.component('Home', {
 						<v-card color="#ECEFF1">
 							<v-card-title>
 							INGRESOS DE ESTE MES
-							<v-icon  @click="sumeryReportPdf('MOUNTH')" class="ml-2" color="green">mdi-calendar-month</v-icon> </v-card-title>
+							<v-icon  @click="sumeryReportPdf('MOUNTH')" class="ml-2" color="green">mdi-whatsapp</v-icon> </v-card-title>
 							<v-card-text>
 								<v-row v-if="details">
 									<v-col cols="12">

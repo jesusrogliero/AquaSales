@@ -1,5 +1,5 @@
 const { DataTypes } = require('sequelize');
-const sequelize = require('../connection');
+const { sequelize } = require('../connection');
 const Product = require('./Product');
 
 const OutstandingPayment = sequelize.define('outstanding_payments', {

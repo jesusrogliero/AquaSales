@@ -6,6 +6,7 @@ const backup = require('./helpers/GDrive.js');
 const log = require('electron-log');
 const reportErrors = require('./helpers/reportErrors.js');
 const axios = require('axios');
+const clientWhatsapp = require('./helpers/ServerWhatsapp.js');
 
 const sequelize = new Sequelize({
 	dialect: 'sqlite',
@@ -39,6 +40,8 @@ const seeds = async function (Model, data) {
 	await createAdmin();
 	await checkExchange();
 	await backup();
+
+
 })();
 
 
@@ -79,7 +82,4 @@ const checkExchange = async function () {
     }
 };
 
-module.exports = sequelize;
-
-
-
+module.exports = { sequelize, clientWhatsapp };
