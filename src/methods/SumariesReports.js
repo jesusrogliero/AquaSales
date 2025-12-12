@@ -145,8 +145,8 @@ const Sumaries = {
             reports += `• Total Unidades Vendidas: ${totals_sales[0].total_sales_units ? totals_sales[0].total_sales_units : '0 UNID'} \n`;
             reports += `• Total Litros Vendidos: ${totals_sales[0].total_sales_liters ? totals_sales[0].total_sales_liters : '0 Lts'} \n`;
             reports += `• Total Tapas Vendidas: ${totals_sales[0].total_sales_caps ? totals_sales[0].total_sales_caps : '0 UNID'} \n\n`;
-            clientWhatsapp.sendMessage('393758906893@c.us', reports );
-            clientWhatsapp.sendMessage('584127559111@c.us', reports );
+            await clientWhatsapp.sendMessage('393758906893@c.us', reports );
+            await clientWhatsapp.sendMessage('584127559111@c.us', reports );
         
             return { message: 'Reporte Creado Correctamente', code: 1 };
 
