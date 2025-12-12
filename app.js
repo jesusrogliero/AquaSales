@@ -8,6 +8,8 @@ const path = require('path');
 const appdata = require('appdata-path');
 const log = require('electron-log').transports.file.resolvePath = () => path.join(appdata('AquaSales'), 'AquaSales.log');
 
+// Variable global para verificar si la app está empaquetada
+global.isPackaged = app.isPackaged;
 
 
 // funcion de inicio de la aplicacion
@@ -69,7 +71,7 @@ const main = function () {
 			buttons: ['Reiniciar', 'Mas Tarde'],
 			title: 'Actualizacion Disponible',
 			message: process.platform === 'win32' ? releaseNotes : releaseName,
-			detail: 'Se ha descargado una nueva versión del sistema'
+			detail: 'Se ha descargado una nueva versión del sistema \n' + releaseNotes + '\n' + releaseName
 		}
 
 		dialog.showMessageBox(dialogOpts).then((returnValue) => {

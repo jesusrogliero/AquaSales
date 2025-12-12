@@ -2,7 +2,7 @@ const whatsappjs = require('whatsapp-web.js');
 const qrcodeTerminal = require('qrcode-terminal');
 const qrcode = require('qrcode'); // Para generar imágenes QR
 const path = require('path');
-const { app, BrowserWindow } = require('electron');
+const { BrowserWindow } = require('electron');
 const log = require('electron-log');
 
 const { Client, LocalAuth } = whatsappjs;
@@ -79,8 +79,7 @@ const puppeteerOptions = {
 };
 
 // Si la app está empaquetada, especificar ruta al ejecutable de Chrome
-console.log('App is packaged:', app.isPackaged);
-if (app.isPackaged) {
+if (global.isPackaged) {
     puppeteerOptions.executablePath = path.join(
         process.resourcesPath,
         'app.asar.unpacked',
@@ -96,21 +95,24 @@ if (app.isPackaged) {
 
 const client = new Client({
     authStrategy: new LocalAuth(),
-    puppeteer: puppeteerOptions
+    puppeteer: puppeteerOptions,
+    takeoverOnConflict: true
 });
 
 client.initialize();
 
 client.on('loading_screen', (percent, message) => {
     console.log('LOADING SCREEN', percent, message);
+    log.info('LOADING SCREEN', percent, message);
 });
 
 client.on('qr', async (qr) => {
     await createQRWindow(qr);
+     log.info('QR RECEIVED', qr);
 });
 
 client.on('authenticated', () => {
-    console.log('AUTHENTICATED');
+    log.info('AUTHENTICATED');
     // Cerrar ventana QR al autenticar
     if (qrWindow) {
         qrWindow.close();
@@ -119,7 +121,7 @@ client.on('authenticated', () => {
 });
 
 client.on('auth_failure', msg => {
-    console.error('AUTHENTICATION FAILURE', msg);
+    log.error('AUTHENTICATION FAILURE', msg);
     if (qrWindow) {
         qrWindow.close();
         qrWindow = null;
@@ -127,14 +129,14 @@ client.on('auth_failure', msg => {
 });
 
 client.on('ready', async () => {
-    console.log('Client is ready!');
-    client.sendMessage('393758906893@c.us', 'Sistema Embotelladora iniciado 🚀');
-    //client.sendMessage('584127559111@c.us', 'Sistema Embotelladora iniciado 🚀');
+     log.info('READY');
+    await client.sendMessage('393758906893@c.us', 'Sistema Embotelladora iniciado 🚀');
+    await client.sendMessage('584127559111@c.us', 'Sistema Embotelladora iniciado 🚀');
 });
 
 
 client.on('disconnected', (reason) => {
-    console.log('Client was logged out', reason);
+    log.warn('Client was logged out', reason);
 });
 
 module.exports = client;
