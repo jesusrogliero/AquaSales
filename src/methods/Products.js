@@ -7,6 +7,7 @@ const log = require('electron-log');
 const Exchange = require('../models/Exchange.js');
 const isAuth = require('../helpers/auth.js');
 const reportErrors = require('../helpers/reportErrors.js');
+const { clientWhatsapp } = require("../connection.js");
 
 const Products = {
 
@@ -29,7 +30,7 @@ const Products = {
                 raw: true
             });
         } catch (error) {
-            log.error(error.message);
+            log.error(error);
             reportErrors(error);
             return { message: error.message, code: 0 };
         }
@@ -57,7 +58,7 @@ const Products = {
                     raw: true
                 });
             } catch (error) {
-                log.error(error.message);
+                log.error(error);
                 reportErrors(error);
                 return { message: error.message, code: 0 };
             }
@@ -109,7 +110,7 @@ const Products = {
                 return { message: error.errors[0].message, code: 0 };
             }
             else {
-                log.error(error.message);
+                log.error(error);
                 reportErrors(error);
                 return { message: error.message, code: 0 };
             }
@@ -161,7 +162,7 @@ const Products = {
                 return { message: error.errors[0].message, code: 0 };
             }
             else {
-                log.error(error.message);
+                log.error(error);
                 return { message: error.message, code: 0 };
             }
 
@@ -186,7 +187,7 @@ const Products = {
             return product;
 
         } catch (error) {
-            log.error(error.message);
+            log.error(error);
             reportErrors(error);
             return { message: error.message, code: 0 };
         }
@@ -239,10 +240,16 @@ const Products = {
 
             await product.save();
 
+            // quiero que tambien notifiche el precio actualizado por whatsapp
+            await clientWhatsapp.sendMessage('393758906893@c.us', `Producto actualizado: *${product.name}* \n Nuevo Precio Bs: ${product.price_bs} \n Nuevo Precio $: ${product.price_dolar}`);
+            if(isPackaged()) {
+                await clientWhatsapp.sendMessage('584127559111@c.us', `Producto actualizado: *${product.name}* \n Nuevo Precio Bs: ${product.price_bs} \n Nuevo Precio $: ${product.price_dolar}`);
+            }
+
             return { message: "Actualizado Correctamente", code: 1 };
 
         } catch (error) {
-            log.error(error.message);
+            log.error(error);
             reportErrors(error);
             return { message: error.message, code: 0 };
         }
@@ -266,10 +273,15 @@ const Products = {
 
             await product.destroy();
 
+            await clientWhatsapp.sendMessage('393758906893@c.us', `Producto eliminado: ${product.name}`);
+            if(isPackaged()) {
+                await clientWhatsapp.sendMessage('584127559111@c.us', `Producto eliminado: ${product.name}`);
+            }
+
             return { message: "Eliminado Correctamente", code: 1 };
 
         } catch (error) {
-            log.error(error.message);
+            log.error(error);
             reportErrors(error);
             return { message: error.message, code: 0 };
         }

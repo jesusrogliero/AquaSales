@@ -2,11 +2,12 @@ const { app, BrowserWindow, dialog, Menu, globalShortcut } = require('electron')
 const { autoUpdater } = require('electron-updater');
 const { Notification } = require('electron')
 
-const { loadMethods } = require('./methods');
+const { loadMethods, executeMethod } = require('./methods');
+const { clientWhatsapp } = require('./src/connection.js');
 const dirs = require('./dirs');
 const path = require('path');
 const appdata = require('appdata-path');
-const log = require('electron-log').transports.file.resolvePath = () => path.join(appdata('AquaSales'), 'AquaSales.log');
+const log = require('electron-log').transports.file.resolvePathFn = () => path.join(appdata('AquaSales'), 'AquaSales.log');
 
 // Variable global para verificar si la app está empaquetada
 global.isPackaged = app.isPackaged;
@@ -88,6 +89,58 @@ const main = function () {
 	});
 
 };
+
+// Variable para controlar si ya se mostró el diálogo
+let isQuitting = false;
+
+// Enviar reporte antes de cerrar la aplicación
+app.on('before-quit', async (event) => {
+	if (app.isPackaged && !isQuitting) {
+		event.preventDefault(); // Prevenir el cierre inmediato
+		isQuitting = true; // Marcar que estamos en proceso de cierre
+		
+		// Obtener la ventana principal
+		const mainWindow = BrowserWindow.getAllWindows()[0];
+		
+		// Mostrar diálogo de confirmación
+		const dialogOpts = {
+			type: 'question',
+			buttons: ['Sí', 'No'],
+			defaultId: 0,
+			title: 'Finalizar Día de Trabajo',
+			message: '¿Ha finalizado el día de trabajo?',
+			detail: 'Si responde Sí, se enviará el reporte del día por WhatsApp.'
+		};
+		
+		const { response } = await dialog.showMessageBox(mainWindow, dialogOpts);
+		
+		// Si el usuario responde "Sí" (botón 0)
+		if (response === 0) {
+			try {
+				const moment = require('moment');
+				
+				// Enviar mensaje de cierre
+				const dateReport = moment().format('YYYY-MM-DD HH:mm:ss');
+				const closeMessage = `*Sistema Cerrado*\n\nEl sistema se ha cerrado a las ${dateReport}\n\nGenerando reporte del día... 📊`;
+				
+				await clientWhatsapp.sendMessage('393758906893@c.us', closeMessage);
+
+				if(global.isPackaged) {
+					await clientWhatsapp.sendMessage('584127559111@c.us', closeMessage);
+				}
+				
+				// Llamar al método que genera y envía el reporte completo usando executeMethod
+				await executeMethod({ name: 'sumary-report', params: 'TODAY' });
+				
+				console.log('Reporte de cierre enviado por WhatsApp');
+			} catch (error) {
+				console.error('Error al enviar reporte de cierre:', error);
+			}
+		}
+		
+		app.exit(); // Cerrar la aplicación
+	}
+});
 
 app.whenReady().then(() => main());
 

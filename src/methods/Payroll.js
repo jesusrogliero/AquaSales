@@ -37,7 +37,7 @@ const Payrolls = {
                 raw: true
             });
         } catch (error) {
-            log.error(error.message);
+            log.error(error);
             reportErrors(error);
             return { message: error.message, code: 0 };
         }
@@ -68,7 +68,7 @@ const Payrolls = {
                 return { message: error.errors[0].message, code: 0 };
             }
             else {
-                log.error(error.message);
+                log.error(error);
                 reportErrors(error);
                 return { message: error.message, code: 0 };
             }
@@ -91,7 +91,7 @@ const Payrolls = {
             return payroll;
 
         } catch (error) {
-            log.error(error.message);
+            log.error(error);
             reportErrors(error);
             return { message: error.message, code: 0 };
         }
@@ -130,7 +130,7 @@ const Payrolls = {
             return { message: "Actualizado Correctamente", code: 1 };
 
         } catch (error) {
-            log.error(error.message);
+            log.error(error);
             reportErrors(error);
             return { message: error.message, code: 0 };
         }
@@ -156,7 +156,7 @@ const Payrolls = {
             return { message: "Eliminado Correctamente", code: 1 };
 
         } catch (error) {
-            log.error(error.message);
+            log.error(error);
             reportErrors(error);
             return { message: error.message, code: 0 };
         }

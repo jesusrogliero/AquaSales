@@ -80,4 +80,4 @@ ipcMain.on('asynchronous-execute-send', async (event, arg) => {
   }
 });
 
-module.exports = { loadMethods };
+module.exports = { loadMethods, executeMethod };

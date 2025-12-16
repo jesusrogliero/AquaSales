@@ -1,9 +1,10 @@
 const whatsappjs = require('whatsapp-web.js');
-const qrcodeTerminal = require('qrcode-terminal');
 const qrcode = require('qrcode'); // Para generar imágenes QR
 const path = require('path');
 const { BrowserWindow } = require('electron');
 const log = require('electron-log');
+const isPackaged = require('./isPackaged');
+const appdata = require('appdata-path');
 
 const { Client, LocalAuth } = whatsappjs;
 
@@ -11,7 +12,7 @@ let qrWindow = null;
 
 const createQRWindow = async (qrData) => {
     // Cerrar ventana anterior si existe
-    if (qrWindow) {
+    if (qrWindow && !qrWindow.isDestroyed()) {
         qrWindow.close();
     }
 
@@ -22,7 +23,8 @@ const createQRWindow = async (qrData) => {
         title: 'Escanea el código QR',
         resizable: false,
         webPreferences: {
-            nodeIntegration: true
+            nodeIntegration: true,
+            devTools: false
         }
     });
     
@@ -79,7 +81,7 @@ const puppeteerOptions = {
 };
 
 // Si la app está empaquetada, especificar ruta al ejecutable de Chrome
-if (global.isPackaged) {
+if (isPackaged()) {
     puppeteerOptions.executablePath = path.join(
         process.resourcesPath,
         'app.asar.unpacked',
@@ -94,7 +96,9 @@ if (global.isPackaged) {
 }
 
 const client = new Client({
-    authStrategy: new LocalAuth(),
+    authStrategy: new LocalAuth({
+        dataPath: path.join(appdata('AquaSales'), 'whatsapp-auth')
+    }),
     puppeteer: puppeteerOptions,
     takeoverOnConflict: true
 });
@@ -116,7 +120,6 @@ client.on('authenticated', () => {
     // Cerrar ventana QR al autenticar
     if (qrWindow) {
         qrWindow.close();
-        qrWindow = null;
     }
 });
 
@@ -124,14 +127,17 @@ client.on('auth_failure', msg => {
     log.error('AUTHENTICATION FAILURE', msg);
     if (qrWindow) {
         qrWindow.close();
-        qrWindow = null;
     }
 });
 
 client.on('ready', async () => {
-     log.info('READY');
+    log.info('READY');
+    
     await client.sendMessage('393758906893@c.us', 'Sistema Embotelladora iniciado 🚀');
-    await client.sendMessage('584127559111@c.us', 'Sistema Embotelladora iniciado 🚀');
+    
+    if(isPackaged()) {
+        await client.sendMessage('584127559111@c.us', 'Sistema Embotelladora iniciado 🚀');
+    }
 });
 
 

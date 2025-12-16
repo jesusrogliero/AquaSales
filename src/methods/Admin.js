@@ -21,7 +21,7 @@ const Admin = {
 
             return data;
         } catch (error) {
-            log.error(error.message);
+            log.error(error);
             reportErrors(error);
             return { message: error.message, code: 0 };
         }
@@ -47,7 +47,7 @@ const Admin = {
 
             return isPassowrd;
         } catch (error) {
-            log.error(error.message);
+            log.error(error);
             reportErrors(error);
             return { message: error.message, code: 0 };
         }
@@ -67,7 +67,7 @@ const Admin = {
             return "Sesión Cerrada";
         } catch (error) {
             reportErrors(error);
-            log.error(error.message);
+            log.error(error);
             return { message: error.message, code: 0 };
         }
     },

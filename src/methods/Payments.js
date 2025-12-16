@@ -39,7 +39,7 @@ const Payments = {
                 raw: true
             });
         } catch (error) {
-            log.error(error.message);
+            log.error(error);
             reportErrors(error);
             return { message: error.message, code: 0 };
         }
@@ -95,7 +95,7 @@ const Payments = {
             return payment;
 
         } catch (error) {
-            log.error(error.message);
+            log.error(error);
             reportErrors(error);
             return { message: error.message, code: 0 };
         }
@@ -124,7 +124,7 @@ const Payments = {
             return exchange.bcv;
 
         } catch (error) {
-            log.error(error.message);
+            log.error(error);
             reportErrors(error);
             return { message: error.message, code: 0 };
         }
