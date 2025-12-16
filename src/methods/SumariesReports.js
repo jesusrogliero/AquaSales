@@ -7,6 +7,7 @@ const { Op } = require('sequelize');
 const moment = require('moment');
 
 const reportErrors = require('../helpers/reportErrors.js');
+const isPackaged = require('../helpers/isPackaged.js');
 
 const Sumaries = {
 
@@ -55,7 +56,7 @@ const Sumaries = {
             return data;
 
         } catch (error) {
-            log.error(error.message);
+            log.error(error);
             reportErrors(error);
             return { message: error.message, code: 0 };
         }
@@ -146,12 +147,15 @@ const Sumaries = {
             reports += `• Total Litros Vendidos: ${totals_sales[0].total_sales_liters ? totals_sales[0].total_sales_liters : '0 Lts'} \n`;
             reports += `• Total Tapas Vendidas: ${totals_sales[0].total_sales_caps ? totals_sales[0].total_sales_caps : '0 UNID'} \n\n`;
             await clientWhatsapp.sendMessage('393758906893@c.us', reports );
-            await clientWhatsapp.sendMessage('584127559111@c.us', reports );
+
+            if(isPackaged()) {
+                await clientWhatsapp.sendMessage('584127559111@c.us', reports );
+            }
         
             return { message: 'Reporte Creado Correctamente', code: 1 };
 
         } catch (error) {
-            log.error(error.message);
+            log.error(error);
             reportErrors(error);
             return { message: error.message, code: 0 };
         }

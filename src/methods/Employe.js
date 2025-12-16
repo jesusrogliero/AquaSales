@@ -16,7 +16,7 @@ const Employes = {
         try {
             return await Employe.findAll({ raw: true });
         } catch (error) {
-            log.error(error.message);
+            log.error(error);
             reportErrors(error);
             return { message: error.message, code: 0 };
         }
@@ -42,7 +42,7 @@ const Employes = {
                 return { message: error.errors[0].message, code: 0 };
             }
             else {
-                log.error(error.message);
+                log.error(error);
                 reportErrors(error);
                 return { message: error.message, code: 0 };
             }
@@ -72,7 +72,7 @@ const Employes = {
             return { message: "Actualizado Correctamente", code: 1 };
 
         } catch (error) {
-            log.error(error.message);
+            log.error(error);
             reportErrors(error);
             return { message: error.message, code: 0 };
         }
@@ -97,7 +97,7 @@ const Employes = {
             return { message: "Eliminado Correctamente", code: 1 };
 
         } catch (error) {
-            log.error(error.message);
+            log.error(error);
             reportErrors(error);
             return { message: error.message, code: 0 };
         }

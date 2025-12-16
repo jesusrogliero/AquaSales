@@ -49,7 +49,7 @@ const Sales = {
             });
 
         } catch (error) {
-            log.error(error.message);
+            log.error(error);
             reportErrors(error);
             return { message: error.message, code: 0 };
         }
@@ -91,7 +91,7 @@ const Sales = {
             });
 
         } catch (error) {
-            log.error(error.message);
+            log.error(error);
             reportErrors(error);
             return { message: error.message, code: 0 };
         }
@@ -116,7 +116,7 @@ const Sales = {
                 return { message: error.errors[0].message, code: 0 };
             }
             else {
-                log.error(error.message);
+                log.error(error);
                 return { message: error.message, code: 0 };
             }
 
@@ -141,7 +141,7 @@ const Sales = {
 
             return { message: "Registrado con exito", code: 1 };
         } catch (error) {
-            log.error(error.message);
+            log.error(error);
             return { message: error.message, code: 0 };
         }
     },
@@ -162,7 +162,7 @@ const Sales = {
             return sale;
 
         } catch (error) {
-            log.error(error.message);
+            log.error(error);
             reportErrors(error);
             return { message: error.message, code: 0 };
         }
@@ -232,7 +232,7 @@ const Sales = {
             return { message: 'Venta Finalizada', code: 1 };
 
         } catch (error) {
-            log.error(error.message);
+            log.error(error);
             reportErrors(error);
             return { message: error.message, code: 0 };
         }
@@ -254,7 +254,7 @@ const Sales = {
             return sale;
 
         } catch (error) {
-            log.error(error.message);
+            log.error(error);
             reportErrors(error);
             return { message: error.message, code: 0 };
         }

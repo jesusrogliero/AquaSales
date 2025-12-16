@@ -87,8 +87,6 @@ let Home = Vue.component('Home', {
 
 		},
 
-
-
 		async sumeryReportPdf(period) {
 			try {
 				let response = await execute('sumary-report', period);
@@ -125,23 +123,27 @@ let Home = Vue.component('Home', {
 		async getMetricsTotal() {
 			try {
 				const { sale_today, sale_week, sale_mounth } = await execute('total-sales');
+				const { previous_sales, previous_week, previous_month } = await execute('previous-sales');
 
 				this.today_sales = {
 					bs: parseFloat(this.empty(sale_today.today_sales_bs)).toFixed(2),
 					dolar: parseFloat(this.empty(sale_today.today_sales_dolar)).toFixed(2),
 					units: sale_today.today_sales_units,
+					previous_units: previous_sales
 				};
 
 				this.lastweek_sales = {
 					bs: parseFloat(this.empty(sale_week.lastweek_sales_bs)).toFixed(2),
 					dolar: parseFloat(this.empty(sale_week.lastweek_sales_dolar)).toFixed(2),
 					units: sale_week.lastweek_sales_units,
+					previous_units: previous_week
 				};
 
 				this.lastmonth_sales = {
 					bs: parseFloat(this.empty(sale_mounth.lastmonth_sales_bs)).toFixed(2),
 					dolar: parseFloat(this.empty(sale_mounth.lastmonth_sales_dolar)).toFixed(2),
 					units: sale_mounth.lastmonth_sales_units,
+					previous_units: previous_month
 				};
 
 			} catch (error) {
@@ -169,7 +171,6 @@ let Home = Vue.component('Home', {
 			this.variacionWeek = await execute('variacion-sales', 'WEEK');
 			this.variacionMounth = await execute('variacion-sales', 'MOUNTH');
 		}
-
 	},
 
 	template: `
@@ -181,7 +182,7 @@ let Home = Vue.component('Home', {
 						
 						<h3>
 							<v-icon size="30" class="mr-2">mdi-briefcase-variant-outline</v-icon>
-							{{mensaje}} | BCV: {{bcv}} BsS
+							{{mensaje}} | BCV: {{bcv}} BsS | Despachos Pendientes: {{pending_dispatch}}
 						</h3>
 					</v-col>	
 					
@@ -414,19 +415,17 @@ let Home = Vue.component('Home', {
 
 					<v-col cols="12" sm="6" md="4" lg="4">
 						<v-card color="#ECEFF1">
-							<v-card-title>
-							<span  class="mt-n3">
-								Despachado Este mes 
-								<v-icon v-if="variacionMounth.variacionUNIT > 0" size="50" class="mr-n4" color="green" >mdi-triangle-small-up</v-icon>  
-								<v-icon v-else size="50" class="mr-n4" color="red" >mdi-triangle-small-down</v-icon>  
-								<span>{{variacionMounth.variacionUNIT}}%</span>
-							</span></v-card-title>
+							<v-card-title>Despachado Este mes</v-card-title>
 							<v-card-text>
 								<v-row>
 									<h1 class="ml-2">{{lastmonth_liters_consumption == null ? 0 : lastmonth_liters_consumption }} LT</h1>
 									<v-spacer></v-spacer>
-									<v-icon v-if="variacionMounth.variacionUNIT > 0" size="80" class="mr-2 mt-n10" color="green" >mdi-trending-up</v-icon>
-									<v-icon v-else size="80" class="mr-2 mt-n10" color="red">mdi-trending-down</v-icon>
+									<v-img
+										class="mt-n9"
+										height="80"
+										max-width="80"
+										src="../public/resources/images/botella-de-agua.png"
+									></v-img>
 								</v-row>
 							</v-card-text>
 						</v-card>
@@ -448,6 +447,10 @@ let Home = Vue.component('Home', {
 									<v-spacer></v-spacer>
 									<v-icon v-if="variacionToday.variacionUNIT > 0" size="80" class="mr-2 mt-n15" color="green" >mdi-trending-up</v-icon>
 									<v-icon v-else size="80" class="mr-2 mt-n15" color="red">mdi-trending-down</v-icon>
+								</v-row>
+								<v-row>
+									<span class="ml-2">Unidades Vendidas ayer: </span>
+									<span class="float-right mr-2 ml-2">{{today_sales.previous_units == null ? 0 : today_sales.previous_units}}</span>
 								</v-row>
 							</v-card-text>
 						</v-card>
@@ -471,25 +474,36 @@ let Home = Vue.component('Home', {
 									<v-icon v-if="variacionWeek.variacionUNIT > 0" size="80" class="mr-2 mt-n15" color="green">mdi-trending-up</v-icon>
 									<v-icon v-else size="80" class="mr-2 mt-n15" color="red">mdi-trending-down</v-icon>
 								</v-row>
+								<v-row>
+									<span class="ml-2">Unidades Vendidas la semana pasada: </span>
+									<span class="float-right mr-2 ml-2">{{lastweek_sales.previous_units == null ? 0 : lastweek_sales.previous_units}}</span>
+								</v-row>
 							</v-card-text>
 						</v-card>
 					</v-col>
 
 					<v-col cols="12" sm="6" md="4" lg="4">
 						<v-card  color="#ECEFF1">
-							<v-card-title>Recargas Pendientes</v-card-title>
+							<v-card-title>
+							
+							<span class="mt-n3">
+							Vendidos Este Mes
+								<v-icon v-if="variacionMounth.variacionUNIT > 0" size="50" class="mr-n2" color="green" >mdi-triangle-small-up</v-icon> 
+								<v-icon v-else size="50" class="mr-n4" color="red" >mdi-triangle-small-down</v-icon>   
+								<span>{{variacionMounth.variacionUNIT}}%</span>
+							</span>
+							</v-card-title>
 							<v-card-text>
-								<v-row>
-									<h1 class="ml-2">{{pending_dispatch == null ? 0 : pending_dispatch }} UNID</h1>
+								<v-row class="mt-n2">
+									<h1 class="ml-2 mb-2">{{lastmonth_sales.units == null ? '0 UNID' : lastmonth_sales.units }}</h1>
 									<v-spacer></v-spacer>
-									
-									<v-img
-									class="mt-n10"
-									height="80"
-									max-width="80"
-									src="../public/resources/images/despacho.png"
-								></v-img>
+									<v-icon v-if="variacionMounth.variacionUNIT > 0" size="80" class="mr-2 mt-n15" color="green">mdi-trending-up</v-icon>
+									<v-icon v-else size="80" class="mr-2 mt-n15" color="red">mdi-trending-down</v-icon>
 								</v-row>
+								<v-row>
+									<span class="ml-2">Unidades Vendidas el mes pasado: </span>
+									<span class="float-right mr-2 ml-2">{{lastmonth_sales.previous_units == null ? 0 : lastmonth_sales.previous_units}}</span>
+								</v-row>	
 							</v-card-text>
 						</v-card>
 					</v-col>

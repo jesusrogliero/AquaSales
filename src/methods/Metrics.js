@@ -27,7 +27,7 @@ const Metrics = {
 
             return data[0];
         } catch (error) {
-            log.error(error.message);
+            log.error(error);
             reportErrors(error);
             return { message: error.message, code: 0 };
         }
@@ -82,7 +82,7 @@ const Metrics = {
                 lastmonth_liters_consumption: month_liters[0].lastmonth_liters_consumption
             };
         } catch (error) {
-            log.error(error.message);
+            log.error(error);
             reportErrors(error);
             return { message: error.message, code: 0 };
         }
@@ -170,7 +170,7 @@ const Metrics = {
                 month_icome: month_icome[0]
             };
         } catch (error) {
-            log.error(error.message);
+            log.error(error);
             reportErrors(error);
             return { message: error.message, code: 0 };
         }
@@ -250,7 +250,6 @@ const Metrics = {
                 raw: true
             });
 
-
             return {
                 sale_today: sale_today[0],
                 sale_week: sale_week[0],
@@ -259,7 +258,87 @@ const Metrics = {
 
         } catch (error) {
             reportErrors(error);
-            log.error(error.message);
+            log.error(error);
+            return { message: error.message, code: 0 };
+        }
+    },
+
+     /**
+     * Metricas de Ventas precendentes
+     * 
+     * @returns {json} pago
+     */
+    'previous-sales': async function () {
+        try {
+            const today = moment().subtract(1, 'days').format("YYYY-MM-DD");
+            const initWeek = moment().subtract(1, 'weeks').startOf('isoWeek').format("YYYY-MM-DD");
+            const initMonth = moment().subtract(1, 'months').startOf('month').format("YYYY-MM-DD");
+
+            let sale_today = await Payment.findAll({
+                attributes: [
+                    [sequelize.literal("sum(total_units) || ' UNID' "), 'previous_sales_units'],
+
+                ],
+                include: [
+                    {
+                        model: Sale,
+                        required: true,
+                        attributes: [],
+                    }
+                ],
+                where: {
+                    createdAt: today
+                },
+                raw: true
+            });
+
+            let sale_week = await Payment.findAll({
+                attributes: [
+                    [sequelize.literal("sum(total_units) || ' UNID' "), 'previous_week_units'],
+                ],
+                include: [
+                    {
+                        model: Sale,
+                        required: true,
+                        attributes: [],
+                    }
+                ],
+                where: {
+                    createdAt: {
+                        [Op.between]: [initWeek, today],
+                    }
+                },
+                raw: true
+            });
+
+            let sale_mounth = await Payment.findAll({
+                attributes: [
+                    [sequelize.literal("sum(total_units) || ' UNID' "), 'previous_month_units']
+                ],
+                include: [
+                    {
+                        model: Sale,
+                        required: true,
+                        attributes: [],
+                    }
+                ],
+                where: {
+                    createdAt: {
+                        [Op.between]: [initMonth, today],
+                    }
+                },
+                raw: true
+            });
+
+            return {
+                previous_sales: sale_today[0].previous_sales_units,
+                previous_week: sale_week[0].previous_week_units,
+                previous_month: sale_mounth[0].previous_month_units
+            };
+
+        } catch (error) {
+            reportErrors(error);
+            log.error(error);
             return { message: error.message, code: 0 };
         }
     },
@@ -287,16 +366,20 @@ const Metrics = {
                 nowfinalDate = moment().format("YYYY-MM-DD");
             }
 
-            // Calculo data del periodo anterior
+            // Calculo data del periodo anterior (mismo rango de días)
             let lastInitDate = null;
             let lastFinalDate = null;
 
             if (period == 'WEEK') {
-                lastFinalDate = moment().subtract(1, 'weeks').endOf('isoWeek').format("YYYY-MM-DD");
+                // Comparar desde lunes hasta el mismo día de la semana pasada
+                const dayOfWeek = moment().isoWeekday(); // 1=lunes, 7=domingo
                 lastInitDate = moment().subtract(1, 'weeks').startOf('isoWeek').format("YYYY-MM-DD");
+                lastFinalDate = moment().subtract(1, 'weeks').startOf('isoWeek').add(dayOfWeek - 1, 'days').format("YYYY-MM-DD");
             } else if (period === 'MOUNTH') {
+                // Comparar desde día 1 hasta el mismo día del mes pasado
+                const dayOfMonth = moment().date();
                 lastInitDate = moment().subtract(1, 'months').startOf('month').format("YYYY-MM-DD");
-                lastFinalDate = moment().subtract(1, 'months').endOf('month').format("YYYY-MM-DD");
+                lastFinalDate = moment().subtract(1, 'months').startOf('month').add(dayOfMonth - 1, 'days').format("YYYY-MM-DD");
             } else { // HOY
                 lastInitDate = moment().subtract(1, 'days').format("YYYY-MM-DD");
                 lastFinalDate = moment().subtract(1, 'days').format("YYYY-MM-DD");
@@ -364,7 +447,7 @@ const Metrics = {
             };
 
         } catch (error) {
-            log.error(error.message);
+            log.error(error);
             reportErrors(error);
             return { message: error.message, code: 0 };
         }

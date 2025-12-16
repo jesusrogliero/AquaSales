@@ -4,6 +4,7 @@ const appdata = require('appdata-path');
 const path = require('path');
 const log = require('electron-log');
 const reportErrors = require('./reportErrors.js');
+const isPackaged = require('./isPackaged.js');
 
 const auth = new google.auth.GoogleAuth({
     keyFile: path.join(appdata('AquaSales'), 'credentials.json'),
@@ -76,7 +77,7 @@ const updateFile = async function (file_id, fileName) {
 
 const init = async function () {
     try {
-        if(!global.isPackaged) {
+        if(!isPackaged()) {
             return;
         }
 
@@ -105,7 +106,7 @@ const init = async function () {
         }
 
     } catch (error) {
-        log.error(error.message);
+        log.error(error);
         reportErrors(error);
         console.log(error);
     }

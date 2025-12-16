@@ -22,7 +22,7 @@ const seeds = async function (Model, data) {
 			});
 		}
 	} catch (error) {
-		log.error(error.message);
+		log.error(error);
 		reportErrors(error);
 	}
 };
@@ -77,7 +77,7 @@ const checkExchange = async function () {
             }
         }
     } catch (error) {
-        log.error(error.message);
+        log.error(error);
         reportErrors(error);
     }
 };
