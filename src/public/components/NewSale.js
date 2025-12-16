@@ -382,140 +382,220 @@ export default Vue.component('new-sale', {
 
    
     
-    <div class="mb-4">
-
-        <v-btn color="red" small dark class="mr-3" v-if="sale_id != null" @click="cancelSale">
-            <span>Cancelar Venta</span>
-            <v-icon>mdi-trash-can-outline</v-icon>
+    <v-card flat class="mb-2 pa-2" color="blue lighten-5">
+        <v-btn color="blue darken-3" small dark class="mr-2" v-if="sale_id != null" @click="finalizeSale">
+            <v-icon small left>mdi-check-circle</v-icon>
+            <span>Finalizar Venta</span>
         </v-btn>
 
-        <v-btn color="purple" small dark v-if="sale_id != null" @click="finalizeSale">
-                <span>Finalizar Venta</span>
-        <v-icon>mdi-check</v-icon>
-    </v-btn>
-    </div>
+        <v-btn color="blue darken-1" small outlined v-if="sale_id != null" @click="cancelSale">
+            <v-icon small left>mdi-close-circle-outline</v-icon>
+            <span>Cancelar Venta</span>
+        </v-btn>
+    </v-card>
     
 
     
-    <v-container v-if="sale_id != null">
-        <v-row>
-            <v-col cols="12" md="6" lg="3" class="card-info-invoice">
-                <v-row>
-                    <v-col cols="12" class="text-center">
-                        <h3>Detalles de la Venta</h3>
-                    </v-col>
-                    <v-col cols="12">
+    <v-container v-if="sale_id != null" fluid class="pa-0">
+        <v-row dense>
+            <v-col cols="12" md="4" lg="4" class="d-flex">
+                <v-card elevation="2" class="d-flex flex-column" style="width: 100%;">
+                    <v-card-title class="blue darken-2 white--text py-2">
+                        <v-icon small left color="white">mdi-clipboard-text</v-icon>
+                        <span class="body-2 font-weight-bold">Detalles de la Venta</span>
+                    </v-card-title>
+                    <v-card-text class="pa-2">
                         <v-text-field 
                             v-model="client" 
-                            class="mb-n6" 
                             dense 
                             @blur="updateClientSale"
-                            label="Nombre del Cliente" 
-                            placeholder="Ingresa el nombre del cliente"
-                            filled
+                            label="Cliente" 
+                            placeholder="Nombre del cliente"
+                            outlined
+                            hide-details
+                            color="blue darken-2"
+                            prepend-inner-icon="mdi-account"
+                            class="mb-2"
+                            style="font-size: 13px;"
                         ></v-text-field>
-                    </v-col>
-                    <v-col cols="12">
-                        <b>Unidades Totales: </b>
-                        <span class="float-right"> {{total_units}} UNID</span>
-                    </v-col>
-                    <v-col cols="12">
-                        <b>Litros Totales: </b>
-                        <span class="float-right">{{total_liters}} L</span>
-                    </v-col>
-                    <v-col cols="12">
-                        <b>Total de Tapas: </b>
-                        <span class="float-right"> {{total_caps}} UNID</span>
-                    </v-col>
-                </v-row>
+                        
+                        <v-divider class="my-1"></v-divider>
+                        
+                        <div class="py-1 d-flex align-center">
+                            <v-chip small color="blue lighten-4" text-color="blue darken-3">
+                                <v-icon small left>mdi-package-variant</v-icon>
+                                Unid.
+                            </v-chip>
+                            <span class="ml-auto body-2 font-weight-bold blue--text text--darken-2">{{total_units}} UNID</span>
+                        </div>
+                        <div class="py-1 d-flex align-center">
+                            <v-chip small color="blue lighten-4" text-color="blue darken-3">
+                                <v-icon small left>mdi-water</v-icon>
+                                Litros
+                            </v-chip>
+                            <span class="ml-auto body-2 font-weight-bold blue--text text--darken-2">{{total_liters}} L</span>
+                        </div>
+                        <div class="py-1 d-flex align-center">
+                            <v-chip small color="blue lighten-4" text-color="blue darken-3">
+                                <v-icon small left>mdi-bottle-tonic</v-icon>
+                                Tapas
+                            </v-chip>
+                            <span class="ml-auto body-2 font-weight-bold blue--text text--darken-2">{{total_caps}} UNID</span>
+                        </div>
+                    </v-card-text>
+                </v-card>
             </v-col>
 
-            <v-col cols="12" md="6" lg="4" class="card-info-invoice">
-                <v-row>
+            <v-col cols="12" md="4" lg="4" class="d-flex">
+                <v-card elevation="2" class="d-flex flex-column" style="width: 100%;">
+                    <v-card-title class="blue darken-2 white--text py-2">
+                        <v-icon small left color="white">mdi-cash-multiple</v-icon>
+                        <span class="body-2 font-weight-bold">Totales por Pagar</span>
+                    </v-card-title>
+                    <v-card-text class="pa-2">
+                        <v-chip small :color="sate_id == 1 ? 'blue lighten-3' : 'blue darken-1'" dark class="mb-1">
+                            <v-icon small left>mdi-information</v-icon>
+                            {{sate_id != 1 ? 'Pendiente' : 'Finalizado'}}
+                        </v-chip>
+                        
+                        <v-divider class="my-1"></v-divider>
+                        
+                        <div class="d-flex align-center py-1">
+                            <v-icon small color="blue darken-2" class="mr-1">mdi-currency-usd</v-icon>
+                            <span class="body-2">Total $:</span>
+                            <span class="ml-auto font-weight-bold blue--text text--darken-3 subtitle-1">{{total_dolar}} $</span>
+                        </div>
+                        
+                        <div class="d-flex align-center py-1">
+                            <v-icon small color="blue darken-2" class="mr-1">mdi-currency-brl</v-icon>
+                            <span class="body-2">Total BsS:</span>
+                            <span class="ml-auto font-weight-bold blue--text text--darken-3 subtitle-1">{{total_bs}} BsS</span>
+                        </div>
 
-                    <v-col cols="12" class="text-center">
-                        <h3>Totales por Pagar</h3>
-                    </v-col>
+                        <v-divider class="my-1"></v-divider>
 
-                    <v-col cols="12">
-                        <b>Estado: </b>
-                        <span class="float-right"> {{sate_id == 1 ? 'Pendiente' : ''}}</span>
-                    </v-col>
-
-                    <v-col cols="12">
-                        <b>Total en BsS: </b>
-                        <span class="float-right">{{total_bs}} BsS</span>
-                    </v-col>
-
-                    <v-col cols="12">
-                        <b>Total en Dolares: </b>
-                        <span class="float-right">{{total_dolar}} $</span>
-                    </v-col>
-
-                    <v-col cols="12">
-                        <b>Pendientes por Despachar: </b>
-                        <span class="float-right red--text">{{pending_dispatch}} UNID</span>
-                    </v-col>
-
-                    
-                    <v-col cols="12">
-                        <b>Total Despachado: </b>
-                        <span class="float-right green--text">{{total_dispatched}} UNID</span>
-                    </v-col>
-                    
-
-                </v-row>
+                        <div class="d-flex align-center py-1">
+                            <v-icon small color="orange darken-2" class="mr-1">mdi-clock-alert-outline</v-icon>
+                            <span class="body-2">Por Despachar:</span>
+                            <span class="ml-auto body-2 font-weight-bold orange--text text--darken-2">{{pending_dispatch}} UNID</span>
+                        </div>
+                        
+                        <div class="d-flex align-center py-1">
+                            <v-icon small color="blue darken-2" class="mr-1">mdi-check-circle</v-icon>
+                            <span class="body-2">Despachado:</span>
+                            <span class="ml-auto body-2 font-weight-bold blue--text text--darken-2">{{total_dispatched}} UNID</span>
+                        </div>
+                    </v-card-text>
+                </v-card>
             </v-col>
 
 
-            <v-col cols="12" md="6" lg="5" class="card-info-invoice">
-                <v-row>
-                    <v-col cols="12" class="text-center">
-                        <h3>Detalles del Pago</h3>
-                    </v-col>
+            <v-col cols="12" md="4" lg="4" class="d-flex">
+                <v-card elevation="2" class="d-flex flex-column" style="width: 100%;">
+                    <v-card-title class="blue darken-2 white--text py-2">
+                        <v-icon small left color="white">mdi-credit-card</v-icon>
+                        <span class="body-2 font-weight-bold">Detalles del Pago</span>
+                    </v-card-title>
+                    <v-card-text class="pa-2">
+                        <v-row dense>
+                            <v-col cols="6">
+                                <v-text-field 
+                                    v-model="mobile_payment" 
+                                    type="number" 
+                                    dense 
+                                    label="Pago Móvil" 
+                                    suffix="BsS" 
+                                    outlined
+                                    hide-details
+                                    color="blue darken-2"
+                                    prepend-inner-icon="mdi-cellphone"
+                                    style="font-size: 13px;"
+                                ></v-text-field>
+                            </v-col>
 
-                    <v-col cols="6">
-                        <v-text-field v-model="mobile_payment" class="mb-n6" type="number" dense label="Pago Movil" suffix="BsS" filled></v-text-field>
-                    </v-col>
+                            <v-col cols="6">
+                                <v-text-field 
+                                    v-model="reference" 
+                                    dense 
+                                    suffix="Nro" 
+                                    label="Referencia" 
+                                    outlined
+                                    hide-details
+                                    color="blue darken-2"
+                                    prepend-inner-icon="mdi-pound"
+                                    style="font-size: 13px;"
+                                ></v-text-field>
+                            </v-col>
 
-                    <v-col cols="6">
-                        <v-text-field v-model="reference" dense class="mb-n6" suffix="Nro" label="Referencia" filled></v-text-field>
-                    </v-col>
+                            <v-col cols="6">
+                                <v-text-field 
+                                    v-model="cash_dollar" 
+                                    dense 
+                                    type="number" 
+                                    label="Efectivo $" 
+                                    suffix="$"  
+                                    outlined
+                                    hide-details
+                                    color="blue darken-2"
+                                    prepend-inner-icon="mdi-cash-usd"
+                                    style="font-size: 13px;"
+                                ></v-text-field>
+                            </v-col>
 
-                    <v-col cols="6">
-                        <v-text-field v-model="cash_dollar" dense class="mb-n6" type="number" label="Efectivo" suffix="$"  filled></v-text-field>
-                    </v-col>
+                            <v-col cols="6">
+                                <v-text-field 
+                                    v-model="cash_bolivares" 
+                                    dense 
+                                    type="number" 
+                                    label="Efectivo BsS" 
+                                    suffix="BsS"  
+                                    outlined
+                                    hide-details
+                                    color="blue darken-2"
+                                    prepend-inner-icon="mdi-cash"
+                                    style="font-size: 13px;"
+                                ></v-text-field>
+                            </v-col>
+                            
+                            <v-col cols="12">
+                                <v-divider class="my-1"></v-divider>
+                            </v-col>
 
-                    <v-col cols="6">
-                        <v-text-field v-model="cash_bolivares" dense class="mb-n6" type="number" label="Efectivo BsS" suffix="BsS"  filled></v-text-field>
-                    </v-col>
+                            <v-col cols="6" class="py-1">
+                                <v-card flat color="blue lighten-5" class="pa-1">
+                                    <div class="body-2 blue--text text--darken-2">Vuelto $</div>
+                                    <div class="subtitle-2 font-weight-bold blue--text text--darken-3">{{vuelto_dolar}} $</div>
+                                </v-card>
+                            </v-col>
 
-                    <v-col cols="6">
-                        <b>Vuelto $: </b>
-                        <span class="float-right"> {{vuelto_dolar}} $</span>
-                    </v-col>
+                            <v-col cols="6" class="py-1">
+                                <v-card flat color="orange lighten-5" class="pa-1">
+                                    <div class="body-2 orange--text text--darken-2">Falta $</div>
+                                    <div class="subtitle-2 font-weight-bold orange--text text--darken-3">{{falta_dolar}} $</div>
+                                </v-card>
+                            </v-col>
 
-                    <v-col cols="6">
-                        <b>Falta en $: </b>
-                        <span class="float-right"> {{falta_dolar}} $</span>
-                    </v-col>
+                            <v-col cols="6" class="py-1">
+                                <v-card flat color="blue lighten-5" class="pa-1">
+                                    <div class="body-2 blue--text text--darken-2">Vuelto BsS</div>
+                                    <div class="subtitle-2 font-weight-bold blue--text text--darken-3">{{vuelto_bs}} BsS</div>
+                                </v-card>
+                            </v-col>
 
-                    <v-col cols="6">
-                        <b>Vuelto BsS: </b>
-                        <span class="float-right"> {{vuelto_bs}} BsS</span>
-                    </v-col>
-
-                    <v-col cols="6">
-                        <b>Falta en BsS: </b>
-                        <span class="float-right"> {{falta_bs}} BsS</span>
-                    </v-col>
-                  
-
-                </v-row>
+                            <v-col cols="6" class="py-1">
+                                <v-card flat color="orange lighten-5" class="pa-1">
+                                    <div class="body-2 orange--text text--darken-2">Falta BsS</div>
+                                    <div class="subtitle-2 font-weight-bold orange--text text--darken-3">{{falta_bs}} BsS</div>
+                                </v-card>
+                            </v-col>
+                        </v-row>
+                    </v-card-text>
+                </v-card>
             </v-col>
         </v-row>
     </v-container>
 
+    <div class="my-4"></div>
     
         <!-- Dialogo de confirmacion antes de eliminar -->
         <dialog-confirm v-if="sale_id != null" :active="dialog == 'delete'" :confirm="destroyItem" :cancel="closeDialog">
@@ -555,15 +635,15 @@ export default Vue.component('new-sale', {
             </template>
 
             <template v-slot:dialog-actions>
-                <v-btn :disabled="!valid" color="transparent" text style="color:#2c823c !important;" class="mr-4"
+                <v-btn :disabled="!valid" color="blue darken-2" dark small class="mr-2"
                     @click="validate">
+                    <v-icon small left>mdi-check</v-icon>
                     <span>Guardar</span>
-                    <v-icon>mdi-check</v-icon>
                 </v-btn>
 
-                <v-btn @click="closeDialog" color="transparent" text style="color: #f44336 !important;">
+                <v-btn @click="closeDialog" color="blue darken-1" small outlined>
+                    <v-icon small left>mdi-close</v-icon>
                     <span>Cancelar</span>
-                    <v-icon>mdi-close</v-icon>
                 </v-btn>
             </template>
         </dialog-base>
@@ -580,11 +660,9 @@ export default Vue.component('new-sale', {
             :sale_id="sale_id"
         >
             <template v-slot:toolbar>
-                <div class="mt-4">
-
-                    <v-row>
-
-                        <col cols="4">
+                <div class="mt-2">
+                    <v-row dense align="center">
+                        <v-col cols="12" md="5">
                             <autocomplete-form 
                                 uri="index-sale-products"
                                 label="Selecciona un Producto"
@@ -593,27 +671,24 @@ export default Vue.component('new-sale', {
                                 :defaultValue="product_id"
                                 :getSelect="getSelectProduct" 
                             />
-                        </col>
+                        </v-col>
 
-                        <col cols="4">
+                        <v-col cols="12" md="4">
                             <v-text-field 
-                                class="ml-3"
                                 v-model="quantity" 
                                 type="number"
                                 suffix="UNID" 
                                 label="Cantidad"
                             ></v-text-field>
-                        </col>
+                        </v-col>
 
-                        <col cols="4">
-                            <v-btn class="ml-3 mr-3" @click="createItem" color="green" text>
+                        <v-col cols="12" md="3">
+                            <v-btn @click="createItem" class="mt-n4" color="blue darken-2" small text>
                                 <v-icon>mdi-plus</v-icon>
                             </v-btn>
-                        </col>
+                        </v-col>
                     </v-row>
-            
                 </div>
-           
             </template>
         </data-table>
         

@@ -11,7 +11,7 @@
 		"start": "electron .",
 		"pack": "electron-builder --dir",
 		"dist": "electron-builder",
-		"publish": "electron-builder -p always"
+		"publish": "dotenv -e .env -- electron-builder -p always"
 	},
 	"author": "Jesus Rogliero",
 	"license": "ISC",
@@ -27,8 +27,7 @@
 			{
 				"provider": "github",
 				"owner": "jesusrogliero",
-				"repo": "AquaSales",
-				"token": ""
+				"repo": "AquaSales"
 			}
 		],
 		"win": {
@@ -43,6 +42,7 @@
 		}
 	},
 	"devDependencies": {
+		"dotenv-cli": "^11.0.0",
 		"electron": "latest",
 		"electron-builder": "latest",
 		"eslint": "latest",

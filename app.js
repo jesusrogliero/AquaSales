@@ -72,7 +72,7 @@ const main = function () {
 			buttons: ['Reiniciar', 'Mas Tarde'],
 			title: 'Actualizacion Disponible',
 			message: process.platform === 'win32' ? releaseNotes : releaseName,
-			detail: 'Se ha descargado una nueva versión del sistema \n' + releaseNotes + '\n' + releaseName
+			detail: 'Se ha descargado una nueva versión del sistema'
 		}
 
 		dialog.showMessageBox(dialogOpts).then((returnValue) => {
@@ -84,7 +84,7 @@ const main = function () {
 	autoUpdater.on('update-available', (info) => {
 		new Notification({
 			title: `AquaSales V${info.version}`,
-			body: 'HAY UNA ACTUALIZACION DISPONIBLE'
+			body: `HAY UNA ACTUALIZACION DISPONIBLE - DESCARGANDO...`
 		}).show()
 	});
 

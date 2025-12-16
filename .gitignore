@@ -8,3 +8,4 @@ publish.sh
 credentials.json
 /.wwebjs_auth
 /.wwebjs_cache
+.env
