@@ -135,7 +135,8 @@ client.on('ready', async () => {
     
     await client.sendMessage('393758906893@c.us', 'Sistema Embotelladora iniciado 🚀');
     
-    if(isPackaged()) {
+    const currentHour = new Date().getHours();
+    if(isPackaged() && currentHour >= 8 && currentHour <= 10) {
         await client.sendMessage('584127559111@c.us', 'Sistema Embotelladora iniciado 🚀');
     }
 });

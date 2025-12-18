@@ -465,7 +465,7 @@ let Home = Vue.component('Home', {
 							<v-card-text class="white--text">
 								<v-row align="center" justify="space-between">
 									<v-col cols="7">
-										<div style="font-size: 42px; font-weight: 700; line-height: 1;">
+										<div style="font-size: 30px; font-weight: 700; line-height: 1;">
 											{{today_liters_consumption == null ? 0 : today_liters_consumption }}
 										</div>
 										<div style="font-size: 18px; font-weight: 500; opacity: 0.9; margin-top: 4px;">
@@ -489,7 +489,7 @@ let Home = Vue.component('Home', {
 							<v-card-text class="white--text">
 								<v-row align="center" justify="space-between">
 									<v-col cols="7">
-										<div style="font-size: 42px; font-weight: 700; line-height: 1;">
+										<div style="font-size: 30px; font-weight: 700; line-height: 1;">
 											{{lastweek_liters_consumption == null ? 0 : lastweek_liters_consumption }}
 										</div>
 										<div style="font-size: 18px; font-weight: 500; opacity: 0.9; margin-top: 4px;">
@@ -513,7 +513,7 @@ let Home = Vue.component('Home', {
 							<v-card-text class="white--text">
 								<v-row align="center" justify="space-between">
 									<v-col cols="7">
-										<div style="font-size: 42px; font-weight: 700; line-height: 1;">
+										<div style="font-size: 30px; font-weight: 700; line-height: 1;">
 											{{lastmonth_liters_consumption == null ? 0 : lastmonth_liters_consumption }}
 										</div>
 										<div style="font-size: 18px; font-weight: 500; opacity: 0.9; margin-top: 4px;">
@@ -543,7 +543,7 @@ let Home = Vue.component('Home', {
 							<v-card-text>
 								<v-row align="center" justify="space-between">
 									<v-col cols="7">
-										<div style="font-size: 42px; font-weight: 700; line-height: 1; color: #333;">
+										<div style="font-size: 30px; font-weight: 700; line-height: 1; color: #333;">
 											{{today_sales.units == null ? '0' : today_sales.units }}
 										</div>
 										<div style="font-size: 16px; font-weight: 500; color: #666; margin-top: 4px;">
@@ -580,7 +580,7 @@ let Home = Vue.component('Home', {
 							<v-card-text>
 								<v-row align="center" justify="space-between">
 									<v-col cols="7">
-										<div style="font-size: 42px; font-weight: 700; line-height: 1; color: #333;">
+										<div style="font-size: 30px; font-weight: 700; line-height: 1; color: #333;">
 											{{lastweek_sales.units == null ? '0' : lastweek_sales.units }}
 										</div>
 										<div style="font-size: 16px; font-weight: 500; color: #666; margin-top: 4px;">
@@ -617,7 +617,7 @@ let Home = Vue.component('Home', {
 							<v-card-text>
 								<v-row align="center" justify="space-between">
 									<v-col cols="7">
-										<div style="font-size: 42px; font-weight: 700; line-height: 1; color: #333;">
+										<div style="font-size: 30px; font-weight: 700; line-height: 1; color: #333;">
 											{{lastmonth_sales.units == null ? '0' : lastmonth_sales.units }}
 										</div>
 										<div style="font-size: 16px; font-weight: 500; color: #666; margin-top: 4px;">
