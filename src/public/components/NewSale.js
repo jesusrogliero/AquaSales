@@ -43,7 +43,7 @@ export default Vue.component('new-sale', {
 
             headers: [
                 { text: 'Producto', value: 'product_name' },
-                { text: 'Unidades (UNID)', value: 'units', align: 'center' },
+                { text: 'Recargas (UNID)', value: 'units', align: 'center' },
                 { text: 'Litros (LT)', value: 'liters', align: 'center'},
                 { text: 'Tapa (UNID)', value: 'caps', align: 'center'},
                 { text: 'Total (BsS)', value: 'total_bs', align: 'center' },
@@ -622,7 +622,7 @@ export default Vue.component('new-sale', {
                 <v-form ref="form" v-model="valid" lazy-validation>
                     <v-row>
                         <v-col cols="12" lg="6" md="6" sm="6"  class="mt-2">
-                            <v-text-field v-model="item_pending_dispatch" suffix="UNID" readonly label="Pendiente Por Despachar"
+                            <v-text-field :value="item_pending_dispatch - dispatch" suffix="UNID" readonly label="Pendiente Por Despachar"
                                 placeholder="Cuanto desea despachar"></v-text-field>
                         </v-col>
 

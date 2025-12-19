@@ -83,13 +83,18 @@ const SaleItems = {
 				dispatched = (params.quantity * product.quantity);
 			}
 
+			let caps = product.cap * (params.quantity * product.quantity);
+			if (product.is_caps) {
+				caps = product.cap * params.quantity;
+			}
+
 			const item = await SaleItem.create({
 				sale_id: sale.id,
 				product_id: params.product_id,
 				quantity: params.quantity,
 				total_bs: total_bs,
 				total_dolar: total_dolar,
-				caps: (product.cap * (params.quantity * product.quantity)),
+				caps: caps,
 				liters: (product.liters * params.quantity),
 				units: (params.quantity * product.quantity),
 				pending_dispatch: pending_dispatch,

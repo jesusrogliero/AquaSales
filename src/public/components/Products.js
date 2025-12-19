@@ -16,6 +16,7 @@ export default Vue.component('products', {
             is_dolar: false,
             is_combo: false,
             is_active: false,
+            is_caps: false,
 
             requiredRule: [v => !!v || 'Este campo es requerido!!'],
 			numberRule: [
@@ -27,15 +28,16 @@ export default Vue.component('products', {
             headers: [
                 { text: 'Nombre', value: 'name' },
                 { text: 'Litros', value: 'liters' },
-                { text: 'Cantidad', value: 'quantity' },
+                { text: 'Cantidad de Recargas', value: 'quantity' },
                 { text: 'Cantidad de Tapas', value: 'cap' },
                 { text: 'Precio en $', value: 'price_dolar' },
                 { text: 'Precio en BsS', value: 'price_bs' },
                 { text: 'Activo', value: 'is_active' },
+                { text: '¿Es una Tapa?', value: 'is_caps' },
                 { text: 'Acción', value: 'actions' },
               ],
 
-              title: 'Gestión De Productos',
+              title: 'Gestión De Recargas',
               url: 'index-products',
               dialog: null,
               valid: true
@@ -60,6 +62,7 @@ export default Vue.component('products', {
                     this.is_dolar = response.is_dolar;
                     this.is_combo = response.is_combo;
                     this.is_active = response.is_active;
+                    this.is_caps = response.is_caps;
 
                     this.price = response.price_bs;
                     if(response.is_dolar) {
@@ -89,6 +92,7 @@ export default Vue.component('products', {
             this.is_dolar = false;
             this.is_combo = false;
             this.is_active = false;
+            this.is_caps = false;
 		},
 
         validate() {
@@ -110,7 +114,8 @@ export default Vue.component('products', {
                     cap: this.cap,
                     is_dolar: this.is_dolar,
                     is_combo: this.is_combo,
-                    is_active: this.is_active
+                    is_active: this.is_active,
+                    is_caps: this.is_caps
                 });
 
 				if (response.code == 0)
@@ -139,7 +144,8 @@ export default Vue.component('products', {
                     cap: this.cap,
                     is_dolar: this.is_dolar,
                     is_combo: this.is_combo,
-                    is_active: this.is_active
+                    is_active: this.is_active,
+                    is_caps: this.is_caps
                 });
 
 				if (response.code == 0)
@@ -216,8 +222,8 @@ export default Vue.component('products', {
                         </v-col>
 
                         <v-col cols="12" lg="6" md="6" sm="6"  class="mt-2">
-                            <v-text-field v-model="quantity" suffix="UNID" :rules="numberRule" type="number" label="Cantidad" required
-                                placeholder="Ingresa la cantidad del producto"></v-text-field>
+                            <v-text-field v-model="quantity" suffix="UNID" :rules="numberRule" type="number" label="Cantidad de Recargas" required
+                                placeholder="Ingresa la cantidad de recargas"></v-text-field>
                         </v-col>
 
                         <v-col cols="12" lg="6" md="6" sm="6"  class="mt-2">
@@ -245,7 +251,11 @@ export default Vue.component('products', {
                         </v-col>
 
                         <v-col cols="12" lg="6" md="6" sm="6"  class="mt-2">
-                            <v-switch v-model="is_active" label="Producto de venta" ></v-switch>
+                            <v-switch v-model="is_active" label="Productos Para la Venta?" ></v-switch>
+                        </v-col>
+
+                     <v-col cols="12" lg="6" md="6" sm="6"  class="mt-2">
+                            <v-switch v-model="is_caps" label="¿Es una Tapa?" ></v-switch>
                         </v-col>
 
                      

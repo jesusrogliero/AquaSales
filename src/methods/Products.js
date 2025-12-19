@@ -20,7 +20,9 @@ const Products = {
         try {
             return await Product.findAll({
                 attributes: [
-                    'id', 'name', 'createdAt', 'updatedAt', 'is_active',
+                    'id', 'name', 'createdAt', 'updatedAt',
+                    [sequelize.literal("IIF(is_active, 'Sí', 'No')"), 'is_active'],
+                    [sequelize.literal("IIF(is_caps, 'Sí', 'No')"), 'is_caps'],
                     [sequelize.literal("liters || ' Lt'"), 'liters'],
                     [sequelize.literal("quantity || ' UNID'"), 'quantity'],
                     [sequelize.literal("cap || ' UNID'"), 'cap'],
@@ -74,7 +76,7 @@ const Products = {
         try {
             if (! await isAuth()) throw new Error('Usted no esta Autorizado');
 
-            if (params.cap > params.quantity) throw new Error('No puedes ingresar mas tapas que porductos');
+            if (params.cap > params.quantity && !params.is_caps) throw new Error('No puedes ingresar mas tapas que productos');
 
             let exchange = await Exchange.findByPk(1);
             let price_bs = 0
@@ -99,7 +101,8 @@ const Products = {
                 cap: params.cap,
                 is_dolar: params.is_dolar,
                 is_combo: params.is_combo,
-                is_active: params.is_active
+                is_active: params.is_active,
+                is_caps: params.is_caps
             });
 
             return { message: "Agregado con exito", code: 1 };
@@ -206,7 +209,6 @@ const Products = {
 
             if (empty(params.name)) throw new Error("El nombre del producto es obligatorio");
             if (empty(params.liters)) throw new Error("Los litros del producto es obligatorio");
-
             if (params.quantity < 0) throw new Error('La cantidad del producto no es correcta');
             if (params.liters < 0) throw new Error('La cantidad de litros no es correcta');
             if (params.cap < 0) throw new Error('La cantidad de tapas es incorrecta');
@@ -237,6 +239,7 @@ const Products = {
             product.cap = params.cap;
             product.is_combo = params.is_combo;
             product.is_active = params.is_active;
+            product.is_caps = params.is_caps;
 
             await product.save();
 

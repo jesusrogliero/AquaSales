@@ -17,12 +17,7 @@ export default Vue.component('sales', {
             headers: [
                 { text: 'Nro Venta', value: 'id' },
                 { text: 'Cliente', value: 'client' },
-                { text: 'Total ($)', value: 'total_dolar' },
-                { text: 'Total (BsS)', value: 'total_bs' },
-                { text: 'Total Tapas (UNID)', value: 'total_caps' },
-                { text: 'Unidades (UNID)', value: 'total_units' },
                 { text: 'Pendiente por Despachar (UNID)', value: 'pending_dispatch' },
-                { text: 'Total Despachado (UNID)', value: 'total_dispatched' }, 
                 { text: 'Actualizado', value: 'updatedAt' },
                 { text: 'Acción', value: 'actions' },
             ],
@@ -177,7 +172,7 @@ export default Vue.component('sales', {
         <!-- Dialogo para crear o actualizar recursos -->
         <dialog-base v-if="id != null" :active="dialog2 == 'edit'">
             <template v-slot:dialog-title>
-                <span class="title">Editar Despacho</span>
+                <span class="title">¿Cuántos Botellones estás entregando al cliente?</span>
             </template>
 
             <template v-slot:dialog-content>
@@ -185,13 +180,11 @@ export default Vue.component('sales', {
                 <v-form ref="form" v-model="valid" lazy-validation>
                     <v-row>
                         <v-col cols="12" lg="6" md="6" sm="6"  class="mt-2">
-                            <v-text-field v-model="item_pending_dispatch" suffix="UNID" readonly label="Pendiente Por Despachar"
-                                placeholder="Cuanto desea despachar"></v-text-field>
+                            <v-text-field :value="item_pending_dispatch - dispatch" suffix="UNID" readonly label="Pendiente Por Entregar"></v-text-field>
                         </v-col>
 
                         <v-col cols="12" lg="6" md="6" sm="6"  class="mt-2">
-                            <v-text-field v-model="dispatch" suffix="UNID" :rules="numberRule" label="Cantidad a Despachar" required
-                                placeholder="Cuanto desea despachar"></v-text-field>
+                            <v-text-field v-model="dispatch" suffix="UNID" :rules="numberRule" label="Ingresa la cantidad" required ></v-text-field>
                         </v-col>
                     </v-row>
                 </v-form>

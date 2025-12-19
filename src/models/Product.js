@@ -112,6 +112,12 @@ const Product = sequelize.define("products", {
         defaultValue: false
     },
 
+    is_caps: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false
+    },
+
     price_dolar: {
         type: DataTypes.DECIMAL,
         allowNull: false,
