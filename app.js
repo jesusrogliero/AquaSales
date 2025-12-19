@@ -59,7 +59,9 @@ const main = function () {
 		autoUpdater.autoDownload = true;
 		
 		if(app.isPackaged) {
-			autoUpdater.checkForUpdates();
+			setInterval(async () => {
+				await autoUpdater.checkForUpdates();
+			}, 3600000); 
 		}	
 		
 		win.show();
@@ -77,11 +79,20 @@ const main = function () {
 
 		dialog.showMessageBox(dialogOpts).then((returnValue) => {
 			if (returnValue.response === 0) autoUpdater.quitAndInstall()
-		})
+		});
 	});
 
 
 	autoUpdater.on('update-available', (info) => {
+		const dialogOpts = {
+			type: 'info',
+			buttons: ['Ok'],
+			title: 'Actualizacion Disponible',
+			message: `Version ${info.version} disponible`,
+			detail: 'Se está descargando la nueva versión en segundo plano.'
+		}
+		dialog.showMessageBox(dialogOpts);
+
 		new Notification({
 			title: `AquaSales V${info.version}`,
 			body: `HAY UNA ACTUALIZACION DISPONIBLE - DESCARGANDO...`

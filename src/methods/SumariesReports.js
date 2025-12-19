@@ -65,6 +65,81 @@ const Sumaries = {
     },
 
     /**
+     * Metricas productos mas vendidos  
+     *
+     * @returns {json} pago
+    */
+    'most-sold-products': async function (params) {
+        try {
+            let initDate = params[0] ? params[0] : null;
+            let finalDate = params[1] ? params[1] : null;
+            
+            let products_sold = await SaleItem.findAll({
+                attributes: [
+                    [sequelize.literal("product.name"), 'product_name'],
+                    [sequelize.literal("count(sales_items.product_id)"), 'quantity_sold']
+                ],
+                include: [
+                    {
+                        model: Product,
+                        required: true,
+                        attributes: [],
+                    }
+                ],
+                where: {
+                    createdAt: {
+                        [Op.between]: [initDate, finalDate]
+                    }
+                },
+                group: ['sales_items.product_id'],
+                raw: true
+            });
+
+            return products_sold;
+        } catch (error) {
+            log.error(error);
+            reportErrors(error);
+            return { message: error.message, code: 0 };
+        }
+    },
+
+    /**
+     * Metricas unidades despachadas  
+     *
+     * @returns {json} pago
+     */
+    'units-dispatched': async function (params) {
+        try {
+            let initDate = params[0] ? params[0] : null;
+            let finalDate = params[1] ? params[1] : null;
+            
+            let units_dispatched = await Sale.findAll({
+                attributes: [
+                    [sequelize.literal("sum(total_units - pending_dispatch)"), 'total_units_dispatched'],
+                    [sequelize.literal("createdAt"), 'fecha']
+                ],
+                where: {
+                    state_id: {
+                        [Op.ne]: 1
+                    },
+                    createdAt: {
+                        [Op.between]: [initDate, finalDate]
+                    }
+                },
+                group: [sequelize.col('createdAt')],
+                raw: true
+            });
+
+            return units_dispatched;
+
+        } catch (error) {
+            log.error(error);
+            reportErrors(error);
+            return { message: error.message, code: 0 };
+        }
+    },
+
+    /**
      * Metricas 
      * 
      * @returns {json} pago

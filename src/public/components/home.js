@@ -456,79 +456,7 @@ let Home = Vue.component('Home', {
 						</v-card>
 					</v-col>
 
-					<v-col cols="12" sm="6" md="4" lg="4">
-						<v-card elevation="3" rounded="lg" class="hover-card" style="background: linear-gradient(135deg, #1e5f8d 0%, #2e8bb9 100%); transition: all 0.3s;">
-							<v-card-title class="white--text pb-2">
-								<v-icon color="white" size="28" class="mr-2">mdi-water</v-icon>
-								<span style="font-weight: 500; font-size: 16px; letter-spacing: 0.5px;">DESPACHADO HOY</span>
-							</v-card-title>
-							<v-card-text class="white--text">
-								<v-row align="center" justify="space-between">
-									<v-col cols="7">
-										<div style="font-size: 30px; font-weight: 700; line-height: 1;">
-											{{today_liters_consumption == null ? 0 : today_liters_consumption }}
-										</div>
-										<div style="font-size: 18px; font-weight: 500; opacity: 0.9; margin-top: 4px;">
-											LITROS
-										</div>
-									</v-col>
-									<v-col cols="5" class="text-center">
-										<v-icon color="white" size="80" style="opacity: 0.3;">mdi-cup-water</v-icon>
-									</v-col>
-								</v-row>
-							</v-card-text>
-						</v-card>
-					</v-col>
-
-					<v-col cols="12" sm="6" md="4" lg="4">
-						<v-card elevation="3" rounded="lg" class="hover-card" style="background: linear-gradient(135deg, #4b6cb7 0%, #5c7cbe 100%); transition: all 0.3s;">
-							<v-card-title class="white--text pb-2">
-								<v-icon color="white" size="28" class="mr-2">mdi-water-check</v-icon>
-								<span style="font-weight: 500; font-size: 16px; letter-spacing: 0.5px;">DESPACHADO ESTA SEMANA</span>
-							</v-card-title>
-							<v-card-text class="white--text">
-								<v-row align="center" justify="space-between">
-									<v-col cols="7">
-										<div style="font-size: 30px; font-weight: 700; line-height: 1;">
-											{{lastweek_liters_consumption == null ? 0 : lastweek_liters_consumption }}
-										</div>
-										<div style="font-size: 18px; font-weight: 500; opacity: 0.9; margin-top: 4px;">
-											LITROS
-										</div>
-									</v-col>
-									<v-col cols="5" class="text-center">
-										<v-icon color="white" size="80" style="opacity: 0.3;">mdi-water-outline</v-icon>
-									</v-col>
-								</v-row>
-							</v-card-text>
-						</v-card>
-					</v-col>
-
-					<v-col cols="12" sm="6" md="4" lg="4">
-						<v-card elevation="3" rounded="lg" class="hover-card" style="background: linear-gradient(135deg, #1a4d7a 0%, #2e5f8e 100%); transition: all 0.3s;">
-							<v-card-title class="white--text pb-2">
-								<v-icon color="white" size="28" class="mr-2">mdi-water-pump</v-icon>
-								<span style="font-weight: 500; font-size: 16px; letter-spacing: 0.5px;">DESPACHADO ESTE MES</span>
-							</v-card-title>
-							<v-card-text class="white--text">
-								<v-row align="center" justify="space-between">
-									<v-col cols="7">
-										<div style="font-size: 30px; font-weight: 700; line-height: 1;">
-											{{lastmonth_liters_consumption == null ? 0 : lastmonth_liters_consumption }}
-										</div>
-										<div style="font-size: 18px; font-weight: 500; opacity: 0.9; margin-top: 4px;">
-											LITROS
-										</div>
-									</v-col>
-									<v-col cols="5" class="text-center">
-										<v-icon color="white" size="80" style="opacity: 0.3;">mdi-water-plus</v-icon>
-									</v-col>
-								</v-row>
-							</v-card-text>
-						</v-card>
-					</v-col>
-
-					<v-col cols="12" sm="6" md="4" lg="4">
+										<v-col cols="12" sm="6" md="4" lg="4">
 						<v-card elevation="3" rounded="lg" class="hover-card" style="background: linear-gradient(135deg, #e0f2f7 0%, #b3d9e6 100%); transition: all 0.3s;">
 							<v-card-title class="d-flex align-center justify-space-between pb-2">
 								<div class="d-flex align-center">
@@ -635,6 +563,78 @@ let Home = Vue.component('Home', {
 									<span>Mes pasado:</span>
 									<span style="font-weight: 600; font-size: 14px;">{{lastmonth_sales.previous_units == null ? 0 : lastmonth_sales.previous_units}}</span>
 								</div>	
+							</v-card-text>
+						</v-card>
+					</v-col>
+
+					<v-col cols="12" sm="6" md="4" lg="4">
+						<v-card elevation="3" rounded="lg" class="hover-card" style="background: linear-gradient(135deg, #1e5f8d 0%, #2e8bb9 100%); transition: all 0.3s;">
+							<v-card-title class="white--text pb-2">
+								<v-icon color="white" size="28" class="mr-2">mdi-water</v-icon>
+								<span style="font-weight: 500; font-size: 16px; letter-spacing: 0.5px;">DESPACHADO HOY</span>
+							</v-card-title>
+							<v-card-text class="white--text">
+								<v-row align="center" justify="space-between">
+									<v-col cols="7">
+										<div style="font-size: 30px; font-weight: 700; line-height: 1;">
+											{{today_liters_consumption == null ? 0 : today_liters_consumption }}
+										</div>
+										<div style="font-size: 18px; font-weight: 500; opacity: 0.9; margin-top: 4px;">
+											LITROS
+										</div>
+									</v-col>
+									<v-col cols="5" class="text-center">
+										<v-icon color="white" size="80" style="opacity: 0.3;">mdi-cup-water</v-icon>
+									</v-col>
+								</v-row>
+							</v-card-text>
+						</v-card>
+					</v-col>
+
+					<v-col cols="12" sm="6" md="4" lg="4">
+						<v-card elevation="3" rounded="lg" class="hover-card" style="background: linear-gradient(135deg, #4b6cb7 0%, #5c7cbe 100%); transition: all 0.3s;">
+							<v-card-title class="white--text pb-2">
+								<v-icon color="white" size="28" class="mr-2">mdi-water-check</v-icon>
+								<span style="font-weight: 500; font-size: 16px; letter-spacing: 0.5px;">DESPACHADO ESTA SEMANA</span>
+							</v-card-title>
+							<v-card-text class="white--text">
+								<v-row align="center" justify="space-between">
+									<v-col cols="7">
+										<div style="font-size: 30px; font-weight: 700; line-height: 1;">
+											{{lastweek_liters_consumption == null ? 0 : lastweek_liters_consumption }}
+										</div>
+										<div style="font-size: 18px; font-weight: 500; opacity: 0.9; margin-top: 4px;">
+											LITROS
+										</div>
+									</v-col>
+									<v-col cols="5" class="text-center">
+										<v-icon color="white" size="80" style="opacity: 0.3;">mdi-water-outline</v-icon>
+									</v-col>
+								</v-row>
+							</v-card-text>
+						</v-card>
+					</v-col>
+
+					<v-col cols="12" sm="6" md="4" lg="4">
+						<v-card elevation="3" rounded="lg" class="hover-card" style="background: linear-gradient(135deg, #1a4d7a 0%, #2e5f8e 100%); transition: all 0.3s;">
+							<v-card-title class="white--text pb-2">
+								<v-icon color="white" size="28" class="mr-2">mdi-water-pump</v-icon>
+								<span style="font-weight: 500; font-size: 16px; letter-spacing: 0.5px;">DESPACHADO ESTE MES</span>
+							</v-card-title>
+							<v-card-text class="white--text">
+								<v-row align="center" justify="space-between">
+									<v-col cols="7">
+										<div style="font-size: 30px; font-weight: 700; line-height: 1;">
+											{{lastmonth_liters_consumption == null ? 0 : lastmonth_liters_consumption }}
+										</div>
+										<div style="font-size: 18px; font-weight: 500; opacity: 0.9; margin-top: 4px;">
+											LITROS
+										</div>
+									</v-col>
+									<v-col cols="5" class="text-center">
+										<v-icon color="white" size="80" style="opacity: 0.3;">mdi-water-plus</v-icon>
+									</v-col>
+								</v-row>
 							</v-card-text>
 						</v-card>
 					</v-col>
