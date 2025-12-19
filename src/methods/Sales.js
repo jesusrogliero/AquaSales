@@ -66,16 +66,8 @@ const Sales = {
                 attributes: [
                     'id',
                     'client',
-                    "total_units",
                     "pending_dispatch",
-                    "total_dispatched",
-                    "total_liters",
-                    "total_caps",
-                    "total_bs",
-                    "total_dolar",
-                    'createdAt',
-                    'updatedAt',
-                    [sequelize.col('sales_state.name'), 'state']
+                    'updatedAt'
                 ],
                 include: [
                     {
@@ -183,7 +175,7 @@ const Sales = {
             if (sale.state_id == 2) throw new Error('Esta Venta ya fue procesada');
             if (sale.state_id == 3) throw new Error('Esta Venta ya fue Despachada');
 
-            if(sale.total_units === 0) {
+            if(sale.total_units === 0 && sale.total_caps === 0) {
                 throw new Error('No has agregado nada a la venta');
             }
 

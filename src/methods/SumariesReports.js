@@ -1,5 +1,7 @@
 'use strict'
 const Sale = require('../models/Sale.js');
+const SaleItem = require('../models/SaleItem.js');
+const Product = require('../models/Product.js');
 const Payment = require('../models/Payment.js');
 const log = require('electron-log');
 const { sequelize, clientWhatsapp } = require("../connection.js");
@@ -114,8 +116,6 @@ const Sumaries = {
                 raw: true
             };
 
-            let sales = await Payment.findAll(option);
-
             let totals_sales = await Payment.findAll({
                 attributes: [
                     [sequelize.literal("( sum(mobile_payment) + sum(cash_bolivares) )  || ' BsS' "), 'total_sales_bs'],
@@ -139,6 +139,27 @@ const Sumaries = {
                 raw: true
             });
 
+            let products_sold = await SaleItem.findAll({
+                attributes: [
+                    [sequelize.literal("product.name"), 'product_name'],
+                    [sequelize.literal("count(sales_items.product_id)"), 'quantity_sold']
+                ],
+                include: [
+                    {
+                        model: Product,
+                        required: true,
+                        attributes: [],
+                    }
+                ],
+                where: {
+                    createdAt: {
+                        [Op.between]: [initDate, finalDate]
+                    }
+                },
+                group: ['sales_items.product_id'],
+                raw: true
+            });
+
             let reports = `*${title}* \n\n`;
             reports += `*Totales de Ventas* \n`;
             reports += `• Total Ventas en Bolivares: ${totals_sales[0].total_sales_bs ? totals_sales[0].total_sales_bs : '0 BsS'} \n`;
@@ -146,6 +167,11 @@ const Sumaries = {
             reports += `• Total Unidades Vendidas: ${totals_sales[0].total_sales_units ? totals_sales[0].total_sales_units : '0 UNID'} \n`;
             reports += `• Total Litros Vendidos: ${totals_sales[0].total_sales_liters ? totals_sales[0].total_sales_liters : '0 Lts'} \n`;
             reports += `• Total Tapas Vendidas: ${totals_sales[0].total_sales_caps ? totals_sales[0].total_sales_caps : '0 UNID'} \n\n`;
+
+            reports += `*Productos Mas Vendidos* \n`;
+            for (let i = 0; i < products_sold.length; i++) {
+                reports += `• ${products_sold[i].product_name} : ${products_sold[i].quantity_sold} UNID \n`;
+            }
             await clientWhatsapp.sendMessage('393758906893@c.us', reports );
 
             if(isPackaged()) {
