@@ -5,6 +5,7 @@ const Product = require('../models/Product.js');
 const empty = require('../helpers/empty.js');
 const log = require('electron-log');
 const Exchange = require('../models/Exchange.js');
+const isPackaged = require('../helpers/isPackaged.js');
 const isAuth = require('../helpers/auth.js');
 const reportErrors = require('../helpers/reportErrors.js');
 const { clientWhatsapp } = require("../connection.js");
