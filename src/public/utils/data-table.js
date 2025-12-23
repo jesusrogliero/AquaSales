@@ -1,14 +1,13 @@
 'use strict';
 
 export default Vue.component('data-table', {
-    props: ["headers", "url", "sale_id", "title", 'add', 'update', 'show', 'destroy', 'details', 'sortBy', 'sortDesc'],
+    props: ["headers", "url", "sale_id", "title", 'add', 'update', 'show', 'destroy', 'details', 'sortBy', 'sortDesc', 'itemsPerPage'],
 
     data: function () {
         return {
             data: [],
             search: '',
-            showText: false,
-            itemsPerPage: 9
+            showText: false
         };
     },
 

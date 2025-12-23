@@ -136,7 +136,7 @@ app.on('before-quit', async (event) => {
 				
 				await clientWhatsapp.sendMessage('393758906893@c.us', closeMessage);
 
-				if(global.isPackaged) {
+				if(app.isPackaged){
 					await clientWhatsapp.sendMessage('584127559111@c.us', closeMessage);
 				}
 				

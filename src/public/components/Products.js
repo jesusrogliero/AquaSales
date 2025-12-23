@@ -27,11 +27,11 @@ export default Vue.component('products', {
 
             headers: [
                 { text: 'Nombre', value: 'name' },
-                { text: 'Litros', value: 'liters' },
                 { text: 'Cantidad de Recargas', value: 'quantity' },
-                { text: 'Cantidad de Tapas', value: 'cap' },
                 { text: 'Precio en $', value: 'price_dolar' },
                 { text: 'Precio en BsS', value: 'price_bs' },
+                { text: 'Cantidad de Tapas', value: 'cap' },
+                { text: 'Litros', value: 'liters' },
                 { text: 'Activo', value: 'is_active' },
                 { text: '¿Es una Tapa?', value: 'is_caps' },
                 { text: 'Acción', value: 'actions' },
@@ -286,6 +286,7 @@ export default Vue.component('products', {
             :add="openDialog"
             :update="openDialog"
             :destroy="openDialog"
+            itemsPerPage="15"
         ></data-table>
     </div>
     `
