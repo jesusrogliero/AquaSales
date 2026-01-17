@@ -9,10 +9,6 @@ const path = require('path');
 const appdata = require('appdata-path');
 const log = require('electron-log').transports.file.resolvePathFn = () => path.join(appdata('AquaSales'), 'AquaSales.log');
 
-// Variable global para verificar si la app está empaquetada
-global.isPackaged = app.isPackaged;
-
-
 // funcion de inicio de la aplicacion
 const main = function () {
 
@@ -59,6 +55,7 @@ const main = function () {
 		autoUpdater.autoDownload = true;
 		
 		if(app.isPackaged) {
+			await autoUpdater.checkForUpdates();
 			setInterval(async () => {
 				await autoUpdater.checkForUpdates();
 			}, 3600000); 
@@ -135,10 +132,7 @@ app.on('before-quit', async (event) => {
 				const closeMessage = `*Sistema Cerrado*\n\nEl sistema se ha cerrado a las ${dateReport}\n\nGenerando reporte del día... 📊`;
 				
 				await clientWhatsapp.sendMessage('393758906893@c.us', closeMessage);
-
-				if(app.isPackaged){
-					await clientWhatsapp.sendMessage('584127559111@c.us', closeMessage);
-				}
+				await clientWhatsapp.sendMessage('584127559111@c.us', closeMessage);
 				
 				// Llamar al método que genera y envía el reporte completo usando executeMethod
 				await executeMethod({ name: 'sumary-report', params: 'TODAY' });

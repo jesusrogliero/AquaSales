@@ -217,7 +217,7 @@ const Sumaries = {
             let products_sold = await SaleItem.findAll({
                 attributes: [
                     [sequelize.literal("product.name"), 'product_name'],
-                    [sequelize.literal("count(sales_items.product_id)"), 'quantity_sold']
+                    [sequelize.literal("sum(sales_items.units)"), 'quantity_sold']
                 ],
                 include: [
                     {
@@ -243,7 +243,7 @@ const Sumaries = {
             reports += `• Total Litros Vendidos: ${totals_sales[0].total_sales_liters ? totals_sales[0].total_sales_liters : '0 Lts'} \n`;
             reports += `• Total Tapas Vendidas: ${totals_sales[0].total_sales_caps ? totals_sales[0].total_sales_caps : '0 UNID'} \n\n`;
 
-            reports += `*Productos Mas Vendidos* \n`;
+            reports += `*Productos Vendidos hoy:* \n`;
             for (let i = 0; i < products_sold.length; i++) {
                 reports += `• ${products_sold[i].product_name} : ${products_sold[i].quantity_sold} UNID \n`;
             }
