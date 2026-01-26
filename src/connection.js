@@ -29,7 +29,7 @@ const seeds = async function (Model, data) {
 
 
 (async () => {
-	await sequelize.sync();
+	await sequelize.sync({ alter: true });
 
 	await seeds(require('./models/SaleState.js'), [
 		{ name: 'Pendiente' },

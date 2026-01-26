@@ -115,7 +115,7 @@ const Payments = {
 
             if (exchange.date != today) {
                 const response = await axios.get('https://ve.dolarapi.com/v1/dolares/oficial');
-                let bcv = parseFloat(response.data.promedio);
+                let bcv = parseFloat(response.data.promedio.toFixed(2));
                 exchange.bcv = bcv;
                 exchange.date = today;
                 await exchange.save();

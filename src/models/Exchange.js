@@ -11,9 +11,9 @@ const Exchange = sequelize.define('exchange', {
 	},
 
 	bcv: {
-		type: DataTypes.DECIMAL,
+		type: DataTypes.DECIMAL(10, 2),
 		allowNull: false,
-		defaultValue: 0
+		defaultValue: 0,
 	},
 	
 	date: {

@@ -77,7 +77,7 @@ const createQRWindow = async (qrData) => {
 // Configurar ruta de Puppeteer para app empaquetada
 const puppeteerOptions = { 
     headless: true,
-    args: ['--no-sandbox', '--disable-setuid-sandbox']
+    args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-popup-blocking']
 };
 
 // Si la app está empaquetada, especificar ruta al ejecutable de Chrome
@@ -100,7 +100,12 @@ const client = new Client({
         dataPath: path.join(appdata('AquaSales'), 'whatsapp-auth')
     }),
     puppeteer: puppeteerOptions,
-    takeoverOnConflict: true
+    takeoverOnConflict: true,
+    // temp
+    webVersionCache: {
+        type: 'remote',
+        remotePath: `https://raw.githubusercontent.com/wppconnect-team/wa-version/refs/heads/main/html/2.3000.1031490220-alpha.html`,    
+    },
 });
 
 client.initialize();
