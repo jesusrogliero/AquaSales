@@ -92,15 +92,11 @@ function findSystemChrome() {
     [programFiles, programFilesx86, programW6432].forEach(base => {
         if (!base) return;
         candidates.push(path.join(base, 'Chromium', 'Application', 'chrome.exe'));
-        candidates.push(path.join(base, 'Google', 'Chrome', 'Application', 'chrome.exe'));
-        candidates.push(path.join(base, 'Microsoft', 'Edge', 'Application', 'msedge.exe'));
     });
 
     // Rutas en el perfil del usuario
     if (localAppData) {
         candidates.push(path.join(localAppData, 'Chromium', 'Application', 'chrome.exe'));
-        candidates.push(path.join(localAppData, 'Google', 'Chrome', 'Application', 'chrome.exe'));
-        candidates.push(path.join(localAppData, 'Microsoft', 'Edge', 'Application', 'msedge.exe'));
     }
 
     // Comprueba existencia y retorna la primera encontrada
