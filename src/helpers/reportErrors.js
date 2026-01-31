@@ -1,18 +1,19 @@
 const nodemailer = require("nodemailer");
+const config = require('./configs');
 
 let sender = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-        user: 'othebestlevel@gmail.com',
-        pass: 'qhqkayvsbxruball'
+        user: config.get('mailUser'),
+        pass: config.get('passSmtpPassword')
     }
 });
 
 module.exports = function(error) {
 
     let mail = {
-        from: "othebestlevel@gmail.com",
-        to: "othebestlevel@gmail.com",
+        from: config.get('mailUser'),
+        to: config.get('mailUser'),
         subject: "Reporte Error: " + error.message,
         text: error.message
     };

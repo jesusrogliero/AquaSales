@@ -7,6 +7,7 @@ const log = require('electron-log');
 const { sequelize, clientWhatsapp } = require("../connection.js");
 const { Op } = require('sequelize');
 const moment = require('moment');
+const config = require('../helpers/configs.js');
 
 const reportErrors = require('../helpers/reportErrors.js');
 const isPackaged = require('../helpers/isPackaged.js');
@@ -247,10 +248,10 @@ const Sumaries = {
             for (let i = 0; i < products_sold.length; i++) {
                 reports += `• ${products_sold[i].product_name} : ${products_sold[i].quantity_sold} UNID \n`;
             }
-            await clientWhatsapp.sendMessage('393758906893@c.us', reports );
+            await clientWhatsapp.sendMessage(config.get('adminPhone'), reports );
 
             if(isPackaged()) {
-                await clientWhatsapp.sendMessage('584127559111@c.us', reports );
+                await clientWhatsapp.sendMessage(config.get('clientPhone'), reports );
             }
         
             return { message: 'Reporte Creado Correctamente', code: 1 };

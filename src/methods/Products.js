@@ -9,6 +9,7 @@ const isPackaged = require('../helpers/isPackaged.js');
 const isAuth = require('../helpers/auth.js');
 const reportErrors = require('../helpers/reportErrors.js');
 const { clientWhatsapp } = require("../connection.js");
+const config = require('../helpers/configs.js');
 
 const Products = {
 
@@ -245,9 +246,9 @@ const Products = {
             await product.save();
 
             // quiero que tambien notifiche el precio actualizado por whatsapp
-            await clientWhatsapp.sendMessage('393758906893@c.us', `Producto actualizado: *${product.name}* \n Nuevo Precio Bs: ${product.price_bs} \n Nuevo Precio $: ${product.price_dolar}`);
+            await clientWhatsapp.sendMessage(config.get('adminPhone'), `Producto actualizado: *${product.name}* \n Nuevo Precio Bs: ${product.price_bs} \n Nuevo Precio $: ${product.price_dolar}`);
             if(isPackaged()) {
-                await clientWhatsapp.sendMessage('584127559111@c.us', `Producto actualizado: *${product.name}* \n Nuevo Precio Bs: ${product.price_bs} \n Nuevo Precio $: ${product.price_dolar}`);
+                await clientWhatsapp.sendMessage(config.get('clientPhone'), `Producto actualizado: *${product.name}* \n Nuevo Precio Bs: ${product.price_bs} \n Nuevo Precio $: ${product.price_dolar}`);
             }
 
             return { message: "Actualizado Correctamente", code: 1 };
@@ -277,9 +278,9 @@ const Products = {
 
             await product.destroy();
 
-            await clientWhatsapp.sendMessage('393758906893@c.us', `Producto eliminado: ${product.name}`);
+            await clientWhatsapp.sendMessage(config.get('adminPhone'), `Producto eliminado: ${product.name}`);
             if(isPackaged()) {
-                await clientWhatsapp.sendMessage('584127559111@c.us', `Producto eliminado: ${product.name}`);
+                await clientWhatsapp.sendMessage(config.get('clientPhone'), `Producto eliminado: ${product.name}`);
             }
 
             return { message: "Eliminado Correctamente", code: 1 };
