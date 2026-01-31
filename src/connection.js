@@ -1,4 +1,7 @@
 const { Sequelize } = require('sequelize');
+const config = require('./helpers/configs');
+config.load();
+
 const appdata = require('appdata-path');
 const path = require('path');
 const hash = require('./helpers/hash.js');

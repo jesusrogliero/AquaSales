@@ -3,8 +3,11 @@ const qrcode = require('qrcode'); // Para generar imágenes QR
 const path = require('path');
 const { BrowserWindow } = require('electron');
 const log = require('electron-log');
+const fs = require('fs');
 const isPackaged = require('./isPackaged');
 const appdata = require('appdata-path');
+const reportErrors = require('./reportErrors');
+const config = require('./configs');
 
 const { Client, LocalAuth } = whatsappjs;
 
@@ -27,7 +30,7 @@ const createQRWindow = async (qrData) => {
             devTools: false
         }
     });
-    
+
     // Generar QR como data URL (imagen en base64)
     const qrDataUrl = await qrcode.toDataURL(qrData, {
         width: 300,
@@ -74,40 +77,80 @@ const createQRWindow = async (qrData) => {
     });
 };
 
-// Configurar ruta de Puppeteer para app empaquetada
-const puppeteerOptions = { 
-    headless: true,
-    args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-popup-blocking']
-};
-
 // Si la app está empaquetada, especificar ruta al ejecutable de Chrome
-if (isPackaged()) {
-    puppeteerOptions.executablePath = path.join(
-        process.resourcesPath,
-        'app.asar.unpacked',
-        'node_modules',
-        'puppeteer-core',
-        '.local-chromium',
-        'win64-1045629',
-        'chrome-win',
-        'chrome.exe'
-    );
+// Buscar Chrome/Chromium instalado en el equipo (preferencia) y usarlo cuando esté empaquetada
+// Sólo Windows: buscar rutas comunes de instalación de Chrome/Chromium/Edge.
+function findSystemChrome() {
+    const candidates = [];
+    const env = process.env;
+    const programFiles = env.PROGRAMFILES;
+    const programFilesx86 = env['PROGRAMFILES(X86)'];
+    const programW6432 = env.PROGRAMW6432;
+    const localAppData = env.LOCALAPPDATA;
 
+    // Rutas típicas en Program Files / Program Files (x86)
+    [programFiles, programFilesx86, programW6432].forEach(base => {
+        if (!base) return;
+        candidates.push(path.join(base, 'Google', 'Chrome', 'Application', 'chrome.exe'));
+        candidates.push(path.join(base, 'Chromium', 'Application', 'chrome.exe'));
+        candidates.push(path.join(base, 'Microsoft', 'Edge', 'Application', 'msedge.exe'));
+    });
+
+    // Rutas en el perfil del usuario
+    if (localAppData) {
+        candidates.push(path.join(localAppData, 'Google', 'Chrome', 'Application', 'chrome.exe'));
+        candidates.push(path.join(localAppData, 'Chromium', 'Application', 'chrome.exe'));
+        candidates.push(path.join(localAppData, 'Microsoft', 'Edge', 'Application', 'msedge.exe'));
+    }
+
+    // Comprueba existencia y retorna la primera encontrada
+    for (const c of candidates) {
+        try {
+            if (c && fs.existsSync(c)) return c;
+        } catch (e) {
+            log.error('Error checking Chrome path:', c, e);
+            reportErrors(e);
+        }
+    }
+    return null;
 }
 
-const client = new Client({
-    authStrategy: new LocalAuth({
-        dataPath: path.join(appdata('AquaSales'), 'whatsapp-auth')
-    }),
-    puppeteer: puppeteerOptions,
-    takeoverOnConflict: true,
-    // temp
-    webVersionCache: {
-        type: 'remote',
-        remotePath: `https://raw.githubusercontent.com/wppconnect-team/wa-version/refs/heads/main/html/2.3000.1031490220-alpha.html`,    
-    },
-});
+// Configuración del cliente WhatsApp
+const getWhatsappConfig = () => {
 
+    let whatsappConfig = {
+        authStrategy: new LocalAuth({
+            dataPath: path.join(appdata('AquaSales'), 'whatsapp-auth')
+        }),
+        puppeteer: {
+            headless: true,
+            args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-popup-blocking']
+        },
+        takeoverOnConflict: true,
+    }
+
+    const cacheTemp = config.get('whatsappCacheTemp');
+    if (cacheTemp) {
+        whatsappConfig.webVersionCache = {
+            type: 'remote',
+            remotePath: cacheTemp,
+        };
+    }
+
+    if (isPackaged()) {
+        const systemChrome = findSystemChrome();
+        if (systemChrome) {
+            whatsappConfig.puppeteer.executablePath = systemChrome;
+            log.info('Using system Chrome for puppeteer:', systemChrome);
+        } else {
+            log.warn('No system Chrome/Chromium found. Puppeteer will try default bundled executable.');
+            reportErrors(new Error('No system Chrome/Chromium found for WhatsApp Web client.'));
+        }
+    }
+
+    return whatsappConfig;
+}
+const client = new Client(getWhatsappConfig());
 client.initialize();
 
 client.on('loading_screen', (percent, message) => {
@@ -117,7 +160,7 @@ client.on('loading_screen', (percent, message) => {
 
 client.on('qr', async (qr) => {
     await createQRWindow(qr);
-     log.info('QR RECEIVED', qr);
+    log.info('QR RECEIVED', qr);
 });
 
 client.on('authenticated', () => {
@@ -137,12 +180,15 @@ client.on('auth_failure', msg => {
 
 client.on('ready', async () => {
     log.info('READY');
-    
-    await client.sendMessage('393758906893@c.us', 'Sistema Embotelladora iniciado 🚀');
-    
+
+    const adminPhone = config.get('adminPhone');
+    const clientPhone = config.get('clientPhone');
+
+    await client.sendMessage(adminPhone, 'Sistema Embotelladora iniciado 🚀');
+
     const currentHour = new Date().getHours();
-    if(isPackaged() && currentHour >= 8 && currentHour <= 10) {
-        await client.sendMessage('584127559111@c.us', 'Sistema Embotelladora iniciado 🚀');
+    if (isPackaged() && currentHour >= 8 && currentHour <= 10) {
+       await client.sendMessage(clientPhone, 'Sistema Embotelladora iniciado 🚀');
     }
 });
 

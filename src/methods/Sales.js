@@ -12,6 +12,7 @@ const isAuth = require('../helpers/auth.js');
 const reportErrors = require('../helpers/reportErrors.js');
 const GBackup = require('../helpers/GDrive.js');
 const isPackaged = require('../helpers/isPackaged.js');
+const config = require('../helpers/configs.js');
 
 const Sales = {
 
@@ -285,9 +286,9 @@ const Sales = {
 
             await sale.destroy();
 
-             clientWhatsapp.sendMessage('393758906893@c.us', `*Una venta fue cancelada*`);
+             clientWhatsapp.sendMessage(config.get('adminPhone'), `*Una venta fue cancelada*`);
             if(isPackaged()) {
-                clientWhatsapp.sendMessage('584127559111@c.us', `*Una venta fue cancelada*`);
+                clientWhatsapp.sendMessage(config.get('clientPhone'), `*Una venta fue cancelada*`);
             }
           
             return { message: "Venta Cancelada", code: 1 };
