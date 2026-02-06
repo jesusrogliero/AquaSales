@@ -126,8 +126,7 @@ app.on('before-quit', async (event) => {
 		
 		const { response } = await dialog.showMessageBox(mainWindow, dialogOpts);
 		
-		// Si el usuario responde "Sí" (botón 0)
-		if (response === 0) {
+	if (response === 0 || new Date().getHours() >= 17) {
 			try {
 				const moment = require('moment');
 				
